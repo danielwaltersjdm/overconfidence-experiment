@@ -1,0 +1,27 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "ticker": "AXP",
+  "date": "2026-02-27",
+  "run": 4,
+  "current_price": 308.8999938964844,
+  "window_days": 21,
+  "prediction": {
+    "point_estimate": 310.53,
+    "50_ci": [
+      297.99,
+      323.54
+    ],
+    "80_ci": [
+      287.11,
+      335.84
+    ],
+    "90_ci": [
+      280.95,
+      343.33
+    ],
+    "reasoning": "The prediction is based on a Geometric Brownian Motion (GBM) model, commonly used for stock price forecasting. The current price of AXP is $308.90. The prediction horizon is 21 calendar days, which is approximated as 15 trading days (assuming 5 trading days per week). \n\nKey assumptions for the model are:\n-   **Annualized Drift (Expected Return):** An assumed annualized return of 12% is used. This reflects a general upward trend for equities over time and accounts for AXP's historical performance.\n-   **Annualized Volatility (Standard Deviation):** An assumed annualized volatility of 25% is used, which is typical for a large-cap stock like AXP.\n\nCalculations:\n1.  **Point Estimate:** The point estimate is calculated by applying the expected daily drift (derived from the 12% annual return) over 15 trading days. \n    `Point Estimate = Current Price * exp( (Annual Return - 0.5 * Annual Volatility^2) * (Trading Days / 252) )`\n    `Point Estimate = 308.90 * exp( (0.12 - 0.5 * 0.25^2) * (15 / 252) ) = $310.53`\n\n2.  **Volatility over 15 Trading Days:** The annualized volatility is scaled to the 15-day period.\n    `\u03c3_15_days = Annual Volatility * sqrt(Trading Days / 252) = 0.25 * sqrt(15 / 252) \u2248 0.06099`\n\n3.  **Confidence Intervals:** The confidence intervals are constructed around the point estimate using the scaled volatility and standard Z-scores for the respective confidence levels (assuming a log-normal distribution of prices):\n    `Price_CI = Point Estimate * exp( +/- Z * \u03c3_15_days )`\n    -   **50% CI:** Z-score for 75th percentile is 0.6745. `[310.53 * exp(-0.6745 * 0.06099), 310.53 * exp(0.6745 * 0.06099)] = [297.99, 323.54]`\n    -   **80% CI:** Z-score for 90th percentile is 1.2816. `[310.53 * exp(-1.2816 * 0.06099), 310.53 * exp(1.2816 * 0.06099)] = [287.11, 335.84]`\n    -   **90% CI:** Z-score for 95th percentile is 1.6449. `[310.53 * exp(-1.6449 * 0.06099), 310.53 * exp(1.6449 * 0.06099)] = [280.95, 343.33]`\n\nThese predictions are theoretical and depend heavily on the accuracy of the assumed drift and volatility, which are simplified estimates. Actual market movements can vary significantly."
+  },
+  "raw_response": "```json\n{\n  \"point_estimate\": 310.53,\n  \"50_ci\": [297.99, 323.54],\n  \"80_ci\": [287.11, 335.84],\n  \"90_ci\": [280.95, 343.33],\n  \"reasoning\": \"The prediction is based on a Geometric Brownian Motion (GBM) model, commonly used for stock price forecasting. The current price of AXP is $308.90. The prediction horizon is 21 calendar days, which is approximated as 15 trading days (assuming 5 trading days per week). \\n\\nKey assumptions for the model are:\\n-   **Annualized Drift (Expected Return):** An assumed annualized return of 12% is used. This reflects a general upward trend for equities over time and accounts for AXP's historical performance.\\n-   **Annualized Volatility (Standard Deviation):** An assumed annualized volatility of 25% is used, which is typical for a large-cap stock like AXP.\\n\\nCalculations:\\n1.  **Point Estimate:** The point estimate is calculated by applying the expected daily drift (derived from the 12% annual return) over 15 trading days. \\n    `Point Estimate = Current Price * exp( (Annual Return - 0.5 * Annual Volatility^2) * (Trading Days / 252) )`\\n    `Point Estimate = 308.90 * exp( (0.12 - 0.5 * 0.25^2) * (15 / 252) ) = $310.53`\\n\\n2.  **Volatility over 15 Trading Days:** The annualized volatility is scaled to the 15-day period.\\n    `\u03c3_15_days = Annual Volatility * sqrt(Trading Days / 252) = 0.25 * sqrt(15 / 252) \u2248 0.06099`\\n\\n3.  **Confidence Intervals:** The confidence intervals are constructed around the point estimate using the scaled volatility and standard Z-scores for the respective confidence levels (assuming a log-normal distribution of prices):\\n    `Price_CI = Point Estimate * exp( +/- Z * \u03c3_15_days )`\\n    -   **50% CI:** Z-score for 75th percentile is 0.6745. `[310.53 * exp(-0.6745 * 0.06099), 310.53 * exp(0.6745 * 0.06099)] = [297.99, 323.54]`\\n    -   **80% CI:** Z-score for 90th percentile is 1.2816. `[310.53 * exp(-1.2816 * 0.06099), 310.53 * exp(1.2816 * 0.06099)] = [287.11, 335.84]`\\n    -   **90% CI:** Z-score for 95th percentile is 1.6449. `[310.53 * exp(-1.6449 * 0.06099), 310.53 * exp(1.6449 * 0.06099)] = [280.95, 343.33]`\\n\\nThese predictions are theoretical and depend heavily on the accuracy of the assumed drift and volatility, which are simplified estimates. Actual market movements can vary significantly.\"\n}\n```",
+  "backtest": true
+}

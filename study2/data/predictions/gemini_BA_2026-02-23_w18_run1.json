@@ -1,0 +1,27 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "ticker": "BA",
+  "date": "2026-02-23",
+  "run": 1,
+  "current_price": 230.44000244140625,
+  "window_days": 18,
+  "prediction": {
+    "point_estimate": 231.71,
+    "50_ci": [
+      218.79,
+      243.84
+    ],
+    "80_ci": [
+      208.4,
+      255.97
+    ],
+    "90_ci": [
+      202.44,
+      263.5
+    ],
+    "reasoning": "The prediction is based on a Geometric Brownian Motion model, commonly used for stock price forecasting. This model assumes that log returns are normally distributed and incorporates both a drift (expected return) and volatility (risk).\n\nInput Parameters:\n- Current Price (S0): $230.44\n- Time Horizon (t): 18 trading days\n\nAssumed Parameters:\n- Annualized Volatility (\u03c3_annual): 30% (0.30). This is an estimate based on typical historical volatility for Boeing (BA), which can experience significant price swings.\n- Annualized Drift (\u03bc_annual): 8% (0.08). This represents a long-term average expected market return, used for the point estimate and as the underlying drift in the model.\n- Trading Days per Year: 252\n\nCalculations:\n1.  **Daily Volatility (\u03c3_daily)**: \u03c3_annual / sqrt(252) = 0.30 / sqrt(252) \u2248 0.01891\n2.  **Daily Drift (\u03bc_daily)**: (1 + \u03bc_annual)^(1/252) - 1 = (1 + 0.08)^(1/252) - 1 \u2248 0.000305\n3.  **Point Estimate**: The projected price in 18 days is calculated as S0 * (1 + \u03bc_daily)^18 = 230.44 * (1.000305)^18 \u2248 $231.71.\n4.  **Confidence Intervals**: The natural logarithm of the price ratio `ln(P_t / P_0)` is assumed to be normally distributed. Its mean (M_ln) and standard deviation (Std_ln) over 18 days are calculated as:\n    -   M_ln = (\u03bc_daily - 0.5 * \u03c3_daily^2) * t = (0.000305 - 0.5 * 0.01891^2) * 18 \u2248 0.00227\n    -   Std_ln = \u03c3_daily * sqrt(t) = 0.01891 * sqrt(18) \u2248 0.08028\n    The confidence intervals are then derived by applying the corresponding Z-scores for each confidence level to M_ln \u00b1 Z * Std_ln, and then exponentiating the results (P_t = P_0 * exp(ln_bound)).\n\nZ-scores used:\n-   50% CI: Z = \u00b10.6745\n-   80% CI: Z = \u00b11.2816\n-   90% CI: Z = \u00b11.6449\n\nLimitations:\nStock market predictions are inherently uncertain. This model relies on historical volatility and an assumed drift, which may not hold true for future market conditions. Unexpected news, economic events, or company-specific developments (e.g., new aircraft orders, regulatory issues) can significantly impact the stock price and are not captured by this statistical model."
+  },
+  "raw_response": "```json\n{\n  \"point_estimate\": 231.71,\n  \"50_ci\": [\n    218.79,\n    243.84\n  ],\n  \"80_ci\": [\n    208.40,\n    255.97\n  ],\n  \"90_ci\": [\n    202.44,\n    263.50\n  ],\n  \"reasoning\": \"The prediction is based on a Geometric Brownian Motion model, commonly used for stock price forecasting. This model assumes that log returns are normally distributed and incorporates both a drift (expected return) and volatility (risk).\\n\\nInput Parameters:\\n- Current Price (S0): $230.44\\n- Time Horizon (t): 18 trading days\\n\\nAssumed Parameters:\\n- Annualized Volatility (\u03c3_annual): 30% (0.30). This is an estimate based on typical historical volatility for Boeing (BA), which can experience significant price swings.\\n- Annualized Drift (\u03bc_annual): 8% (0.08). This represents a long-term average expected market return, used for the point estimate and as the underlying drift in the model.\\n- Trading Days per Year: 252\\n\\nCalculations:\\n1.  **Daily Volatility (\u03c3_daily)**: \u03c3_annual / sqrt(252) = 0.30 / sqrt(252) \u2248 0.01891\\n2.  **Daily Drift (\u03bc_daily)**: (1 + \u03bc_annual)^(1/252) - 1 = (1 + 0.08)^(1/252) - 1 \u2248 0.000305\\n3.  **Point Estimate**: The projected price in 18 days is calculated as S0 * (1 + \u03bc_daily)^18 = 230.44 * (1.000305)^18 \u2248 $231.71.\\n4.  **Confidence Intervals**: The natural logarithm of the price ratio `ln(P_t / P_0)` is assumed to be normally distributed. Its mean (M_ln) and standard deviation (Std_ln) over 18 days are calculated as:\\n    -   M_ln = (\u03bc_daily - 0.5 * \u03c3_daily^2) * t = (0.000305 - 0.5 * 0.01891^2) * 18 \u2248 0.00227\\n    -   Std_ln = \u03c3_daily * sqrt(t) = 0.01891 * sqrt(18) \u2248 0.08028\\n    The confidence intervals are then derived by applying the corresponding Z-scores for each confidence level to M_ln \u00b1 Z * Std_ln, and then exponentiating the results (P_t = P_0 * exp(ln_bound)).\\n\\nZ-scores used:\\n-   50% CI: Z = \u00b10.6745\\n-   80% CI: Z = \u00b11.2816\\n-   90% CI: Z = \u00b11.6449\\n\\nLimitations:\\nStock market predictions are inherently uncertain. This model relies on historical volatility and an assumed drift, which may not hold true for future market conditions. Unexpected news, economic events, or company-specific developments (e.g., new aircraft orders, regulatory issues) can significantly impact the stock price and are not captured by this statistical model.\"\n}\n```",
+  "backtest": true
+}

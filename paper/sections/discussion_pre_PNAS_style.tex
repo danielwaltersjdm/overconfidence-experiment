@@ -1,0 +1,143 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Convergent Evidence for LLM Overconfidence}
+\label{sec:discussion-convergent}
+
+The most consistent finding across all three studies is that LLMs---particularly
+GPT-4---are substantially overconfident in their confidence intervals for quantitative
+forecasting. GPT-4's ECE ranges from 18.9\% (Study 3, favorable domain mix) to 43.7\%
+(Study 1, equity-only), with a cross-study mean exceeding 35\%. Even Claude, the
+best-calibrated model in every study, achieves only 19.7\% ECE in Study 1---far from
+the 0\% target. The pattern of overconfidence is robust to domain, horizon, and sample
+size, confirming that it is a systematic property of these models rather than an
+artifact of any single experimental design.
+
+These ECE values are comparable to the most severe human expert overconfidence
+documented in the literature. \citet{BenDavid2013} found that CFOs' 80\% confidence
+intervals for annual equity returns achieved only 36--38\% empirical coverage---roughly
+equivalent to our Study 1 Claude result (58\% at 80\%). GPT-4's Study 1 performance
+(31\% at the 80\% level) is dramatically worse, suggesting that some frontier LLMs may
+exhibit human-level or super-human overconfidence in certain forecasting contexts.
+
+\subsection{The Prediction Horizon Effect}
+\label{sec:discussion-horizon}
+
+Study 2 reveals a sharp divergence between models as the prediction horizon grows.
+Claude and GPT-4 both degrade substantially, consistent with the hypothesis that their
+CI widths are anchored to short-horizon volatility estimates and fail to scale
+appropriately with forecast uncertainty. This mirrors findings from the human
+overconfidence literature, where longer horizons are consistently associated with
+greater interval underestimation \citep{Griffin1992}.
+
+Gemini's behavior is more complex. Its near-perfect 1-day calibration (ECE = 1.8\%,
+hit@80 = 78.5\%) and recovery to excellent long-horizon calibration (ECE = 2.5\% at
+22 days) suggest that its CI widths implicitly scale with realized volatility in a way
+that happens to match empirical coverage at the extremes of the horizon range. Whether
+this reflects a genuine uncertainty representation or an accidental match between
+Gemini's CI scaling function and stock return volatility at these specific horizons
+is an open question that warrants longitudinal replication.
+
+\subsection{A Domain-Confidence Inversion}
+\label{sec:discussion-domain}
+
+The central finding of Study 3 is a systematic domain-confidence inversion: LLMs are
+most overconfident in financial domains (equities, commodities) where actual
+predictability is low, and most underconfident in speculative domains (cryptocurrency,
+forex) where they appear to apply large epistemic-humility priors. This pattern is
+inconsistent with a single domain-agnostic miscalibration mechanism and suggests
+models apply domain-level heuristics inherited from forecasting commentary in their
+training corpora.
+
+This finding parallels the human expert literature. \citet{Griffin1992} showed that
+perceived predictability often exceeds actual predictability in structured,
+information-rich domains. LLMs trained on large corpora of equity research and
+commodity analysis may exhibit the same pattern---asserting narrow intervals in domains
+where training data contains many precise price forecasts, without encoding the base
+rate of forecast failure.
+
+The commodity result is particularly striking: $\mu = 0.25$ uniformly across all three
+models. This uniformity suggests a shared domain prior in training data rather than a
+model-specific artifact. The crypto inversion (Claude $\mu = 14.4$) implies that models
+apply a ``crypto is unpredictable'' narrative that dramatically overstates typical
+24-hour volatility.
+
+\subsection{Model Differences}
+\label{sec:discussion-models}
+
+GPT-4 is consistently the most overconfident model across all three studies. Its Study
+1 ECE (43.7\%) is nearly double Claude's (19.7\%) in the same task, and its Study 2
+ECE at 22-day horizon (49.9\%) approaches the theoretical maximum for three-level
+calibration. Claude is the best-calibrated model in Study 3 (ECE = 5.3\%) and
+competitive with Gemini in Studies 1 and 2. Gemini occupies an intermediate position
+overall but is distinctive for its horizon robustness in Study 2.
+
+Claude's extreme underconfidence in cryptocurrency ($\mu = 14.4$) represents the
+largest positive outlier in the meta-knowledge analysis, indicating that even the
+best-calibrated model can exhibit severe directional miscalibration in specific domains.
+GPT-4's forex failure (ECE = 44.2\%) is the worst domain-model result in Study 3 and,
+as noted, reflects a compound failure of both point-estimate anchoring and CI width
+calibration that the MEAD/MAD ratio alone cannot fully capture.
+
+\subsection{Limitations and Future Directions}
+\label{sec:discussion-limitations}
+
+Several limitations constrain our conclusions. First, Studies 1 and 3 were each
+conducted on a single day, and Study 3's domain-specific results may partly reflect
+idiosyncratic market conditions on March 25, 2026. Study 2's backtest design mitigates
+this concern for equities but introduces potential look-ahead biases if models' training
+data extends to the backtest period. Second, statistical precision is limited in small
+Study 3 domains: $n = 10$ for commodities, $n = 8$ for forex. Third, NBA outcomes were
+excluded from Study 3 due to API resolution failures. Fourth, models were evaluated
+without chain-of-thought or explicit calibration prompting; whether such interventions
+produce genuine calibration improvement is an important open question.
+
+Future work should address these limitations by: (i) collecting predictions daily over
+extended periods to separate stable calibration properties from single-day volatility;
+(ii) extending the domain set to include earnings forecasts, macroeconomic indicators,
+and prediction market prices; (iii) evaluating calibration-specific prompting and
+post-hoc recalibration (conformal prediction, temperature scaling); and (iv) using
+larger $n$ within Study 3 domains to enable robust domain-level inference.
+
+
+% -----------------------------------------------------------------------
+% Conclusion — no separate section file exists; placed here for continuity
+% -----------------------------------------------------------------------
+\section{Conclusion}
+\label{sec:conclusion}
+
+We report three pre-registered studies examining whether frontier LLMs exhibit
+systematic overconfidence in quantitative interval estimates, and how miscalibration
+varies with prediction horizon and application domain. Across all three studies, all
+three models are substantially overconfident, with GPT-4 consistently the worst
+(cross-study ECE 19--44\%) and Claude the best. Study 2 reveals that Claude and GPT-4
+become increasingly miscalibrated as the prediction horizon grows from 1 to 22 days,
+while Gemini maintains near-target coverage at both short and long horizons. Study 3
+reveals a domain-confidence inversion: all models overstate certainty in commodity and
+equity markets while overstating uncertainty in cryptocurrency and forex, a pattern
+consistent with domain-specific miscalibration inherited from training corpora.
+
+These results have direct implications for practice. Users who elicit confidence
+intervals from LLMs for financial decision support should not assume that stated
+uncertainty reflects calibrated epistemic states. The pattern of miscalibration is most
+dangerous in precisely the domains (commodities, equities) and at precisely the horizons
+(multi-week) where overconfident forecasting carries the most severe consequences.
+Global calibration performance does not transfer across domains or horizons;
+domain-stratified and horizon-stratified evaluation is necessary to characterize
+model-specific calibration risk.
+
+More broadly, this study demonstrates that the domain-specificity and
+horizon-sensitivity of human overconfidence---developed over four decades of experimental
+research on human judges---apply with striking regularity to large language models. LLMs
+are not immune to the calibration failures of their training data; they may instead
+amplify and systematize them at scale.
+
+
+% -----------------------------------------------------------------------
+% Acknowledgements — no separate section file; placed here
+% -----------------------------------------------------------------------
+\section*{Acknowledgements}
+
+The authors thank the maintainers of the open data APIs used in this study:
+yfinance, CoinGecko, Open-Meteo, and ESPN. No external funding was received
+for this research. The authors declare no conflicts of interest.

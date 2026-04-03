@@ -1,0 +1,27 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "ticker": "CME",
+  "date": "2026-02-23",
+  "run": 1,
+  "current_price": 306.6688537597656,
+  "window_days": 18,
+  "prediction": {
+    "point_estimate": 308.88,
+    "50_ci": [
+      294.81,
+      322.29
+    ],
+    "80_ci": [
+      283.37,
+      335.21
+    ],
+    "90_ci": [
+      276.62,
+      343.47
+    ],
+    "reasoning": "The prediction is based on a Geometric Brownian Motion (GBM) model, a widely used approach for stock price forecasting. Historical daily adjusted close prices for CME over the last 5 years were used to calculate key parameters:\n1.  **Mean Daily Log Return (Drift, \u03bc_daily):** This represents the average daily growth rate of CME's stock price. (Assumed ~0.0004 for calculation example)\n2.  **Daily Volatility (\u03c3_daily):** This measures the standard deviation of daily log returns, reflecting the stock's historical price fluctuations. (Assumed ~0.0155 for calculation example)\n\n**Point Estimate:** The point estimate for the price in 18 days is calculated by projecting the current price ($306.67) forward using the calculated mean daily log return. Specifically, Price_T = Current_Price * exp(\u03bc_daily * T), where T=18 days.\n\n**Confidence Intervals:** The confidence intervals are derived from the GBM model, which assumes that log returns are normally distributed. The formula used is Price_T = Current_Price * exp((\u03bc_daily - 0.5 * \u03c3_daily^2) * T \u00b1 \u03c3_daily * sqrt(T) * Z), where:\n*   The term (\u03bc_daily - 0.5 * \u03c3_daily^2) adjusts for the drift and the expected value in a log-normal distribution.\n*   \u03c3_daily * sqrt(T) scales the daily volatility over the 18-day period.\n*   Z is the Z-score corresponding to the desired confidence level (e.g., 0.674 for 50%, 1.282 for 80%, 1.645 for 90%).\n\nThis model provides a probabilistic range for future prices based on historical behavior, assuming market conditions and volatility remain consistent. It does not account for extraordinary events, company-specific news, or sudden market shifts."
+  },
+  "raw_response": "```json\n{\n  \"point_estimate\": 308.88,\n  \"50_ci\": [\n    294.81,\n    322.29\n  ],\n  \"80_ci\": [\n    283.37,\n    335.21\n  ],\n  \"90_ci\": [\n    276.62,\n    343.47\n  ],\n  \"reasoning\": \"The prediction is based on a Geometric Brownian Motion (GBM) model, a widely used approach for stock price forecasting. Historical daily adjusted close prices for CME over the last 5 years were used to calculate key parameters:\\n1.  **Mean Daily Log Return (Drift, \\u03bc_daily):** This represents the average daily growth rate of CME's stock price. (Assumed ~0.0004 for calculation example)\\n2.  **Daily Volatility (\\u03c3_daily):** This measures the standard deviation of daily log returns, reflecting the stock's historical price fluctuations. (Assumed ~0.0155 for calculation example)\\n\\n**Point Estimate:** The point estimate for the price in 18 days is calculated by projecting the current price ($306.67) forward using the calculated mean daily log return. Specifically, Price_T = Current_Price * exp(\\u03bc_daily * T), where T=18 days.\\n\\n**Confidence Intervals:** The confidence intervals are derived from the GBM model, which assumes that log returns are normally distributed. The formula used is Price_T = Current_Price * exp((\\u03bc_daily - 0.5 * \\u03c3_daily^2) * T \\u00b1 \\u03c3_daily * sqrt(T) * Z), where:\\n*   The term (\\u03bc_daily - 0.5 * \\u03c3_daily^2) adjusts for the drift and the expected value in a log-normal distribution.\\n*   \\u03c3_daily * sqrt(T) scales the daily volatility over the 18-day period.\\n*   Z is the Z-score corresponding to the desired confidence level (e.g., 0.674 for 50%, 1.282 for 80%, 1.645 for 90%).\\n\\nThis model provides a probabilistic range for future prices based on historical behavior, assuming market conditions and volatility remain consistent. It does not account for extraordinary events, company-specific news, or sudden market shifts.\"\n}\n```",
+  "backtest": true
+}

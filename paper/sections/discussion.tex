@@ -1,0 +1,114 @@
+% ============================================================
+% General Discussion
+% ============================================================
+
+\section{General Discussion}
+
+The most consistent finding across all three studies is that frontier
+LLMs---particularly GPT-4---are substantially overconfident in their confidence
+intervals for quantitative forecasting. GPT-4's ECE ranged from 18.9\%
+(Study~3, favorable domain mix) to 43.7\% (Study~1, equity-only), with a
+cross-study mean exceeding 35\%. Even Claude, the best-calibrated model in
+every study, achieved only 19.7\% ECE in Study~1. This pattern of overconfidence
+was robust to domain, horizon, and sample size, confirming it as a systematic
+property of these models rather than an artifact of any single design.
+
+These ECE values are comparable to the most severe human expert overconfidence
+on record. \citet{BenDavid2013} found that CFOs' 80\% intervals for annual
+equity returns achieved only 36--38\% empirical coverage---roughly equivalent
+to our Study~1 Claude result (58\% at 80\%). GPT-4's Study~1 performance
+(31\% at the 80\% level) is dramatically worse, suggesting that some frontier
+LLMs may exhibit super-human overconfidence in certain forecasting contexts.
+
+\paragraph{The horizon effect} Study~2 reveals that prediction horizon
+strongly moderates miscalibration, with a divergent model-specific pattern.
+The degradation of Claude and GPT-4 is consistent with CI widths anchored
+to short-horizon volatility---a failure mode that mirrors human behavior
+at longer horizons \citep{Griffin1992}. Gemini's near-perfect calibration
+at both 1~day and 22~days suggests its CI widths scale approximately
+proportionally to realized volatility at these extremes, though the mechanism
+underlying this unusual profile is not yet understood.
+
+\paragraph{The domain-confidence inversion} Study~3's central finding---that
+all models overstate certainty in commodity and equity markets while
+overstating uncertainty in cryptocurrency and forex---is inconsistent with a
+single domain-agnostic miscalibration mechanism. The most plausible
+interpretation is that LLMs apply domain-level heuristics inherited from
+training corpora: equity research and commodity analysis provide many narrow
+price forecasts, encoding an implicit prior that these markets are predictable,
+while cryptocurrency and forex commentary may emphasize unpredictability.
+The uniform $\mu = 0.25$ on commodities across all three models supports
+a shared training-data origin rather than a model-specific artifact.
+
+\paragraph{Model differences} GPT-4 was consistently the most overconfident
+model. Its Study~1 ECE (43.7\%) is nearly double Claude's (19.7\%) in the
+same task, and its Study~2 ECE at 22~days (49.9\%) approaches the theoretical
+maximum for three-level calibration. Claude performed best in every study at
+the aggregate level but exhibits severe directional miscalibration in
+cryptocurrency ($\mu = 14.4$)---the largest positive outlier in the
+meta-knowledge analysis. This shows that even the best-calibrated model
+can be dramatically miscalibrated in specific domains. GPT-4's forex failure
+(ECE\,=\,44.2\%) is the worst domain-model result in Study~3 and reflects a
+compound failure of point-estimate anchoring and CI-width miscalibration that
+the MEAD/MAD ratio alone cannot fully capture; both metrics are required for
+complete diagnosis.
+
+\paragraph{Limitations} Several limitations constrain our conclusions.
+First, Studies~1 and~3 were each conducted on a single day, and Study~3's
+domain-specific results may partly reflect idiosyncratic market conditions
+on March~25, 2026. Study~2's backtest design mitigates this concern for
+equities but introduces potential look-ahead bias if models' training data
+extends to the backtest period. Second, statistical precision is limited in
+small Study~3 domains ($n = 5$ for commodities, $n = 5$ for crypto,
+$n = 8$ for forex). Third, the Claude model version differed between
+Studies~1--2 (claude-sonnet-4-20250514) and Study~3 (claude-sonnet-4-6);
+cross-study comparisons for Claude should be interpreted with this caveat.
+Fourth, NBA outcomes were excluded entirely from Study~3 due to ESPN API
+resolution failures. Fifth, models were evaluated without chain-of-thought
+or explicit calibration prompting; whether such interventions produce genuine
+calibration improvement is an important open question.
+
+\paragraph{Future directions} Future work should: (i)~collect predictions
+daily over extended periods to separate stable calibration properties from
+single-day conditions; (ii)~extend the domain set to include earnings
+forecasts, macroeconomic indicators, and prediction market prices;
+(iii)~evaluate calibration-specific prompting and post-hoc recalibration
+(conformal prediction, temperature scaling); and (iv)~use larger $n$ within
+Study~3 domains to enable robust domain-level inference.
+
+
+% -----------------------------------------------------------------------
+% Conclusion
+% -----------------------------------------------------------------------
+\section{Conclusion}
+
+We report three preregistered studies examining whether frontier LLMs exhibit
+systematic overconfidence in quantitative interval estimates, and how
+miscalibration varies with prediction horizon and domain. All three models
+were substantially overconfident across all three studies, with GPT-4
+consistently the worst (cross-study ECE 19--44\%) and Claude the best.
+Study~2 reveals that Claude and GPT-4 become increasingly miscalibrated as
+horizon grows from 1 to 22~days, while Gemini maintains near-target coverage
+at both ends of the tested range. Study~3 reveals a domain-confidence
+inversion: all models overstate certainty in commodity and equity markets
+while overstating uncertainty in cryptocurrency and forex---a pattern
+consistent with domain-specific miscalibration inherited from training corpora.
+
+These results have direct practical implications. Users who elicit confidence
+intervals from LLMs for financial decision support should not assume that
+stated uncertainty reflects calibrated epistemic states. The pattern of
+miscalibration is most severe in precisely the domains (commodities, equities)
+and at precisely the horizons (multi-week) where overconfident forecasting
+carries the most severe consequences. Global calibration benchmarks do not
+transfer across domains or horizons; domain-stratified and
+horizon-stratified evaluation is necessary to characterize model-specific
+calibration risk. More broadly, this study demonstrates that the
+domain-specificity and horizon-sensitivity of human overconfidence---developed
+over four decades of research on human judges---apply with striking regularity
+to large language models trained on those same human outputs.
+
+
+% -----------------------------------------------------------------------
+% Acknowledgements
+% -----------------------------------------------------------------------
+% Acknowledgements moved to main.tex \begin{acknowledgments} block (PNAS format)

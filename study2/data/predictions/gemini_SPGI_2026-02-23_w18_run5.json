@@ -1,0 +1,27 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "ticker": "SPGI",
+  "date": "2026-02-23",
+  "run": 5,
+  "current_price": 403.8412780761719,
+  "window_days": 18,
+  "prediction": {
+    "point_estimate": 406.16,
+    "50_ci": [
+      391.37,
+      420.58
+    ],
+    "80_ci": [
+      378.89,
+      434.42
+    ],
+    "90_ci": [
+      371.74,
+      442.82
+    ],
+    "reasoning": "The prediction is based on a Geometric Brownian Motion (GBM) model, a widely used stochastic model for stock prices. The current price of SPGI is $403.84.\n\n1.  **Assumed Parameters:** Since real-time historical data retrieval is not possible in this interaction, I've used typical market parameters for a large-cap stock like SPGI:\n    *   Annualized Mean Return (\u03bc_annual): 10% (0.10)\n    *   Annualized Volatility (\u03c3_annual): 20% (0.20)\n    (These values were chosen as reasonable estimates for SPGI, a stable company, over a long term.)\n\n2.  **Daily Parameters Conversion:** The annualized parameters were converted to daily figures assuming 252 trading days in a year:\n    *   Daily Mean Log Return (\u03bc_daily) = \u03bc_annual / 252 = 0.10 / 252 \u2248 0.0003968\n    *   Daily Volatility (\u03c3_daily) = \u03c3_annual / \u221a252 = 0.20 / \u221a252 \u2248 0.01260\n\n3.  **Adjusted Drift for Log-Normal Median:** For the log-normal distribution, the drift term for `ln(S_T)` is given by (\u03bc_daily - 0.5 * \u03c3_daily\u00b2). This adjusted mean corresponds to the median of the future price distribution. \n    *   Adjusted Daily Mean (\u03bc_adjusted_daily) = 0.0003968 - 0.5 * (0.01260)\u00b2 \u2248 0.00031742\n\n4.  **18-Day Parameters:** For an 18-day period (T=18):\n    *   Mean of `ln(S_T/S_0)` = \u03bc_adjusted_daily * T = 0.00031742 * 18 \u2248 0.00571356\n    *   Standard Deviation of `ln(S_T/S_0)` = \u03c3_daily * \u221aT = 0.01260 * \u221a18 \u2248 0.053457\n\n5.  **Point Estimate:** The point estimate is the median of the predicted log-normal price distribution:\n    *   S_T = S_0 * exp(\u03bc_adjusted_daily * T) = 403.84 * exp(0.00571356) \u2248 $406.16\n\n6.  **Confidence Intervals:** The confidence intervals are calculated using the properties of the log-normal distribution. The log of the future price, `ln(S_T)`, is normally distributed. The intervals are symmetric around the mean of `ln(S_T)` and then exponentiated back to price values:\n    *   `ln(S_T)` mean = `ln(S_0)` + (`\u03bc_adjusted_daily` * T) \u2248 6.00000 + 0.00571356 = 6.005714659\n    *   `ln(S_T)` standard deviation = `\u03c3_daily` * \u221aT \u2248 0.053457\n    *   Using the appropriate z-scores for each confidence level (0.674489 for 50%, 1.28155 for 80%, 1.64485 for 90%), the intervals are computed and then exponentiated to get the price ranges."
+  },
+  "raw_response": "```json\n{\n  \"point_estimate\": 406.16,\n  \"50_ci\": [\n    391.37,\n    420.58\n  ],\n  \"80_ci\": [\n    378.89,\n    434.42\n  ],\n  \"90_ci\": [\n    371.74,\n    442.82\n  ],\n  \"reasoning\": \"The prediction is based on a Geometric Brownian Motion (GBM) model, a widely used stochastic model for stock prices. The current price of SPGI is $403.84.\\n\\n1.  **Assumed Parameters:** Since real-time historical data retrieval is not possible in this interaction, I've used typical market parameters for a large-cap stock like SPGI:\\n    *   Annualized Mean Return (\\u03bc_annual): 10% (0.10)\\n    *   Annualized Volatility (\\u03c3_annual): 20% (0.20)\\n    (These values were chosen as reasonable estimates for SPGI, a stable company, over a long term.)\\n\\n2.  **Daily Parameters Conversion:** The annualized parameters were converted to daily figures assuming 252 trading days in a year:\\n    *   Daily Mean Log Return (\\u03bc_daily) = \\u03bc_annual / 252 = 0.10 / 252 \\u2248 0.0003968\\n    *   Daily Volatility (\\u03c3_daily) = \\u03c3_annual / \\u221a252 = 0.20 / \\u221a252 \\u2248 0.01260\\n\\n3.  **Adjusted Drift for Log-Normal Median:** For the log-normal distribution, the drift term for `ln(S_T)` is given by (\\u03bc_daily - 0.5 * \\u03c3_daily\\u00b2). This adjusted mean corresponds to the median of the future price distribution. \\n    *   Adjusted Daily Mean (\\u03bc_adjusted_daily) = 0.0003968 - 0.5 * (0.01260)\\u00b2 \\u2248 0.00031742\\n\\n4.  **18-Day Parameters:** For an 18-day period (T=18):\\n    *   Mean of `ln(S_T/S_0)` = \\u03bc_adjusted_daily * T = 0.00031742 * 18 \\u2248 0.00571356\\n    *   Standard Deviation of `ln(S_T/S_0)` = \\u03c3_daily * \\u221aT = 0.01260 * \\u221a18 \\u2248 0.053457\\n\\n5.  **Point Estimate:** The point estimate is the median of the predicted log-normal price distribution:\\n    *   S_T = S_0 * exp(\\u03bc_adjusted_daily * T) = 403.84 * exp(0.00571356) \\u2248 $406.16\\n\\n6.  **Confidence Intervals:** The confidence intervals are calculated using the properties of the log-normal distribution. The log of the future price, `ln(S_T)`, is normally distributed. The intervals are symmetric around the mean of `ln(S_T)` and then exponentiated back to price values:\\n    *   `ln(S_T)` mean = `ln(S_0)` + (`\\u03bc_adjusted_daily` * T) \\u2248 6.00000 + 0.00571356 = 6.005714659\\n    *   `ln(S_T)` standard deviation = `\\u03c3_daily` * \\u221aT \\u2248 0.053457\\n    *   Using the appropriate z-scores for each confidence level (0.674489 for 50%, 1.28155 for 80%, 1.64485 for 90%), the intervals are computed and then exponentiated to get the price ranges.\"\n}\n```",
+  "backtest": true
+}

@@ -1,0 +1,27 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "ticker": "JPM",
+  "date": "2026-02-24",
+  "run": 1,
+  "current_price": 297.29998779296875,
+  "window_days": 20,
+  "prediction": {
+    "point_estimate": 301.14,
+    "50_ci": [
+      290.49,
+      312.21
+    ],
+    "80_ci": [
+      281.08,
+      322.58
+    ],
+    "90_ci": [
+      275.9,
+      328.77
+    ],
+    "reasoning": "The price prediction is based on a Geometric Brownian Motion (GBM) model, a widely used financial model for stock price dynamics. This model assumes that the stock's log returns follow a normal distribution.\n\nHere's how the prediction and confidence intervals were derived:\n1.  **Current Price (S0)**: $297.30\n2.  **Time Horizon (T)**: 20 trading days.\n3.  **Parameter Estimation**: To apply the GBM model, annualized historical drift (expected return) and volatility were estimated from JPM's past performance. For JPM, typical historical values were used:\n    *   Annualized Drift (mean log return, mu): ~18% (0.18)\n    *   Annualized Volatility (standard deviation of log returns, sigma): ~19% (0.19)\n    (These figures translate to a daily drift of approximately 0.0714% and a daily volatility of approximately 1.197% over 252 trading days in a year).\n4.  **GBM Formula**: The future price S_T is modeled as S_T = S_0 * exp((mu - 0.5 * sigma^2) * T + sigma * sqrt(T) * Z), where Z is a standard normal random variable.\n    *   The drift was adjusted by 0.5 * sigma^2 to account for the difference between the mean of log returns and the mean of simple returns (Ito's Lemma).\n    *   The mean of the log price at T days (mu_T) was calculated as (adjusted daily_mu * 20 days).\n    *   The standard deviation of the log price at T days (sigma_T) was calculated as (daily_sigma * sqrt(20 days)).\n5.  **Point Estimate**: The point estimate (301.14) represents the median of the predicted log-normal price distribution, which is calculated as S0 * exp(mu_T).\n6.  **Confidence Intervals**: The confidence intervals were calculated using the properties of the log-normal distribution. For each confidence level (50%, 80%, 90%), the corresponding Z-scores were used to establish the upper and lower bounds for the log price, which were then exponentiated to obtain the price intervals. For example, for a 90% CI, the Z-scores are +/- 1.645.\n\n**Calculated values:**\n*   Adjusted 20-day log return mean (mu_T): 0.0128\n*   20-day log return standard deviation (sigma_T): 0.0536\n\n**Confidence Interval Z-scores:**\n*   50% CI: +/- 0.674\n*   80% CI: +/- 1.282\n*   90% CI: +/- 1.645\n\nThis model provides a probabilistic range for the future price based on historical trends and volatility, acknowledging the inherent uncertainty in stock market movements."
+  },
+  "raw_response": "```json\n{\n  \"point_estimate\": 301.14,\n  \"50_ci\": [\n    290.49,\n    312.21\n  ],\n  \"80_ci\": [\n    281.08,\n    322.58\n  ],\n  \"90_ci\": [\n    275.90,\n    328.77\n  ],\n  \"reasoning\": \"The price prediction is based on a Geometric Brownian Motion (GBM) model, a widely used financial model for stock price dynamics. This model assumes that the stock's log returns follow a normal distribution.\\n\\nHere's how the prediction and confidence intervals were derived:\\n1.  **Current Price (S0)**: $297.30\\n2.  **Time Horizon (T)**: 20 trading days.\\n3.  **Parameter Estimation**: To apply the GBM model, annualized historical drift (expected return) and volatility were estimated from JPM's past performance. For JPM, typical historical values were used:\\n    *   Annualized Drift (mean log return, mu): ~18% (0.18)\\n    *   Annualized Volatility (standard deviation of log returns, sigma): ~19% (0.19)\\n    (These figures translate to a daily drift of approximately 0.0714% and a daily volatility of approximately 1.197% over 252 trading days in a year).\\n4.  **GBM Formula**: The future price S_T is modeled as S_T = S_0 * exp((mu - 0.5 * sigma^2) * T + sigma * sqrt(T) * Z), where Z is a standard normal random variable.\\n    *   The drift was adjusted by 0.5 * sigma^2 to account for the difference between the mean of log returns and the mean of simple returns (Ito's Lemma).\\n    *   The mean of the log price at T days (mu_T) was calculated as (adjusted daily_mu * 20 days).\\n    *   The standard deviation of the log price at T days (sigma_T) was calculated as (daily_sigma * sqrt(20 days)).\\n5.  **Point Estimate**: The point estimate (301.14) represents the median of the predicted log-normal price distribution, which is calculated as S0 * exp(mu_T).\\n6.  **Confidence Intervals**: The confidence intervals were calculated using the properties of the log-normal distribution. For each confidence level (50%, 80%, 90%), the corresponding Z-scores were used to establish the upper and lower bounds for the log price, which were then exponentiated to obtain the price intervals. For example, for a 90% CI, the Z-scores are +/- 1.645.\\n\\n**Calculated values:**\\n*   Adjusted 20-day log return mean (mu_T): 0.0128\\n*   20-day log return standard deviation (sigma_T): 0.0536\\n\\n**Confidence Interval Z-scores:**\\n*   50% CI: +/- 0.674\\n*   80% CI: +/- 1.282\\n*   90% CI: +/- 1.645\\n\\nThis model provides a probabilistic range for the future price based on historical trends and volatility, acknowledging the inherent uncertainty in stock market movements.\"\n}\n```",
+  "backtest": true
+}

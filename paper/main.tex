@@ -1,0 +1,96 @@
+%% ============================================================
+%% main.tex — PNAS research article format
+%% Requires pnas-new.cls and pnas-new.bst (both in paper/)
+%% Compile: pdflatex main && bibtex main && pdflatex main && pdflatex main
+%% ============================================================
+
+\documentclass[9pt,twoside,lineno]{pnas-new}
+
+\templatetype{pnasresearcharticle}
+
+%% ---- Title --------------------------------------------------
+\title{Overconfidence in Confidence Interval Estimates Produced by
+       Frontier Large Language Models}
+
+%% ---- Authors ------------------------------------------------
+\author[a,1]{Author Placeholder}
+
+\affil[a]{Institution Placeholder}
+
+\leadauthor{Walters}
+
+%% ---- Significance statement ---------------------------------
+\significancestatement{%
+Large language models (LLMs) are increasingly deployed as
+decision-support tools, yet their capacity to express calibrated
+uncertainty has not been systematically evaluated. We queried three
+frontier LLMs across three studies covering equity markets (1 to 22-day
+horizons) and six heterogeneous domains. All models were substantially
+overconfident, with GPT-4 the most miscalibrated and Claude the least
+across all studies. Critically, miscalibration is not uniform: all
+models overstate certainty in commodity and equity markets while
+overstating uncertainty in cryptocurrency and forex---a domain-confidence
+inversion consistent with domain-specific priors inherited from training
+corpora. These findings show that global calibration benchmarks are
+insufficient; domain-stratified evaluation is necessary to characterize
+model-specific calibration risk in high-stakes applications.%
+}
+
+%% ---- Author declarations ------------------------------------
+\authordeclaration{The authors declare no competing interests.}
+\equalauthors{\textsuperscript{1}Correspondence:
+  author\texttt{@}institution.edu}
+\keywords{large language models | calibration | overconfidence |
+  interval estimation | forecasting}
+
+%% ---- Abstract -----------------------------------------------
+\begin{abstract}
+We document systematic miscalibration in confidence interval estimates
+produced by three frontier large language models (Claude, GPT-4, Gemini).
+In Study~1, all three models were substantially overconfident when
+predicting 1-day equity prices, with GPT-4 exhibiting the largest
+Expected Calibration Error (ECE\,=\,43.7\%) and Claude the smallest
+(ECE\,=\,19.7\%). In Study~2, using 100 equities across nine prediction
+horizons spanning 1--22 days ($N > 18{,}000$ scored predictions), Claude
+and GPT-4 became increasingly miscalibrated at longer horizons, whereas
+Gemini maintained near-target coverage at the longest horizon tested
+(ECE\,=\,2.5\% at 22~days). In Study~3, extending to six heterogeneous
+prediction domains, we found a systematic domain-confidence inversion:
+all models were overconfident in commodity markets
+($\mu = 0.25$ uniformly) but underconfident in cryptocurrency
+($\mu = 1.35$--$14.4$), while achieving near-target calibration on
+weather. Across all three studies, GPT-4 was the most overconfident
+model and Claude the most calibrated. These findings show that LLM
+miscalibration is domain- and horizon-structured rather than uniform,
+with direct implications for deploying LLMs in high-stakes decision
+support.
+\end{abstract}
+
+\additionalelement{}
+\dates{This manuscript was compiled on \today}
+\doi{10.1073/pnas.XXXXXXXXXX}
+\acknow{The authors thank the maintainers of the open data APIs used in this
+study: yfinance, CoinGecko, Open-Meteo, and ESPN. No external funding
+was received for this research.}
+
+%% ============================================================
+\begin{document}
+
+\maketitle
+\thispagestyle{firststyle}
+\ifthenelse{\boolean{shortarticle}}
+  {\ifthenelse{\boolean{singlecolumn}}
+    {\abscontentformatted}{\abscontent}}{}
+
+%% ---- Body sections -----------------------------------------
+\input{sections/introduction}
+\input{sections/study1}
+\input{sections/study2}
+\input{sections/study3}
+\input{sections/discussion}
+
+%% ---- Acknowledgements + Bibliography -----------------------
+\showacknow
+\bibliography{references}
+
+\end{document}

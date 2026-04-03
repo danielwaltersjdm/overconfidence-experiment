@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM Confidence Interval Index</title>
+  <meta name="description" content="A live public index tracking whether frontier AI models know what they don't know — measured by 90% confidence interval hit rates across stocks, crypto, forex, and weather." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <span class="site-title">LLM CI Index</span>
+  <nav>
+    <a href="./index.html" class="active">Index</a>
+    <a href="./about.html">About</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Do AI models know what they don't know?</h1>
+    <p>
+      Every weekday, three leading AI models each make 40 calibrated predictions
+      across stocks, crypto, forex, and weather. We score them against real outcomes
+      and publish the results here — live.
+    </p>
+  </div>
+
+  <!-- Status bar -->
+  <div class="data-status loading" id="data-status">
+    <div class="dot"></div>
+    <span class="status-text">Loading…</span>
+  </div>
+
+  <!-- Model headline cards (1-day horizon) -->
+  <div class="section-header">
+    <h2>Model Index — 30-day rolling 90% CI hit rate</h2>
+    <span style="font-size:0.85rem;color:var(--color-muted)">1-day horizon · target: 90%</span>
+  </div>
+  <div class="model-cards" id="model-cards">
+    <!-- populated by app.js -->
+    <div class="model-card claude">
+      <div class="model-name">Claude</div>
+      <div class="hit-rate" style="color:var(--color-muted)">—</div>
+      <div class="hit-rate-label">Loading…</div>
+    </div>
+    <div class="model-card gpt4o">
+      <div class="model-name">GPT-4o</div>
+      <div class="hit-rate" style="color:var(--color-muted)">—</div>
+      <div class="hit-rate-label">Loading…</div>
+    </div>
+    <div class="model-card gemini">
+      <div class="model-name">Gemini</div>
+      <div class="hit-rate" style="color:var(--color-muted)">—</div>
+      <div class="hit-rate-label">Loading…</div>
+    </div>
+  </div>
+
+  <!-- Horizon tabs + time-series chart -->
+  <div class="section-header">
+    <h2>Index over time</h2>
+    <div class="horizon-tabs" role="tablist">
+      <button class="horizon-tab active" data-horizon="1d" role="tab">1-Day</button>
+      <button class="horizon-tab"        data-horizon="1w" role="tab">1-Week</button>
+      <button class="horizon-tab"        data-horizon="1m" role="tab">1-Month</button>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Rolling 30-day 90% CI hit rate — all models</div>
+    <div class="chart-wrap" id="ts-chart-wrap" style="height:300px">
+      <canvas id="ts-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Domain breakdown -->
+  <div class="section-header">
+    <h2>Domain breakdown</h2>
+    <span style="font-size:0.85rem;color:var(--color-muted)">90% CI hit rate · 30-day rolling</span>
+  </div>
+  <div class="domain-table-wrap" id="domain-table-wrap">
+    <!-- populated by app.js -->
+  </div>
+
+  <!-- Plain-English explainer -->
+  <div class="explainer">
+    <h3>What does this mean?</h3>
+    <p>
+      When an AI model gives a <strong>90% confidence interval</strong>, it is claiming:
+      "I'm 90% sure the true value falls between these two numbers."
+      If it really were 90% sure, then across many predictions, the true outcome should land
+      inside the interval about 9 times out of 10.
+    </p>
+    <p>
+      The <strong>LLM CI Index</strong> measures exactly this. A hit rate near 90% means
+      well-calibrated confidence. A hit rate well below 90% means the model is
+      <strong>overconfident</strong> — its stated certainty exceeds its actual accuracy.
+    </p>
+    <ul>
+      <li><strong>Target line (90%)</strong> — perfect calibration</li>
+      <li><strong>Above 85%</strong> — well calibrated</li>
+      <li><strong>70–85%</strong> — slightly overconfident</li>
+      <li><strong>Below 70%</strong> — substantially overconfident</li>
+    </ul>
+    <p>
+      <a href="./about.html">Read more about the methodology →</a>
+    </p>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    Data updated automatically each weekday after US market close.
+    Part of an ongoing empirical research project on LLM calibration.
+    <a href="./about.html">About this study</a>
+  </p>
+</footer>
+
+<script src="./js/app.js"></script>
+</body>
+</html>

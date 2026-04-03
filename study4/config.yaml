@@ -1,0 +1,125 @@
+# Study 4 Configuration — Longitudinal LLM CI Tracking
+# IMPORTANT: Do not change model_id values mid-study without adding a
+# version_change entry below.
+
+study:
+  name: "Study 4 — Longitudinal LLM Confidence Interval Tracking"
+  start_date: null  # Set to ISO date when study begins, e.g. "2026-04-07"
+
+# ── Model configuration ────────────────────────────────────────────────────────
+# Pin exact API model version strings. Record any mid-study updates in
+# model_version_changes below.
+models:
+  - name: claude
+    api: anthropic
+    model_id: claude-sonnet-4-6
+
+  - name: gpt4o
+    api: openai
+    model_id: gpt-4o-2024-11-20
+
+  - name: gemini
+    api: google
+    model_id: gemini-2.5-flash
+
+# Append here when a model version changes mid-study.
+model_version_changes: []
+# Example:
+# - date: "2026-06-01"
+#   model_name: claude
+#   old_model_id: claude-sonnet-4-6
+#   new_model_id: claude-sonnet-4-7
+#   note: "Upgraded to next Sonnet release"
+
+# ── Prediction horizons ────────────────────────────────────────────────────────
+horizons:
+  - id: "1d"
+    days: 1
+    label: "1-Day"
+  - id: "1w"
+    days: 7
+    label: "1-Week"
+  - id: "1m"
+    days: 30
+    label: "1-Month"
+
+# Confidence interval levels collected on every prediction call
+ci_levels: [50, 80, 90]
+
+# Rolling window for the public index (days)
+rolling_window_days: 30
+
+# ── Weekend / holiday collection behaviour ────────────────────────────────────
+weekend_collection:
+  weather: true    # weather has no market hours; collect 7 days/week
+  financial: false # stocks, crypto, forex: skip on Sat/Sun
+
+# ── Domains and items ─────────────────────────────────────────────────────────
+
+domains:
+
+  stocks:
+    enabled: true
+    unit: USD
+    actuals_source: yfinance
+    items:
+      - {id: SPY,   label: "S&P 500 ETF",          yfinance_ticker: "SPY"}
+      - {id: AAPL,  label: "Apple Inc.",             yfinance_ticker: "AAPL"}
+      - {id: MSFT,  label: "Microsoft Corp.",        yfinance_ticker: "MSFT"}
+      - {id: GOOGL, label: "Alphabet Inc.",          yfinance_ticker: "GOOGL"}
+      - {id: NVDA,  label: "NVIDIA Corp.",           yfinance_ticker: "NVDA"}
+      - {id: AMZN,  label: "Amazon.com Inc.",        yfinance_ticker: "AMZN"}
+      - {id: META,  label: "Meta Platforms",         yfinance_ticker: "META"}
+      - {id: TSLA,  label: "Tesla Inc.",             yfinance_ticker: "TSLA"}
+      - {id: JPM,   label: "JPMorgan Chase",         yfinance_ticker: "JPM"}
+      - {id: BRK-B, label: "Berkshire Hathaway B",  yfinance_ticker: "BRK-B"}
+
+  crypto:
+    enabled: true
+    unit: USD
+    actuals_source: coingecko
+    items:
+      - {id: BTC,  label: "Bitcoin",   coingecko_id: bitcoin}
+      - {id: ETH,  label: "Ethereum",  coingecko_id: ethereum}
+      - {id: SOL,  label: "Solana",    coingecko_id: solana}
+      - {id: BNB,  label: "BNB",       coingecko_id: binancecoin}
+      - {id: XRP,  label: "XRP",       coingecko_id: ripple}
+      - {id: ADA,  label: "Cardano",   coingecko_id: cardano}
+      - {id: AVAX, label: "Avalanche", coingecko_id: avalanche-2}
+      - {id: DOGE, label: "Dogecoin",  coingecko_id: dogecoin}
+      - {id: DOT,  label: "Polkadot",  coingecko_id: polkadot}
+      - {id: LINK, label: "Chainlink", coingecko_id: chainlink}
+
+  forex:
+    enabled: true
+    unit: rate
+    actuals_source: yfinance
+    items:
+      - {id: "EUR/USD", label: "Euro / US Dollar",               yfinance_ticker: "EURUSD=X", safe_id: "EURUSD"}
+      - {id: "GBP/USD", label: "British Pound / US Dollar",      yfinance_ticker: "GBPUSD=X", safe_id: "GBPUSD"}
+      - {id: "USD/JPY", label: "US Dollar / Japanese Yen",       yfinance_ticker: "USDJPY=X", safe_id: "USDJPY"}
+      - {id: "AUD/USD", label: "Australian Dollar / US Dollar",  yfinance_ticker: "AUDUSD=X", safe_id: "AUDUSD"}
+      - {id: "USD/CAD", label: "US Dollar / Canadian Dollar",    yfinance_ticker: "USDCAD=X", safe_id: "USDCAD"}
+      - {id: "USD/CHF", label: "US Dollar / Swiss Franc",        yfinance_ticker: "USDCHF=X", safe_id: "USDCHF"}
+      - {id: "NZD/USD", label: "New Zealand Dollar / US Dollar", yfinance_ticker: "NZDUSD=X", safe_id: "NZDUSD"}
+      - {id: "USD/CNY", label: "US Dollar / Chinese Yuan",       yfinance_ticker: "USDCNY=X", safe_id: "USDCNY"}
+      - {id: "USD/MXN", label: "US Dollar / Mexican Peso",       yfinance_ticker: "USDMXN=X", safe_id: "USDMXN"}
+      - {id: "USD/SGD", label: "US Dollar / Singapore Dollar",   yfinance_ticker: "USDSGD=X", safe_id: "USDSGD"}
+
+  weather:
+    enabled: true
+    unit: "°F"
+    actuals_source: open_meteo
+    # Actuals = daily mean temperature (temperature_2m_mean) from Open-Meteo archive
+    # Reference value = prior day's mean (also from archive) so units are consistent
+    items:
+      - {id: "New York",  label: "New York, USA",       safe_id: "NewYork",   lat: 40.7128,  lon: -74.0060}
+      - {id: "London",    label: "London, UK",          safe_id: "London",    lat: 51.5074,  lon: -0.1278}
+      - {id: "Tokyo",     label: "Tokyo, Japan",        safe_id: "Tokyo",     lat: 35.6762,  lon: 139.6503}
+      - {id: "Sydney",    label: "Sydney, Australia",   safe_id: "Sydney",    lat: -33.8688, lon: 151.2093}
+      - {id: "Sao Paulo", label: "São Paulo, Brazil",   safe_id: "SaoPaulo",  lat: -23.5505, lon: -46.6333}
+      - {id: "Lagos",     label: "Lagos, Nigeria",      safe_id: "Lagos",     lat: 6.5244,   lon: 3.3792}
+      - {id: "Mumbai",    label: "Mumbai, India",       safe_id: "Mumbai",    lat: 19.0760,  lon: 72.8777}
+      - {id: "Toronto",   label: "Toronto, Canada",     safe_id: "Toronto",   lat: 43.6532,  lon: -79.3832}
+      - {id: "Dubai",     label: "Dubai, UAE",          safe_id: "Dubai",     lat: 25.2048,  lon: 55.2708}
+      - {id: "Berlin",    label: "Berlin, Germany",     safe_id: "Berlin",    lat: 52.5200,  lon: 13.4050}

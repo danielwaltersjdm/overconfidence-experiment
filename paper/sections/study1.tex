@@ -1,0 +1,88 @@
+% ============================================================
+% Study 1 — Baseline overconfidence in 1-day equity predictions
+% ============================================================
+
+\subsection*{Study 1}
+
+Study~1 established a baseline calibration estimate for three frontier LLMs
+producing confidence intervals for 1-day equity price predictions. We predicted
+that all models would be overconfident---stating intervals narrower than warranted
+by realized outcomes---and that the degree of miscalibration would differ
+systematically across models.
+
+\subsubsection*{Methods}
+
+Three commercially deployed LLMs were evaluated: Claude
+(claude-sonnet-4-20250514; Anthropic), GPT-4 (gpt-4o; OpenAI), and Gemini
+(gemini-2.5-flash; Google DeepMind). All models were queried via their public
+APIs at default temperature with a maximum of 512 output tokens per call.
+
+\paragraph{Stimuli and predictions} Twenty large-cap S\&P~500 equities
+were selected as prediction targets (AAPL, NVDA, MSFT, AMZN, GOOGL, META,
+AVGO, TSLA, BRK-B, WMT, LLY, JPM, XOM, V, JNJ, MU, MA, ORCL, COST, SPY).
+Each prompt provided the current closing price and prediction horizon as plain
+text, requesting a point estimate plus 50\%, 80\%, and 90\% confidence
+intervals as structured JSON. No chain-of-thought reasoning or calibration
+instructions were provided; models were evaluated in their default,
+deployment-ready configuration. Predictions were collected on March~23, 2026
+for outcomes on March~24, 2026. Each model made 5 independent runs per
+ticker, yielding 100 scored predictions per model.
+
+\paragraph{Calibration metrics} For each confidence level
+$\alpha \in \{0.50, 0.80, 0.90\}$, the empirical \textit{hit rate}
+$\hat{p}_\alpha$ is the proportion of predictions for which the true outcome
+fell within the stated interval $[L, U]$. A calibrated model achieves
+$\hat{p}_\alpha = \alpha$; values below indicate overconfidence. Expected
+Calibration Error (ECE) is the mean absolute deviation between stated and
+empirical coverage across all three levels:
+\begin{equation}
+  \label{eq:ece}
+  \text{ECE} = \frac{1}{3} \sum_{\alpha \in \{0.50,\,0.80,\,0.90\}}
+               \left| \alpha - \hat{p}_\alpha \right|.
+\end{equation}
+A perfectly calibrated model achieves ECE\,=\,0.
+
+\subsubsection*{Results}
+
+Table~\ref{tab:study1} summarizes calibration for all three models.
+
+\paragraph{Hit rates} All models were substantially overconfident at every
+confidence level. Claude was the least miscalibrated (Hit@80\,=\,58\%,
+Hit@90\,=\,73\%), but remained far below calibration targets. GPT-4's 80\%
+CI contained the true outcome only 31\% of the time, and its 90\% CI only
+38\%---implying interval widths roughly consistent with a 30\% confidence
+level. Gemini closely tracked Claude at the 80\% level but underperformed at
+90\% (65\%).
+
+\paragraph{ECE} GPT-4's overall ECE (43.7\%) was more than double Claude's
+(19.7\%) and more than triple the perfect-calibration target of 0\%.
+Gemini was intermediate (22.7\%).
+
+\begin{table}[ht]
+  \centering
+  \caption{Study~1: Calibration in 1-day equity predictions ($n = 100$ per model).
+    ECE = Expected Calibration Error; lower is better.}
+  \label{tab:study1}
+  \begin{tabular}{lcccc}
+    \toprule
+    Model   & Hit@50\% & Hit@80\% & Hit@90\% & ECE    \\
+    \midrule
+    Claude  & 30.0\%   & 58.0\%   & 73.0\%   & 19.7\% \\
+    Gemini  & 29.0\%   & 58.0\%   & 65.0\%   & 22.7\% \\
+    GPT-4   & 20.0\%   & 31.0\%   & 38.0\%   & 43.7\% \\
+    \midrule
+    Perfect & 50.0\%   & 80.0\%   & 90.0\%   & 0.0\%  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection*{Discussion}
+
+All three models produced systematically narrow confidence intervals for a
+simple, single-domain forecasting task. GPT-4's calibration (31\% coverage at
+the 80\% level) is comparable to the most severe human expert overconfidence
+on record: \citet{BenDavid2013} found that CFOs' 80\% intervals for annual
+equity returns achieved only 36--38\% coverage. These results confirm
+universal overconfidence in the simplest possible setting and establish the
+model ranking---Claude best, GPT-4 worst, Gemini intermediate---that will
+prove consistent across Studies~2 and~3 in the aggregate.

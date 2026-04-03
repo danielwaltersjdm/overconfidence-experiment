@@ -1,0 +1,178 @@
+% ============================================================
+% Study 3 — Calibration across six prediction domains
+% ============================================================
+
+\subsection*{Study 3}
+
+Studies~1 and~2 established overconfidence within a single domain (equities)
+and its moderation by horizon. Study~3 asked whether miscalibration is
+domain-general or structured by the type of quantity being predicted. Six
+heterogeneous domains---spanning financial markets, physical measurements,
+and sports outcomes---were included to test whether all models are uniformly
+overconfident or whether the direction and magnitude of miscalibration
+varies systematically with domain.
+
+\subsubsection*{Methods}
+
+The same prompt format and three confidence levels were used. Note that
+Study~3 employed a different Claude model version (claude-sonnet-4-6)
+than Studies~1 and~2 (claude-sonnet-4-20250514); GPT-4 (gpt-4o) and
+Gemini (gemini-2.5-flash) were identical across all studies (see
+Web Appendix for model version details). All predictions used a 24-hour
+horizon. Predictions were collected on March~25, 2026; outcomes were
+collected automatically on March~26, 2026. One prediction per item per
+model was collected.
+
+\paragraph{Domains and stimuli} Six domains were included: equities
+($n = 20$ large-cap tickers, same set as Study~1), commodity futures
+($n = 5$: gold, crude oil, silver, natural gas, copper), cryptocurrency
+($n = 10$ by market cap), foreign exchange ($n = 8$ major pairs), weather
+($n = 30$ major U.S.\ cities, next-day high temperature in~$^\circ$F), and
+NBA game totals ($n = 3$, subsequently excluded; see Web Appendix). Each
+domain prompt provided the current value as context and a question
+specifying the target quantity and date. Weather prompts additionally
+included the official meteorological forecast for the target day.\footnote{%
+  Weather prompts provided the Open-Meteo forecast high temperature for the
+  target date. Models produced CIs around (or independent of) this forecast.
+  Full prompt templates are in the Web Appendix.}
+CoinGecko rate limits caused five cryptocurrency outcomes to remain
+unresolved; these were excluded. The final scored dataset comprised
+$n = 68$ resolved predictions per model ($N = 204$ total).
+
+\paragraph{Calibration and meta-knowledge metrics} Hit rates and ECE were
+computed as in Studies~1 and~2. We additionally computed the Soll--Klayman
+meta-knowledge ratio $\mu = \text{MEAD}/\text{MAD}$ \citep{Soll2004},
+which quantifies whether stated uncertainty appropriately tracks actual
+forecast error. Treating 80\% CI endpoints as the 10th and 90th percentiles
+of a symmetric normal ($z = 1.2816$), the Absolute Deviation for prediction
+$i$ is:
+\begin{equation}
+  \label{eq:ad}
+  \text{AD}_i = \frac{|(L_i + U_i)/2 - y_i|}{\sigma},
+\end{equation}
+where $\sigma$ is the within-domain outcome standard deviation. The
+meta-knowledge ratio $\mu = \text{MEAD}/\text{MAD}$ is the ratio of
+CI-width-implied error (MEAD) to actual midpoint error (MAD) at the
+domain level; $\mu < 1$ indicates overconfidence, $\mu = 1$ is perfect,
+and $\mu > 1$ indicates underconfidence.
+
+\subsubsection*{Results}
+
+\paragraph{Overall calibration} Aggregating across all 68 resolved items,
+Claude was the best calibrated model (ECE\,=\,5.3\%), followed by Gemini
+(ECE\,=\,7.2\%) and GPT-4 (ECE\,=\,18.9\%; Table~\ref{tab:study3-overall}).
+Overall ECE values are lower than in Studies~1 and~2, driven by
+near-perfect calibration on weather---which accounted for 44\% of
+Study~3 observations.
+
+\begin{table}[ht]
+  \centering
+  \caption{Study~3: Overall calibration by model ($n = 68$ resolved
+    predictions per model).}
+  \label{tab:study3-overall}
+  \begin{tabular}{lcccc}
+    \toprule
+    Model   & Hit@50\% & Hit@80\% & Hit@90\% & ECE    \\
+    \midrule
+    Claude  & 58.8\%   & 82.4\%   & 85.3\%   & 5.3\%  \\
+    Gemini  & 45.6\%   & 73.5\%   & 79.4\%   & 7.2\%  \\
+    GPT-4   & 30.9\%   & 63.2\%   & 69.1\%   & 18.9\% \\
+    \midrule
+    Perfect & 50.0\%   & 80.0\%   & 90.0\%   & 0.0\%  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Domain effects} Table~\ref{tab:study3-domain} disaggregates
+calibration by domain. The central result is a systematic directional
+reversal: all models were overconfident in commodity and equity markets but
+underconfident in cryptocurrency and, to a lesser degree, forex. No model
+was uniformly overconfident or underconfident across all domains.
+Commodities showed the most extreme and uniform overconfidence (ECE\,=\,40\%
+for all three models; 80\% and 90\% CIs achieving only 40\% coverage).
+Crypto showed the opposite pattern: Claude and GPT-4 both achieved 100\%
+coverage at the 90\% level. GPT-4's forex calibration was dramatically worse
+than the other models (ECE\,=\,44.2\%).
+
+\begin{table}[ht]
+  \centering
+  \caption{Study~3: Hit rates and ECE by model and domain. $n$ = number
+    of resolved predictions. NBA excluded (see Web Appendix).
+    Commod.\ = commodity futures.}
+  \label{tab:study3-domain}
+  \begin{tabular}{llcccccc}
+    \toprule
+    Domain  & Model  & $n$ & H@50\% & H@80\% & H@90\% & ECE    \\
+    \midrule
+    Stocks  & Claude & 20  & 50\%  & 85\%  & 90\%  &  1.7\% \\
+            & Gemini & 20  & 25\%  & 70\%  & 75\%  & 16.7\% \\
+            & GPT-4  & 20  & 15\%  & 55\%  & 65\%  & 28.3\% \\
+    \addlinespace
+    Commod. & Claude &  5  & 20\%  & 40\%  & 40\%  & 40.0\% \\
+            & Gemini &  5  & 20\%  & 40\%  & 40\%  & 40.0\% \\
+            & GPT-4  &  5  & 20\%  & 40\%  & 40\%  & 40.0\% \\
+    \addlinespace
+    Crypto  & Claude &  5  & 80\%  & 100\% & 100\% & 20.0\% \\
+            & Gemini &  5  & 20\%  & 80\%  & 100\% & 13.3\% \\
+            & GPT-4  &  5  & 20\%  & 100\% & 100\% & 20.0\% \\
+    \addlinespace
+    Forex   & Claude &  8  & 38\%  &  75\% &  75\% & 10.8\% \\
+            & Gemini &  8  & 50\%  &  63\% &  75\% & 10.8\% \\
+            & GPT-4  &  8  & 25\%  &  25\% &  38\% & 44.2\% \\
+    \addlinespace
+    Weather & Claude & 30  & 73\%  &  87\% &  90\% & 10.0\% \\
+            & Gemini & 30  & 67\%  &  83\% &  87\% &  7.8\% \\
+            & GPT-4  & 30  & 47\%  &  77\% &  80\% &  5.5\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Meta-knowledge ratios} Table~\ref{tab:mead} presents the
+Soll--Klayman $\mu$ for each model-domain combination. All models show
+$\mu = 0.25$ on commodities---stated uncertainty is only one-quarter of
+what actual errors require, the most extreme overconfidence observed.
+At the other extreme, Claude's crypto $\mu = 14.4$ indicates CIs 14~times
+wider than necessary. GPT-4's high forex ECE (44.2\%) is not fully captured
+by its $\mu$ (1.29), because $\mu$ cannot distinguish misanchored point
+estimates from miscalibrated CI widths; the two metrics must be examined
+jointly to diagnose the full failure mode.
+
+\begin{table}[ht]
+  \centering
+  \caption{Study~3: Meta-knowledge ratio $\mu = \text{MEAD}/\text{MAD}$
+    by model and domain. $\mu < 1$ = overconfidence;
+    $\mu > 1$ = underconfidence.}
+  \label{tab:mead}
+  \begin{tabular}{lccc}
+    \toprule
+    Domain       & Claude & Gemini & GPT-4 \\
+    \midrule
+    Stocks       & 0.81   & 0.55   & 0.41  \\
+    Commodities  & 0.25   & 0.25   & 0.25  \\
+    Crypto       & 14.40  & 1.35   & 1.84  \\
+    Forex        & 2.68   & 1.67   & 1.29  \\
+    Weather      & 1.28   & 1.04   & 0.85  \\
+    \midrule
+    Overall      & 1.23   & 0.99   & 0.81  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection*{Discussion}
+
+The domain-confidence inversion is the central finding of Study~3: LLMs are
+most overconfident in structured financial markets where actual predictability
+is low, and most underconfident in speculative markets where they appear to
+apply large epistemic-humility priors. This parallels findings from the human
+expert literature---\citet{Griffin1992} showed that perceived predictability
+often exceeds actual predictability in information-rich, structured
+domains---and suggests that LLMs may inherit domain-specific miscalibration
+from training corpora dense in equity research and commodity price forecasts.
+The uniform $\mu = 0.25$ across all three models on commodities is
+particularly striking: this uniformity points to a shared domain prior in
+training data rather than a model-specific artifact. The crypto inversion
+(Claude $\mu = 14.4$) implies that models apply a ``cryptocurrency is
+unpredictable'' narrative that dramatically overstates typical 24-hour
+crypto volatility. The Study~3 aggregate model ranking replicates Studies~1
+and~2 (Claude best, GPT-4 worst), but aggregate comparisons obscure the
+domain-crossing inversions that are the study's primary contribution.

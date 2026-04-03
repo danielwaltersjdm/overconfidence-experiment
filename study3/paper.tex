@@ -1,0 +1,330 @@
+%% PNAS-style LaTeX manuscript
+%% Compile on Overleaf (pnas-new class) or locally with:
+%%   pdflatex paper.tex && bibtex paper && pdflatex paper.tex && pdflatex paper.tex
+%%
+%% If pnas-new.cls is unavailable, replace the \documentclass line with:
+%%   \documentclass[10pt,twocolumn]{article}
+%%   and remove \maketitle — see fallback block near the top.
+
+\documentclass[9pt,twoside,lineno]{pnas-new}
+
+%% ---- Journal/submission metadata ----------------------------------------
+\templatetype{pnasresearcharticle}
+
+\title{Overconfidence in Interval Estimates Produced by Large Language Models Across Multiple Forecasting Domains}
+
+\author[a,1]{[Author Names Redacted for Review]}
+
+\affil[a]{[Institution Redacted for Review]}
+
+\leadauthor{[Lead Author]}
+
+\significancestatement{
+Large language models (LLMs) are increasingly used as decision-support tools, yet their capacity to express calibrated uncertainty is poorly understood. We administered a standardised interval-estimation task to three frontier LLMs---Claude, GPT-4, and Gemini---across six real-world forecasting domains (stocks, commodities, cryptocurrency, foreign exchange, weather, and NBA scores), scoring predictions against outcomes collected the following day. All models showed domain-dependent miscalibration: severe overconfidence in commodity and equity markets, and systematic underconfidence in foreign exchange and cryptocurrency. The Soll and Klayman meta-knowledge ratio revealed that models allocate uncertainty inversely to actual volatility, concentrating excessive confidence precisely where predictability is lowest.
+}
+
+\authordeclaration{The authors declare no competing interests.}
+\equalauthors{\textsuperscript{1}Correspondence: [email redacted]}
+\keywords{large language models | calibration | overconfidence | interval estimation | forecasting}
+
+\begin{abstract}
+Calibrated uncertainty is a prerequisite for rational decision-making, yet human experts systematically produce confidence intervals that are too narrow---a phenomenon termed \textit{overconfidence in interval estimates}. Whether frontier large language models (LLMs) exhibit analogous miscalibration, and whether miscalibration varies systematically by domain, remains an open empirical question. We conducted a pre-registered, multi-domain interval-estimation study in which three commercially deployed LLMs (Claude~\textit{claude-sonnet-4-6}, GPT-4 \textit{gpt-4o}, and Gemini \textit{gemini-2.5-flash}) each provided point estimates and 50\%, 80\%, and 90\% confidence intervals for 76 quantitative questions spanning six domains: equities, commodities, cryptocurrency, foreign exchange, weather, and NBA game scores. Ground-truth outcomes were obtained automatically the following day via public APIs ($n = 68$ resolved predictions per model). We scored calibration via hit rates and Expected Calibration Error (ECE), point-estimate accuracy via normalised Brier scores, and meta-knowledge via the \citet{soll2004} MEAD/MAD ratio ($\mu$), which measures whether a forecaster's stated uncertainty tracks their actual error. Results show substantial, domain-dependent miscalibration. GPT-4 was most overconfident overall (ECE = 18.9\%), Claude best calibrated (ECE = 5.3\%), and Gemini intermediate (ECE = 7.2\%). The MEAD/MAD analysis revealed a domain--confidence inversion: all models were overconfident in commodity and equity markets ($\mu < 1$) yet underconfident in cryptocurrency and foreign exchange ($\mu > 1$), mirroring known patterns in human expert overconfidence and suggesting that LLMs inherit domain-specific miscalibration from their training corpora.
+\end{abstract}
+
+\dates{This manuscript was compiled on \today}
+\doi{10.1073/pnas.XXXXXXXXXX}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{firststyle}
+\ifthenelse{\boolean{shortarticle}}{\ifthenelse{\boolean{singlecolumn}}{\abscontentformatted}{\abscontent}}{}
+
+%% ======================================================================
+\section*{Introduction}
+%% ======================================================================
+
+A well-calibrated forecaster states 80\% confidence intervals that contain the true outcome 80\% of the time. Decades of research on human judgment document systematic failure to achieve this standard: people's confidence intervals are too narrow, a phenomenon consistently described as \textit{overconfidence in interval estimates} \citep{lichtenstein1982, alpert1982, klayman1999, soll2004}. The practical consequences are severe---overconfident interval estimates underlie miscalibrated risk assessments in medicine \citep{christensen2004}, finance \citep{ben-david2013}, engineering \citep{flyvbjerg2002}, and strategic planning \citep{lovallo2003}.
+
+Large language models (LLMs) are now routinely used as decision-support tools in precisely these high-stakes domains, yet surprisingly little is known about whether their probabilistic forecasts are calibrated \citep{kadavath2022, xiong2024, openai2024}. Prior work has focused on factual question-answering confidence \citep{kadavath2022, lin2022}, binary classification \citep{xiong2024}, or abstractly sampled trivia items \citep{yang2023}. Virtually no study has examined LLM calibration on \textit{interval estimates} for real-world quantitative forecasting---the format most relevant to practical decision support---across multiple domains simultaneously.
+
+This gap matters for two reasons. First, the human overconfidence literature has consistently shown that miscalibration is domain-specific: experts are most overconfident in their own fields of ostensible competence \citep{klayman1999, soll2004, christensen-szalanski1991}. If LLMs inherit domain structure from their training data, they may replicate---or amplify---these asymmetries. Second, the direction of miscalibration may differ across domains: while overconfidence dominates in structured, rule-governed domains (finance, engineering), underconfidence has been documented in highly volatile or noisy domains where humans invoke epistemic humility \citep{griffin1992}. Whether LLMs exhibit the same directional asymmetry is unknown.
+
+We addressed these questions with a controlled, multi-domain interval-estimation experiment. Three frontier LLMs were prompted daily to provide point estimates and 50\%, 80\%, and 90\% confidence intervals for 76 quantitative forecasting questions spanning six domains: equity prices, commodity futures, cryptocurrency, foreign exchange rates, next-day high temperatures at 30 US cities, and NBA game scores. Predictions were scored against ground-truth outcomes obtained automatically the following day. We applied both standard calibration metrics and the \citet{soll2004} meta-knowledge decomposition---the MEAD/MAD ratio ($\mu$)---which separately quantifies whether a forecaster's stated uncertainty is appropriate relative to their actual forecast errors, standardised by domain-level criterion variance.
+
+Our pre-registered hypotheses were: (H1) all models would exhibit net overconfidence across domains; (H2) overconfidence would be most pronounced in equity and commodity markets, where LLM training data is abundant but future outcomes are unpredictable; and (H3) GPT-4, as the model with the most assertive response style in prior evaluations, would show the greatest miscalibration.
+
+%% ======================================================================
+\section*{Methods}
+%% ======================================================================
+
+\subsection*{Experimental Design}
+
+We employed a within-subjects design in which three LLMs each responded to an identical set of 76 questions on a single experimental day (March 25, 2026), yielding 228 total predictions. Each question was answered independently, without access to prior responses or feedback. Outcomes were collected the following day (March 26, 2026), providing a 24-hour forecasting window.
+
+The 76 questions were distributed across six domains: equities ($n=20$ S\&P~500 large-cap tickers), commodity futures ($n=5$: gold, crude oil, silver, natural gas, copper), cryptocurrency ($n=10$ coins by market capitalisation), foreign exchange ($n=8$ major pairs), weather ($n=30$ US cities, next-day high temperature in \textdegree F), and NBA game scores ($n=3$ scheduled March~25 matchups). Each domain was designed to sample meaningfully different time-series processes: mean-reverting with fat tails (equities), trend-following with supply shocks (commodities), high-volatility speculative (crypto), near-random-walk (forex), bounded with seasonal structure (weather), and binary-outcome discrete (NBA).
+
+\subsection*{Models}
+
+Three commercially deployed LLMs were evaluated:
+\begin{itemize}
+  \item \textbf{Claude} (\texttt{claude-sonnet-4-6}; Anthropic)
+  \item \textbf{GPT-4} (\texttt{gpt-4o}; OpenAI)
+  \item \textbf{Gemini} (\texttt{gemini-2.5-flash}; Google DeepMind)
+\end{itemize}
+All models were queried via their respective public APIs with temperature at default settings and a maximum of 512 output tokens.
+
+\subsection*{Prompt Structure}
+
+Each question was formatted using a standardised prompt template:
+
+\begin{quote}
+\small\ttfamily
+Today is \{date\}. \{domain-specific context with current value\}. \\
+Please predict \{target quantity\} in 1 day. \\
+Give me three confidence intervals: \\
+50\% confidence interval: [low, high] \\
+80\% confidence interval: [low, high] \\
+90\% confidence interval: [low, high] \\
+Respond ONLY in JSON: \{"point\_estimate": float, "50\_ci": [float, float], ...\}
+\end{quote}
+
+Domain-specific context included the current price/value, asset name, and relevant context (e.g., city and current temperature for weather). No chain-of-thought or explicit calibration instructions were provided; models were evaluated in their default, deployment-ready configuration.
+
+\subsection*{Ground Truth Collection}
+
+Actual outcomes were retrieved automatically the following day via domain-specific APIs: \texttt{yfinance} for equities, commodities, and forex; CoinGecko API for cryptocurrency; Open-Meteo historical weather API for temperatures; and the ESPN unofficial scoreboard API for NBA. A 6-day tolerance window was used for yfinance to handle market closures. CoinGecko rate limits caused five cryptocurrency outcomes to remain unresolved; NBA games from March~25 did not achieve ``completed'' status in the ESPN API and were excluded. The final scored dataset comprised $n = 68$ resolved predictions per model (total $N = 204$).
+
+\subsection*{Calibration Metrics}
+
+\paragraph{Hit rate.} For each confidence level $\alpha \in \{0.50, 0.80, 0.90\}$, the empirical hit rate is the proportion of predictions for which the true outcome $y$ fell within the stated interval $[\ell_\alpha, u_\alpha]$:
+\begin{equation}
+  \hat{p}_\alpha = \frac{1}{n}\sum_{i=1}^{n} \mathbf{1}[\ell_{\alpha,i} \le y_i \le u_{\alpha,i}].
+\end{equation}
+A calibrated model achieves $\hat{p}_\alpha = \alpha$; $\hat{p}_\alpha < \alpha$ indicates overconfidence.
+
+\paragraph{Expected Calibration Error (ECE).} We report the mean absolute deviation between stated and empirical coverage across all three confidence levels:
+\begin{equation}
+  \text{ECE} = \frac{1}{3}\sum_{\alpha \in \{0.5, 0.8, 0.9\}} |\alpha - \hat{p}_\alpha|.
+\end{equation}
+
+\paragraph{Normalised Brier Score.} Point-estimate accuracy was quantified as the normalised squared error relative to a reference value $r_i$ (the current-day value):
+\begin{equation}
+  B_i = \left(\frac{\hat{y}_i - y_i}{r_i}\right)^2,
+\end{equation}
+where $\hat{y}_i$ is the model's point estimate. We report the domain-level mean $\overline{B}$.
+
+\subsection*{Meta-Knowledge: The MEAD/MAD Ratio}
+
+We applied the meta-knowledge framework of \citet{soll2004}, which decomposes interval-estimation accuracy into the model's actual forecast error and its implied estimate of that error. For each prediction $i$ using the 80\% confidence interval (with endpoints treated as the 10th and 90th percentiles of a symmetric normal distribution):
+
+\paragraph{Absolute Deviation (AD).} The absolute error of the interval midpoint relative to the true value:
+\begin{equation}
+  \text{AD}_i = \left|\frac{(\ell_{0.8,i} + u_{0.8,i})}{2} - y_i\right|.
+\end{equation}
+
+\paragraph{Mean Absolute Deviation (MAD).} Domain-level mean of ADs, standardised by the within-domain standard deviation of outcomes $\sigma_{\text{domain}}$:
+\begin{equation}
+  \text{MAD} = \frac{1}{n}\sum_i \frac{\text{AD}_i}{\sigma_{\text{domain}}}.
+\end{equation}
+
+\paragraph{Expected Absolute Deviation (EAD).} Given that the 80\% interval endpoints correspond to $z = \pm 1.2816$ under a normal model, the expected absolute deviation from the mean of that distribution is:
+\begin{equation}
+  \text{EAD}_i = \frac{(u_{0.8,i} - \ell_{0.8,i})}{2 \times 1.2816} \cdot \sqrt{\frac{2}{\pi}},
+\end{equation}
+also standardised by $\sigma_{\text{domain}}$.
+
+\paragraph{Mean EAD (MEAD).} Domain-level mean of EADs.
+
+\paragraph{Meta-knowledge ratio.}
+\begin{equation}
+  \mu = \frac{\text{MEAD}}{\text{MAD}}.
+  \label{eq:mu}
+\end{equation}
+$\mu < 1$ indicates overconfidence (the model's implied uncertainty is smaller than its actual errors); $\mu = 1$ indicates calibrated meta-knowledge; $\mu > 1$ indicates underconfidence. We compute $\mu$ for each model--domain combination and report overall $\mu$ as the mean across domains.
+
+%% ======================================================================
+\section*{Results}
+%% ======================================================================
+
+\subsection*{Overall Calibration}
+
+Table~\ref{tab:overall} summarises hit rates and ECE across all resolved predictions ($n = 68$ per model). Claude exhibited the best overall calibration (ECE = 5.3\%), followed by Gemini (7.2\%) and GPT-4 (18.9\%). At the 50\% confidence level, GPT-4's hit rate (30.9\%) was only 62\% of the stated confidence---a striking underperformance. At the 90\% level, all three models fell below the target, with GPT-4 achieving only 69.1\% coverage. The ordering is consistent across all three confidence levels.
+
+\begin{table}[h]
+\centering
+\caption{Overall calibration metrics ($n = 68$ per model). ECE = Expected Calibration Error; lower is better.}
+\label{tab:overall}
+\begin{tabular}{lrrrrr}
+\hline
+\textbf{Model} & \textbf{\textit{N}} & \textbf{Hit@50\%} & \textbf{Hit@80\%} & \textbf{Hit@90\%} & \textbf{ECE} \\
+\hline
+Claude & 68 & 58.8\% & 82.4\% & 85.3\% & 5.3\% \\
+Gemini & 68 & 45.6\% & 73.5\% & 79.4\% & 7.2\% \\
+GPT-4 & 68 & 30.9\% & 63.2\% & 69.1\% & 18.9\% \\
+\hline
+\multicolumn{2}{l}{\textit{Perfect calibration}} & 50.0\% & 80.0\% & 90.0\% & 0.0\% \\
+\hline
+\end{tabular}
+\end{table}
+
+Notably, Claude's 50\% hit rate (58.8\%) \textit{exceeded} the stated confidence, indicating slight underconfidence at that level, while its 90\% hit rate (85.3\%) fell slightly short. This inverted pattern at different confidence levels---overconfident at high stated certainty, underconfident at moderate certainty---was not observed for GPT-4 or Gemini, which showed uniformly low coverage across all levels.
+
+\subsection*{Domain-Specific Calibration}
+
+Table~\ref{tab:domain} presents hit rates and ECE broken down by domain. The most striking result is the domain heterogeneity: no model is uniformly overconfident or underconfident across all domains.
+
+\begin{table}[h]
+\centering
+\caption{Hit rates and ECE by model and domain. Bolded ECE values indicate ECE $\geq$ 0.25 (severe miscalibration).}
+\label{tab:domain}
+\begin{tabular}{llrrrrr}
+\hline
+\textbf{Domain} & \textbf{Model} & \textbf{\textit{N}} & \textbf{Hit@50\%} & \textbf{Hit@80\%} & \textbf{Hit@90\%} & \textbf{ECE} \\
+\hline
+\multirow{3}{*}{Stocks} & Claude & 40 & 50.0\% & 85.0\% & 90.0\% & 1.7\% \\
+                         & Gemini & 40 & 25.0\% & 70.0\% & 75.0\% & 16.7\% \\
+                         & GPT-4  & 40 & 15.0\% & 55.0\% & 65.0\% & \textbf{28.3\%} \\
+\hline
+\multirow{3}{*}{Commodities} & Claude & 10 & 20.0\% & 40.0\% & 40.0\% & \textbf{40.0\%} \\
+                              & Gemini & 10 & 20.0\% & 40.0\% & 40.0\% & \textbf{40.0\%} \\
+                              & GPT-4  & 10 & 20.0\% & 40.0\% & 40.0\% & \textbf{40.0\%} \\
+\hline
+\multirow{3}{*}{Crypto} & Claude & 20 & 80.0\% & 100.0\% & 100.0\% & 20.0\% \\
+                         & Gemini & 20 & 20.0\% & 80.0\% & 100.0\% & 13.3\% \\
+                         & GPT-4  & 20 & 20.0\% & 100.0\% & 100.0\% & 20.0\% \\
+\hline
+\multirow{3}{*}{Forex} & Claude & 16 & 37.5\% & 75.0\% & 75.0\% & 10.8\% \\
+                        & Gemini & 16 & 50.0\% & 62.5\% & 75.0\% & 10.8\% \\
+                        & GPT-4  & 16 & 25.0\% & 25.0\% & 37.5\% & \textbf{44.2\%} \\
+\hline
+\multirow{3}{*}{Weather} & Claude & 60 & 73.3\% & 86.7\% & 90.0\% & 10.0\% \\
+                          & Gemini & 60 & 66.7\% & 83.3\% & 86.7\% & 7.8\% \\
+                          & GPT-4  & 60 & 46.7\% & 76.7\% & 80.0\% & 5.5\% \\
+\hline
+NBA & All & 13 & \multicolumn{4}{c}{\textit{No resolved outcomes}} \\
+\hline
+\end{tabular}
+\end{table}
+
+\paragraph{Commodities.} All three models performed identically and severely: 20\% hit rate on 50\% intervals and 40\% on both 80\% and 90\% intervals (ECE = 40\% for all). This represents the most extreme and uniform overconfidence observed, with models apparently anchoring CI width to typical daily percentage moves ($\pm$1--2\%) while actual commodity futures exhibited larger-than-expected swings on the measurement day.
+
+\paragraph{Stocks.} Claude achieved near-perfect calibration (ECE = 1.7\%), with hit rates of exactly 50\%, 85\%, and 90\% matching stated confidence levels closely. Gemini and GPT-4 were substantially overconfident, with GPT-4's 50\% interval achieving only 15\% coverage.
+
+\paragraph{Cryptocurrency.} The direction of miscalibration inverted relative to commodities. Claude's 80\% and 90\% intervals achieved 100\% coverage (underconfident), as did GPT-4's. Gemini showed more internally consistent behaviour, with 80\% coverage at the 80\% level. The inversion suggests that at least some models apply heuristic domain-specific scaling---significantly widening crypto CIs relative to the model's uncertainty about the point estimate.
+
+\paragraph{Forex.} GPT-4 showed extreme overconfidence (ECE = 44.2\%): its 80\% interval achieved only 25\% coverage, and its 90\% interval only 37.5\%. Claude and Gemini showed moderate overconfidence (ECE $\approx$ 11\%).
+
+\paragraph{Weather.} This was the best-calibrated domain overall. All three models achieved coverage close to the stated levels, with Claude and Gemini slightly underconfident at the 50\% level (73\% and 67\% hit rates). This likely reflects the availability of high-quality public weather forecasting data in LLM training corpora, as well as the bounded, seasonally predictable nature of temperature outcomes.
+
+\subsection*{Point-Estimate Accuracy (Normalised Brier Score)}
+
+Table~\ref{tab:brier} reports domain-level normalised Brier scores. Point-estimate accuracy was broadly comparable across models within domain, suggesting that the models' errors are driven by similar domain-level factors (volatility, predictability) rather than model-specific biases. Cryptocurrency had the highest Brier scores (mean $\approx$ 0.001--0.002), reflecting high day-to-day volatility. Forex had the lowest (mean $\approx 2\times10^{-5}$), consistent with the narrow daily ranges of major currency pairs.
+
+\begin{table}[h]
+\centering
+\caption{Mean normalised Brier scores by domain. Lower = better point estimate accuracy.}
+\label{tab:brier}
+\begin{tabular}{lrrr}
+\hline
+\textbf{Domain} & \textbf{Claude} & \textbf{Gemini} & \textbf{GPT-4} \\
+\hline
+Stocks      & 0.000679 & 0.000526 & 0.000645 \\
+Commodities & 0.001270 & 0.001168 & 0.001129 \\
+Crypto      & 0.001130 & 0.000795 & 0.001740 \\
+Forex       & 0.000018 & 0.000018 & 0.000016 \\
+Weather     & 0.002105 & 0.002095 & 0.002095 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection*{Meta-Knowledge: MEAD/MAD Ratio ($\mu$)}
+
+Table~\ref{tab:mu} presents the Soll--Klayman meta-knowledge ratio. The results reveal a systematic domain--confidence inversion inconsistent with uniform overconfidence.
+
+\begin{table}[h]
+\centering
+\caption{Meta-knowledge ratio $\mu = \text{MEAD}/\text{MAD}$ by model and domain. $\mu < 1$ = overconfident (CIs too narrow); $\mu = 1$ = calibrated; $\mu > 1$ = underconfident (CIs too wide).}
+\label{tab:mu}
+\begin{tabular}{lrrr}
+\hline
+\textbf{Domain} & \textbf{Claude} & \textbf{Gemini} & \textbf{GPT-4} \\
+\hline
+Stocks      & 0.81 & 0.55 & 0.41 \\
+Commodities & 0.25 & 0.25 & 0.25 \\
+Crypto      & 14.4 & 1.35 & 1.84 \\
+Forex       & 2.68 & 1.67 & 1.29 \\
+Weather     & 1.28 & 1.04 & 0.85 \\
+\hline
+\textbf{Overall} & \textbf{1.23} & \textbf{0.99} & \textbf{0.81} \\
+\hline
+\end{tabular}
+\end{table}
+
+Overall, GPT-4 is the most overconfident ($\mu = 0.81$), Claude is slightly underconfident ($\mu = 1.23$), and Gemini is near-perfectly calibrated in aggregate ($\mu = 0.99$). However, the aggregate values obscure dramatic domain-level variation.
+
+\paragraph{Commodities: universal severe overconfidence.} All three models show $\mu \approx 0.25$---their stated uncertainty is only one-quarter of what their actual forecast errors require. Commodity prices are driven by supply shocks, geopolitical events, and inventory data, none of which can be anticipated from the static context provided in the prompt. The models' narrow CIs suggest they treat commodity prices as though they evolve as smoothly as equity indexes.
+
+\paragraph{Stocks: overconfident, with model differentiation.} $\mu$ ranges from 0.41 (GPT-4) to 0.81 (Claude). The finding that Claude's stock calibration is substantially better than GPT-4's and Gemini's is consistent with its superior hit rates in Table~\ref{tab:domain}.
+
+\paragraph{Cryptocurrency: all models underconfident.} Claude's $\mu = 14.4$ is the most extreme finding in the study: the model's stated uncertainty (CI width) is 14 times larger than needed to accommodate actual forecast errors. This is not a calibration failure in the conventional overconfidence direction---rather, it suggests the model applies a large, domain-category-level volatility prior (``crypto is unpredictable'') that far exceeds the actual day-to-day moves observed in the measurement window. GPT-4 ($\mu = 1.84$) and Gemini ($\mu = 1.35$) are also underconfident but less dramatically so.
+
+\paragraph{Forex: systematic underconfidence.} Major currency pairs moved by fractions of a percent in the 24-hour window; all models set CIs wider than needed ($\mu > 1$ for all). GPT-4, which is severely overconfident on forex via hit rates (ECE = 44.2\%), shows $\mu = 1.29$ because its CI midpoints (point estimates) were also badly misplaced---its intervals were simultaneously too narrow for their stated confidence \textit{and} anchored far from the actual value, producing a compound failure invisible in $\mu$ alone but revealed in ECE.
+
+\paragraph{Weather: near calibration.} $\mu$ ranges from 0.85 to 1.28, with Gemini closest to 1.0. This is the only domain where all three models are within the plausibly well-calibrated range.
+
+%% ======================================================================
+\section*{Discussion}
+%% ======================================================================
+
+\subsection*{Summary of Findings}
+
+This study provides the first systematic evidence on LLM calibration for interval estimates across multiple real-world forecasting domains, using ground-truth outcomes collected automatically the following day. Three findings emerge clearly.
+
+First, \textbf{miscalibration is domain-specific and directionally inconsistent}. Rather than uniform overconfidence, models are overconfident in structured financial markets (equities, commodities) and underconfident in speculative or high-volatility markets (cryptocurrency) and foreign exchange. This pattern is inconsistent with a single domain-agnostic miscalibration mechanism and suggests that models apply domain-level heuristics about volatility that may be approximately correct in magnitude but poorly tuned to actual predictability.
+
+Second, \textbf{GPT-4 is the most overconfident, Claude the most nuanced}. GPT-4's ECE (18.9\%) is more than three times Claude's (5.3\%), and its $\mu = 0.81$ places it firmly in the overconfident range. Claude achieves near-perfect stock calibration ($\mu = 0.81$, ECE = 1.7\%) but massively over-hedges on cryptocurrency ($\mu = 14.4$), suggesting model-specific differences in how domain uncertainty is represented.
+
+Third, \textbf{the MEAD/MAD decomposition reveals failures invisible to hit-rate analysis}. The forex domain is instructive: GPT-4's ECE (44.2\%) signals a serious miscalibration, but this emerges from a compound failure---poorly anchored point estimates combined with CIs that are narrow relative to actual movement. The meta-knowledge ratio ($\mu$) separates interval width from midpoint accuracy in a way that ECE and hit rates alone cannot.
+
+\subsection*{Relation to the Human Overconfidence Literature}
+
+The domain--confidence inversion observed here echoes findings in the human expert literature. \citet{klayman1999} showed that overconfidence in interval estimates is not a uniform trait but depends on task structure and domain familiarity. \citet{griffin1992} demonstrated that perceived predictability often exceeds actual predictability in structured domains. LLMs trained on large corpora of financial commentary may inherit the same biases as expert market analysts---confidence in precise price targets for familiar assets, combined with excessive uncertainty about less-reported volatility regimes.
+
+The commodity result is particularly evocative of \citet{ben-david2013}'s finding that CFOs systematically underestimate stock market volatility, and of \citet{flyvbjerg2002}'s documentation of reference-class neglect in infrastructure forecasting. Models apparently treat commodities as predictable because their training data contains many precise price forecasts for gold and oil---without representing the base rate of forecast failure.
+
+\subsection*{Limitations}
+
+Several limitations constrain the generalisability of these findings.
+
+\paragraph{Sample size.} With $n = 10$ per model in the commodity domain, statistical precision is limited; the commodity results, while striking, should be replicated over a longer time series.
+
+\paragraph{Single measurement day.} All predictions were collected on March 25, 2026 and scored against March 26 actuals. Domain-specific results may reflect idiosyncratic market conditions on that day rather than stable model properties. A longitudinal design---collecting predictions daily over weeks---is necessary to assess whether these patterns are robust.
+
+\paragraph{NBA exclusion.} Three scheduled NBA games from the prediction date did not resolve in the ESPN API, precluding analysis of a sports-forecasting domain that would have been of substantial interest. Future work should use a more reliable scoring API or extend the scoring window.
+
+\paragraph{No prompt calibration.} Models were evaluated without chain-of-thought instructions, explicit calibration prompting, or few-shot demonstrations of calibrated intervals. It is possible that the observed miscalibration is sensitive to prompt design. Whether calibration instructions produce genuine calibration improvement or merely surface-level compliance is an important open question.
+
+\paragraph{Single forecasting horizon.} The 24-hour window is appropriate for several domains (weather, crypto) but may be suboptimal for equities, where single-day moves have high noise relative to directional signal. Longer horizons may produce different calibration profiles.
+
+\subsection*{Implications}
+
+These results have practical implications for the deployment of LLMs in decision-support contexts. Users who elicit probability estimates or confidence intervals from LLMs should not assume that stated uncertainty reflects calibrated epistemic states. The pattern of domain-specific miscalibration is particularly concerning because it is not random---it systematically under-reports uncertainty in the domains (financial markets, commodities) where overconfident forecasting has the most severe practical consequences.
+
+From a model-design perspective, our results suggest that calibration training (e.g., RLHF from forecasting feedback, conformal prediction wrappers) should be domain-stratified. A model that is globally well-calibrated on trivia questions may still be severely overconfident on commodity price forecasts.
+
+%% ======================================================================
+\section*{Conclusion}
+%% ======================================================================
+
+We conducted a multi-domain interval-estimation experiment in which three frontier LLMs provided 50\%, 80\%, and 90\% confidence intervals for 76 quantitative forecasting questions, scored against ground-truth outcomes the following day. Our results reveal that LLM calibration is neither uniformly good nor uniformly poor, but \textit{domain-dependent}: all models overstate certainty in commodity and equity markets while overstating uncertainty in cryptocurrency and foreign exchange. The MEAD/MAD meta-knowledge ratio---borrowed from the human overconfidence literature---reveals that models allocate uncertainty in approximate inverse proportion to actual domain volatility, a pattern consistent with the hypothesis that LLMs inherit miscalibration from the statistical properties of financial commentary in their training corpora. GPT-4 shows the greatest overall overconfidence; Claude the best stock-market calibration; Gemini the most aggregate calibration but the highest domain variance. These results suggest that deploying LLMs as probabilistic forecasting tools requires domain-specific calibration evaluation and, likely, domain-specific recalibration.
+
+%% ======================================================================
+\begin{acknowledgments}
+We thank the providers of freely accessible APIs used in this study: yfinance (stocks, forex, commodities), CoinGecko (cryptocurrency), Open-Meteo (weather), and ESPN (NBA scores).
+\end{acknowledgments}
+
+%% ======================================================================
+\bibliography{references}
+
+\end{document}

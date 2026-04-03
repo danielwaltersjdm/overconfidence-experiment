@@ -1,0 +1,87 @@
+% ============================================================
+% Study 2 — Calibration across prediction horizons
+% ============================================================
+
+\subsection*{Study 2}
+
+Study~1 established overconfidence at a single, short horizon. Study~2 asked
+whether stated confidence intervals---which must widen to maintain coverage
+as forecast uncertainty grows---actually scale with prediction horizon.
+Using a backtesting design with 100 large-cap equities and nine horizons spanning
+1 to 22 trading days, we tested whether miscalibration grows, shrinks, or
+diverges across models as the horizon extends.
+
+\subsubsection*{Methods}
+
+The same three models were evaluated using the same prompt format and
+structured JSON output as Study~1. Study~2 used a backtesting design in which
+predictions were made against historical prices using date-blinded prompts
+(current price and horizon provided; calendar date withheld) to prevent
+models from conditioning on known future events.
+
+\paragraph{Design} One hundred large-cap S\&P~500 equities were selected.
+Predictions were collected at nine horizons: 1, 2, 3, 6, 7, 18, 20, 21, and
+22 calendar days. Five independent predictions per ticker per model were
+collected at each horizon, using a reference date of March~24, 2026.
+Market closures were handled by applying a $\pm$6-calendar-day tolerance
+window when matching predictions to realized prices. After excluding
+unresolved predictions, the design yielded between 157 and 1,495 scored
+predictions per model-horizon cell ($N > 18{,}000$ total).
+
+\paragraph{Calibration metrics} Hit rates and ECE were computed as in
+Study~1, aggregated within each model-horizon cell.
+
+\subsubsection*{Results}
+
+Table~\ref{tab:study2} reports 80\% hit rates and ECE at four representative
+horizons; complete results for all nine horizons are in the Web Appendix.
+
+\paragraph{Horizon degradation: Claude and GPT-4} Both models exhibited
+marked degradation with increasing horizon. Claude's Hit@80 fell from
+80.5\% at 1~day to 46.2\% at 18~days (ECE rising from 1.4\% to 29.8\%),
+consistent with CI widths anchored to short-horizon volatility that fail
+to scale with realized uncertainty at longer windows. GPT-4---already
+poorly calibrated at 1~day (ECE\,=\,21.8\%)---deteriorated further, reaching
+Hit@80\,=\,27.2\% and ECE\,=\,47.4\% at 18~days. By 22~days, GPT-4's ECE
+(49.9\%) approached the theoretical maximum for three-level calibration.
+
+\paragraph{Horizon robustness: Gemini} Gemini exhibited a qualitatively
+different pattern. Its 1-day calibration (ECE\,=\,1.8\%, Hit@80\,=\,78.5\%) was
+the best of any model at any single horizon in the study. While it degraded
+at intermediate horizons (ECE\,=\,16.6\% at 18~days), it recovered strongly
+at 22~days (Hit@80\,=\,80.1\%, ECE\,=\,2.5\%)---near-perfect calibration at the
+longest horizon tested.
+
+\begin{table}[ht]
+  \centering
+  \caption{Study~2: Hit@80 and ECE by model and prediction horizon
+    (selected horizons; full table in Web Appendix).}
+  \label{tab:study2}
+  \begin{tabular}{lcccccc}
+    \toprule
+    & \multicolumn{2}{c}{Claude}
+    & \multicolumn{2}{c}{Gemini}
+    & \multicolumn{2}{c}{GPT-4} \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Horizon & H@80   & ECE    & H@80   & ECE    & H@80   & ECE    \\
+    \midrule
+    1d  & 80.5\% & 1.4\%  & 78.5\% & 1.8\%  & 55.2\% & 21.8\% \\
+    6d  & 56.0\% & 20.6\% & 71.7\% & 8.4\%  & 34.5\% & 41.6\% \\
+    18d & 46.2\% & 29.8\% & 59.8\% & 16.6\% & 27.2\% & 47.4\% \\
+    22d & 51.2\% & 26.9\% & 80.1\% & 2.5\%  & 24.4\% & 49.9\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection*{Discussion}
+
+Prediction horizon strongly moderated miscalibration in a model-specific
+pattern. The degradation of Claude and GPT-4 mirrors the human tendency
+toward greater interval underestimation at longer horizons \citep{Griffin1992},
+consistent with CI widths anchored to short-run volatility. Gemini's
+recovery at 22~days is more surprising: its CI widths appear to scale
+approximately proportionally to realized volatility at the extremes of the
+tested range but not at intermediate horizons. Whether this reflects a genuine
+uncertainty representation or an incidental match with equity return
+volatility at these specific windows requires replication at additional
+horizons and across different historical periods.

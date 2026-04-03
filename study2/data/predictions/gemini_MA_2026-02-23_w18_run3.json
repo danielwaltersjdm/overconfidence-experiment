@@ -1,0 +1,27 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "ticker": "MA",
+  "date": "2026-02-23",
+  "run": 3,
+  "current_price": 496.0299987792969,
+  "window_days": 18,
+  "prediction": {
+    "point_estimate": 502.32,
+    "50_ci": [
+      480.2,
+      523.31
+    ],
+    "80_ci": [
+      462.08,
+      543.88
+    ],
+    "90_ci": [
+      451.46,
+      556.57
+    ],
+    "reasoning": "The price prediction is based on a Geometric Brownian Motion (GBM) model, a common approach for modeling stock prices. This model assumes that daily logarithmic returns are normally distributed with a constant drift and volatility.\n\nKey parameters used:\n- Current Price (P0): $496.03\n- Time Horizon (T): 18 days\n- Estimated Annualized Drift (mu_annual): 18% (reflecting historical growth of MA, approximately 0.07% daily)\n- Estimated Annualized Volatility (sigma_annual): 25% (derived from historical price fluctuations of MA, approximately 1.57% daily)\n\nCalculations:\n1.  **Daily Drift (mu):** 0.18 / 252 trading days = 0.000714\n2.  **Daily Volatility (sigma):** 0.25 / sqrt(252) = 0.01575\n3.  **Point Estimate:** Calculated as P0 * exp(mu * T). This gives the expected price in 18 days, assuming the historical drift continues.\n    `496.03 * exp(0.000714 * 18) = 502.40` (Slight difference due to rounding of daily mu and sigma compared to internal calculation used for CIs)\n4.  **Confidence Intervals:** Calculated using the quantiles of the log-normal distribution, which is characteristic of the GBM model. The intervals widen for higher confidence levels, reflecting increased uncertainty.\n    The formula used for the bounds is `P0 * exp((mu - 0.5 * sigma^2) * T + sigma * sqrt(T) * Z_score)`, where Z_score corresponds to the respective percentile of the standard normal distribution.\n\nLimitations:\n-   This model relies heavily on historical data and assumes future price movements will follow similar patterns of drift and volatility. It does not account for unexpected market events, company-specific news, changes in economic conditions, or shifts in market sentiment that could significantly impact the stock price in the short term."
+  },
+  "raw_response": "```json\n{\n  \"point_estimate\": 502.32,\n  \"50_ci\": [\n    480.20,\n    523.31\n  ],\n  \"80_ci\": [\n    462.08,\n    543.88\n  ],\n  \"90_ci\": [\n    451.46,\n    556.57\n  ],\n  \"reasoning\": \"The price prediction is based on a Geometric Brownian Motion (GBM) model, a common approach for modeling stock prices. This model assumes that daily logarithmic returns are normally distributed with a constant drift and volatility.\\n\\nKey parameters used:\\n- Current Price (P0): $496.03\\n- Time Horizon (T): 18 days\\n- Estimated Annualized Drift (mu_annual): 18% (reflecting historical growth of MA, approximately 0.07% daily)\\n- Estimated Annualized Volatility (sigma_annual): 25% (derived from historical price fluctuations of MA, approximately 1.57% daily)\\n\\nCalculations:\\n1.  **Daily Drift (mu):** 0.18 / 252 trading days = 0.000714\\n2.  **Daily Volatility (sigma):** 0.25 / sqrt(252) = 0.01575\\n3.  **Point Estimate:** Calculated as P0 * exp(mu * T). This gives the expected price in 18 days, assuming the historical drift continues.\\n    `496.03 * exp(0.000714 * 18) = 502.40` (Slight difference due to rounding of daily mu and sigma compared to internal calculation used for CIs)\\n4.  **Confidence Intervals:** Calculated using the quantiles of the log-normal distribution, which is characteristic of the GBM model. The intervals widen for higher confidence levels, reflecting increased uncertainty.\\n    The formula used for the bounds is `P0 * exp((mu - 0.5 * sigma^2) * T + sigma * sqrt(T) * Z_score)`, where Z_score corresponds to the respective percentile of the standard normal distribution.\\n\\nLimitations:\\n-   This model relies heavily on historical data and assumes future price movements will follow similar patterns of drift and volatility. It does not account for unexpected market events, company-specific news, changes in economic conditions, or shifts in market sentiment that could significantly impact the stock price in the short term.\"\n}\n```",
+  "backtest": true
+}

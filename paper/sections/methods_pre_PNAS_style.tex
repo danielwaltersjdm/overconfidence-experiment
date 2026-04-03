@@ -1,0 +1,87 @@
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Common Design Elements}
+\label{sec:methods-common}
+
+Three commercially deployed LLMs were evaluated across all studies: Claude
+(claude-sonnet-4-20250514; Anthropic), GPT-4 (gpt-4o; OpenAI), and Gemini
+(gemini-2.5-flash; Google DeepMind). All models were queried via their public APIs
+at default temperature with a maximum of 512 output tokens per response.
+
+Each prompt provided the current value of the target quantity and requested a point
+estimate plus 50\%, 80\%, and 90\% confidence intervals as structured JSON output,
+with a specified target horizon. No chain-of-thought or explicit calibration
+instructions were given; models were evaluated in their default,
+deployment-ready configuration. Three confidence levels (50\%, 80\%, 90\%) were
+used in all studies. Calibration was measured via Expected Calibration Error (ECE),
+defined as the mean absolute deviation between stated and empirical coverage
+across all three levels (see Section~\ref{sec:methods-metrics}).
+
+\subsection{Study 1: Equities, Single Horizon}
+\label{sec:methods-study1}
+
+Study 1 (March 23, 2026) employed 20 large-cap S\&P 500 equities (AAPL, NVDA,
+MSFT, AMZN, GOOGL, META, AVGO, TSLA, BRK-B, WMT, LLY, JPM, XOM, V, JNJ, MU,
+MA, ORCL, COST, SPY) with a 1-day prediction horizon (outcomes collected March
+24, 2026). Each model made 5 independent predictions per ticker, yielding 100
+scored predictions per model. This study establishes a baseline calibration
+estimate under the simplest possible conditions: a single, well-defined domain
+and the shortest practical horizon.
+
+\subsection{Study 2: Equities, Multi-Horizon}
+\label{sec:methods-study2}
+
+Study 2 expanded to 100 large-cap equities across nine prediction horizons (1,
+2, 3, 6, 7, 18, 20, 21, and 22 days), with a reference date of March 24, 2026
+and predictions made against historical prices via backtesting. Five independent
+runs per ticker per model were collected at each horizon. After excluding
+unresolved predictions due to market closures (applied tolerance window of 6
+calendar days), the study yielded between 157 and 1,497 scored predictions per
+model-horizon cell (total $N > 18{,}000$). This design allows direct measurement
+of how confidence interval miscalibration scales with the prediction horizon.
+
+\subsection{Study 3: Multi-Domain, Single Horizon}
+\label{sec:methods-study3}
+
+Study 3 (March 25, 2026) extended prediction to six heterogeneous domains:
+equities ($n = 20$ large-cap tickers), commodity futures ($n = 5$: gold, crude oil,
+silver, natural gas, copper), cryptocurrency ($n = 10$ by market cap), foreign
+exchange ($n = 8$ major pairs), weather ($n = 30$ U.S.\ cities, next-day high
+temperature), and NBA game totals ($n = 3$). All predictions used a 24-hour
+horizon. Outcomes were collected automatically March 26, 2026. CoinGecko rate
+limits caused five cryptocurrency outcomes to remain unresolved; NBA games did
+not achieve completed status in the ESPN API and were excluded. The final scored
+dataset comprised $n = 68$ resolved predictions per model ($N = 204$ total).
+
+\subsection{Calibration Metrics}
+\label{sec:methods-metrics}
+
+\textbf{Hit rate.} For each confidence level $\alpha \in \{0.50, 0.80, 0.90\}$,
+the empirical hit rate is the proportion of predictions for which the true outcome
+fell within the stated interval $[L, U]$. A calibrated model achieves a hit rate
+equal to the stated confidence; values below indicate overconfidence, values above
+indicate underconfidence.
+
+\textbf{Expected Calibration Error (ECE)} is the mean absolute deviation between
+stated and empirical coverage across all three confidence levels:
+\begin{equation}
+  \label{eq:ece}
+  \text{ECE} = \frac{1}{3} \sum_{\alpha} \left| \alpha - \hat{p}_\alpha \right|,
+  \quad \alpha \in \{0.50, 0.80, 0.90\}.
+\end{equation}
+
+\textbf{Meta-knowledge ratio (Study 3 only).} We apply the MEAD/MAD framework of
+\citet{Soll2004}. The 80\% CI endpoints are treated as the 10th and 90th percentiles
+of a symmetric normal ($z = 1.2816$). The Absolute Deviation (AD) is the midpoint
+error of the 80\% CI relative to the true outcome, standardized by within-domain
+outcome standard deviation $\sigma$:
+\begin{equation}
+  \label{eq:ad}
+  \text{AD}_i = \frac{|(L_i + U_i)/2 - y_i|}{\sigma}.
+\end{equation}
+
+The Expected Absolute Deviation (EAD) is the CI-width-implied error standardized
+by $\sigma$, and the meta-knowledge ratio $\mu = \text{MEAD}/\text{MAD}$ is the
+ratio of their domain means. $\mu < 1$ indicates overconfidence; $\mu > 1$
+indicates underconfidence.

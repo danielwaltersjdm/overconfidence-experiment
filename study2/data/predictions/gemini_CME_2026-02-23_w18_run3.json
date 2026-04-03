@@ -1,0 +1,27 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "ticker": "CME",
+  "date": "2026-02-23",
+  "run": 3,
+  "current_price": 306.6688537597656,
+  "window_days": 18,
+  "prediction": {
+    "point_estimate": 308.43,
+    "50_ci": [
+      295.96,
+      320.39
+    ],
+    "80_ci": [
+      285.53,
+      332.0
+    ],
+    "90_ci": [
+      279.6,
+      339.14
+    ],
+    "reasoning": "The prediction is based on a Geometric Brownian Motion (GBM) model, commonly used for stock price forecasting over short to medium terms. The current price of CME is $306.67. The time horizon is 18 days, which translates to approximately 0.0714 years (assuming 252 trading days per year).\n\nKey assumptions for the GBM model are:\n-   **Annualized Drift (mu):** An annualized drift of 8% was assumed. This represents a long-term average growth rate for a stable, large-cap company like CME.\n-   **Annualized Volatility (sigma):** An annualized volatility of 22% was assumed, which is a typical range for a large-cap stock, reflecting potential price fluctuations.\n\n**Point Estimate Calculation:**\nThe point estimate is calculated as the expected future price, `S_t = S_0 * exp(mu * t)`.\n`S_t = 306.67 * exp(0.08 * (18/252)) = 306.67 * exp(0.005714) = 308.43`.\n\n**Confidence Interval Calculations:**\nThe confidence intervals are derived from the log-normal distribution of prices under GBM. The natural logarithm of the future price, `ln(S_t)`, is assumed to be normally distributed. The mean of `ln(S_t)` is `ln(S_0) + (mu - 0.5 * sigma^2) * t`, and its standard deviation is `sigma * sqrt(t)`.\n\n-   `ln(S_0) = ln(306.67) = 5.7259`\n-   `Adjusted drift = mu - 0.5 * sigma^2 = 0.08 - 0.5 * (0.22^2) = 0.0558`\n-   `Mean of ln(S_t) = 5.7259 + 0.0558 * (18/252) = 5.7259 + 0.00398 = 5.72988`\n-   `Standard Deviation of ln(S_t) = sigma * sqrt(t) = 0.22 * sqrt(18/252) = 0.0588`\n\nUsing Z-scores for the respective confidence levels (0.6745 for 50%, 1.2816 for 80%, 1.6449 for 90%), the intervals are calculated symmetrically around the mean of the log-prices and then exponentiated to get the price ranges."
+  },
+  "raw_response": "```json\n{\n  \"point_estimate\": 308.43,\n  \"50_ci\": [\n    295.96,\n    320.39\n  ],\n  \"80_ci\": [\n    285.53,\n    332.00\n  ],\n  \"90_ci\": [\n    279.60,\n    339.14\n  ],\n  \"reasoning\": \"The prediction is based on a Geometric Brownian Motion (GBM) model, commonly used for stock price forecasting over short to medium terms. The current price of CME is $306.67. The time horizon is 18 days, which translates to approximately 0.0714 years (assuming 252 trading days per year).\\n\\nKey assumptions for the GBM model are:\\n-   **Annualized Drift (mu):** An annualized drift of 8% was assumed. This represents a long-term average growth rate for a stable, large-cap company like CME.\\n-   **Annualized Volatility (sigma):** An annualized volatility of 22% was assumed, which is a typical range for a large-cap stock, reflecting potential price fluctuations.\\n\\n**Point Estimate Calculation:**\\nThe point estimate is calculated as the expected future price, `S_t = S_0 * exp(mu * t)`.\\n`S_t = 306.67 * exp(0.08 * (18/252)) = 306.67 * exp(0.005714) = 308.43`.\\n\\n**Confidence Interval Calculations:**\\nThe confidence intervals are derived from the log-normal distribution of prices under GBM. The natural logarithm of the future price, `ln(S_t)`, is assumed to be normally distributed. The mean of `ln(S_t)` is `ln(S_0) + (mu - 0.5 * sigma^2) * t`, and its standard deviation is `sigma * sqrt(t)`.\\n\\n-   `ln(S_0) = ln(306.67) = 5.7259`\\n-   `Adjusted drift = mu - 0.5 * sigma^2 = 0.08 - 0.5 * (0.22^2) = 0.0558`\\n-   `Mean of ln(S_t) = 5.7259 + 0.0558 * (18/252) = 5.7259 + 0.00398 = 5.72988`\\n-   `Standard Deviation of ln(S_t) = sigma * sqrt(t) = 0.22 * sqrt(18/252) = 0.0588`\\n\\nUsing Z-scores for the respective confidence levels (0.6745 for 50%, 1.2816 for 80%, 1.6449 for 90%), the intervals are calculated symmetrically around the mean of the log-prices and then exponentiated to get the price ranges.\"\n}\n```",
+  "backtest": true
+}

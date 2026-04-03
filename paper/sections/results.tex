@@ -1,0 +1,176 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Study 1: Baseline Overconfidence in Equity Markets}
+\label{sec:results-study1}
+
+Table~\ref{tab:study1} summarizes hit rates and ECE for the 1-day equity prediction
+task ($n = 100$ per model). All three models are substantially overconfident: even the
+best-performing model (Claude) achieves only 58\% coverage at the 80\% confidence
+level, and only 73\% at 90\%. GPT-4 is dramatically worse---its 80\% CI contains
+the true outcome only 31\% of the time, and its 90\% CI only 38\% (ECE = 43.7\%).
+These results confirm universal overconfidence and that GPT-4 is the worst-calibrated
+model in the simplest possible setting.
+
+\begin{table}[ht]
+  \centering
+  \caption{Study 1: Overall Calibration in 1-Day Equity Predictions ($n = 100$ per model).
+    ECE = Expected Calibration Error; lower is better. Perfect calibration = 0\%.}
+  \label{tab:study1}
+  \begin{tabular}{lcccc}
+    \toprule
+    Model   & Hit@50\% & Hit@80\% & Hit@90\% & ECE    \\
+    \midrule
+    Claude  & 30.0\%   & 58.0\%   & 73.0\%   & 19.7\% \\
+    Gemini  & 29.0\%   & 58.0\%   & 65.0\%   & 22.7\% \\
+    GPT-4   & 20.0\%   & 31.0\%   & 38.0\%   & 43.7\% \\
+    \midrule
+    Perfect & 50.0\%   & 80.0\%   & 90.0\%   & 0.0\%  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Study 2: Calibration Across Prediction Horizons}
+\label{sec:results-study2}
+
+Table~\ref{tab:study2} shows how calibration changes with prediction horizon for each
+model. The results reveal a pronounced and divergent horizon effect. Claude's 80\% hit
+rate drops from 80.5\% at 1 day to 46.2\% at 18 days (ECE rises from 1.4\% to 29.8\%),
+a pattern consistent with systematic interval-width anchoring on short-horizon
+volatility. GPT-4---already poorly calibrated at 1 day (ECE = 21.8\%)---deteriorates
+further, reaching 27.2\% hit@80 at 18 days and an ECE of 47.4\%.
+
+Gemini's pattern is strikingly different. Its 1-day calibration (ECE = 1.8\%) is the
+best of any model at any horizon. While it degrades at intermediate horizons
+(ECE = 16.6\% at 18 days), it recovers at longer windows, achieving 80.1\% hit@80
+and ECE = 2.5\% at 22 days---near-perfect calibration. This suggests Gemini's CI
+widths scale approximately proportionally to horizon uncertainty in a way that matches
+realized volatility at longer windows, even as Claude and GPT-4 fail to do so.
+
+\begin{table}[ht]
+  \centering
+  \caption{Study 2: 80\% Hit Rate and ECE by Model and Prediction Horizon.
+    Hit@80 = proportion of predictions where true outcome falls within 80\% CI.
+    ECE = mean absolute calibration error across 50/80/90\% levels.}
+  \label{tab:study2}
+  % TODO: Add remaining horizon rows (2d, 3d, 7d, 20d, 21d) from study2/data/results/summary.csv
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{lcccccc}
+    \toprule
+    Horizon & Cl.\ H80 & Cl.\ ECE & Gem.\ H80 & Gem.\ ECE & GPT H80 & GPT ECE \\
+    \midrule
+    1d  & 80.5\% & 1.4\%  & 78.5\% & 1.8\%  & 55.2\% & 21.8\% \\
+    6d  & 56.0\% & 20.6\% & 71.7\% & 8.4\%  & 34.5\% & 41.6\% \\
+    18d & 46.2\% & 29.8\% & 59.8\% & 16.6\% & 27.2\% & 47.4\% \\
+    22d & 51.2\% & 26.9\% & 80.1\% & 2.5\%  & 24.4\% & 49.9\% \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\subsection{Study 3: Domain-Specific Calibration}
+\label{sec:results-study3}
+
+Table~\ref{tab:study3-overall} summarizes overall calibration in the multi-domain
+study ($n = 68$ per model). Claude exhibits the best overall calibration (ECE = 5.3\%),
+followed by Gemini (7.2\%) and GPT-4 (18.9\%), consistent with Study 1 and Study 2
+rankings. The overall ECE values are substantially lower than in Studies 1 and 2,
+driven by near-perfect calibration in the weather domain (which accounts for 44\% of
+Study 3 observations).
+
+\begin{table}[ht]
+  \centering
+  \caption{Study 3: Overall Calibration by Model ($n = 68$ per model).
+    ECE = Expected Calibration Error; lower values indicate better calibration.}
+  \label{tab:study3-overall}
+  \begin{tabular}{lcccc}
+    \toprule
+    Model   & Hit@50\% & Hit@80\% & Hit@90\% & ECE    \\
+    \midrule
+    Claude  & 58.8\%   & 82.4\%   & 85.3\%   & 5.3\%  \\
+    Gemini  & 45.6\%   & 73.5\%   & 79.4\%   & 7.2\%  \\
+    GPT-4   & 30.9\%   & 63.2\%   & 69.1\%   & 18.9\% \\
+    \midrule
+    Perfect & 50.0\%   & 80.0\%   & 90.0\%   & 0.0\%  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:study3-domain} disaggregates calibration by domain. The central result
+is a systematic directional reversal: models are overconfident in commodity and equity
+markets and underconfident in cryptocurrency and, to a lesser extent, forex. No model
+is uniformly overconfident or underconfident, refuting a simple single-mechanism
+account of LLM miscalibration.
+
+Commodities showed the most extreme and uniform overconfidence: ECE = 40\% for all
+three models, with 80\% and 90\% CIs achieving only 40\% coverage. The cryptocurrency
+domain showed a directional inversion: both Claude and GPT-4 achieved 100\% coverage
+at the 90\% level, indicating systematic underconfidence. Weather was the
+best-calibrated domain overall. GPT-4 performed dramatically worse on forex
+(ECE = 44.2\%).
+
+\begin{table}[ht]
+  \centering
+  \caption{Study 3: Hit Rates and ECE by Model and Domain.
+    NBA games excluded (ESPN API). Commod.\ = commodity futures.}
+  \label{tab:study3-domain}
+  \small
+  \begin{tabular}{llccccc}
+    \toprule
+    Domain     & Model  & $N$ & H50\% & H80\%  & H90\%  & ECE    \\
+    \midrule
+    Stocks     & Claude & 40  & 50\%  & 85\%   & 90\%   & 1.7\%  \\
+               & Gemini & 40  & 25\%  & 70\%   & 75\%   & 16.7\% \\
+               & GPT-4  & 40  & 15\%  & 55\%   & 65\%   & 28.3\% \\
+    Commod.    & Claude & 10  & 20\%  & 40\%   & 40\%   & 40.0\% \\
+               & Gemini & 10  & 20\%  & 40\%   & 40\%   & 40.0\% \\
+               & GPT-4  & 10  & 20\%  & 40\%   & 40\%   & 40.0\% \\
+    Crypto     & Claude & 20  & 80\%  & 100\%  & 100\%  & 20.0\% \\
+               & Gemini & 20  & 20\%  & 80\%   & 100\%  & 13.3\% \\
+               & GPT-4  & 20  & 20\%  & 100\%  & 100\%  & 20.0\% \\
+    Forex      & Claude & 16  & 38\%  & 75\%   & 75\%   & 10.8\% \\
+               & Gemini & 16  & 50\%  & 63\%   & 75\%   & 10.8\% \\
+               & GPT-4  & 16  & 25\%  & 25\%   & 38\%   & 44.2\% \\
+    Weather    & Claude & 60  & 73\%  & 87\%   & 90\%   & 10.0\% \\
+               & Gemini & 60  & 67\%  & 83\%   & 87\%   & 7.8\%  \\
+               & GPT-4  & 60  & 47\%  & 77\%   & 80\%   & 5.5\%  \\
+    NBA        & All    & 13  & --    & --     & --     & --     \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Meta-Knowledge Analysis (Study 3)}
+\label{sec:results-metaknowledge}
+
+Table~\ref{tab:mead} presents the Soll-Klayman meta-knowledge ratio for each
+model-domain combination. Overall, GPT-4 is the most overconfident ($\mu = 0.81$)
+and Claude slightly underconfident in aggregate ($\mu = 1.23$). However, the
+aggregate values conceal dramatic variation that constitutes the central finding
+of this study.
+
+\begin{table}[ht]
+  \centering
+  \caption{Study 3: Meta-Knowledge Ratio $\mu = \text{MEAD}/\text{MAD}$ by Model and Domain.
+    $\mu < 1$ = overconfidence; $\mu = 1$ = perfect; $\mu > 1$ = underconfidence.}
+  \label{tab:mead}
+  \begin{tabular}{lccc}
+    \toprule
+    Domain       & Claude & Gemini & GPT-4 \\
+    \midrule
+    Stocks       & 0.81   & 0.55   & 0.41  \\
+    Commodities  & 0.25   & 0.25   & 0.25  \\
+    Crypto       & 14.40  & 1.35   & 1.84  \\
+    Forex        & 2.68   & 1.67   & 1.29  \\
+    Weather      & 1.28   & 1.04   & 0.85  \\
+    \midrule
+    Overall      & 1.23   & 0.99   & 0.81  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+All models show $\mu = 0.25$ on commodities: stated uncertainty is only one-quarter
+of what actual errors require, the most extreme overconfidence in the dataset. At the
+other extreme, Claude's crypto $\mu = 14.4$ indicates CIs 14 times wider than
+necessary. The forex domain reveals a compound failure in GPT-4: its high ECE
+(44.2\%) is not reflected in its $\mu$ (1.29), because $\mu$ cannot distinguish
+misanchored point estimates from miscalibrated CI widths. The two metrics must
+be examined jointly to diagnose the full failure mode.
