@@ -20,7 +20,8 @@ _Last updated: 2026-04-03_
 
 ## In Progress
 
-_Nothing currently blocked._
+- **Study 4**: pipeline live as of 2026-04-03. GitHub Actions + secrets configured. First collection pending (16:30 UTC trigger).
+- **TODO today**: deploy `study4/website/` to Vercel or Netlify (root dir = `study4/website`)
 
 ---
 
