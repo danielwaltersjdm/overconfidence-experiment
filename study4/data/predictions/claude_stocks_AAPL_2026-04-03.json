@@ -1,0 +1,66 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "1.1.0",
+  "pred_date": "2026-04-03",
+  "timestamp": "2026-04-03T19:31:12.784817Z",
+  "domain": "stocks",
+  "item": "AAPL",
+  "item_label": "Apple Inc.",
+  "unit": "USD",
+  "current_value": 255.9199981689453,
+  "context": "Current closing price of Apple Inc. (AAPL): $255.92 USD as of 2026-04-03.",
+  "prompt_text": "Today is 2026-04-03.\n\nCurrent closing price of Apple Inc. (AAPL): $255.92 USD as of 2026-04-03.\n\nProvide point estimates and confidence intervals for Apple Inc. at three future horizons.\n\nFor each horizon, provide a 50%, 80%, and 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true outcome will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. The same logic applies to the 50% and 80% intervals. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-04\n  1-week target date: 2026-04-10\n  1-month target date: 2026-05-03\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 254.50,\n    \"50_ci\": [251.00, 258.50],\n    \"80_ci\": [247.00, 263.00],\n    \"90_ci\": [243.00, 267.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 253.00,\n    \"50_ci\": [245.00, 262.00],\n    \"80_ci\": [237.00, 270.00],\n    \"90_ci\": [230.00, 277.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 252.00,\n    \"50_ci\": [236.00, 270.00],\n    \"80_ci\": [220.00, 287.00],\n    \"90_ci\": [208.00, 300.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 254.5,
+      "50_ci": [
+        251.0,
+        258.5
+      ],
+      "80_ci": [
+        247.0,
+        263.0
+      ],
+      "90_ci": [
+        243.0,
+        267.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 253.0,
+      "50_ci": [
+        245.0,
+        262.0
+      ],
+      "80_ci": [
+        237.0,
+        270.0
+      ],
+      "90_ci": [
+        230.0,
+        277.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 252.0,
+      "50_ci": [
+        236.0,
+        270.0
+      ],
+      "80_ci": [
+        220.0,
+        287.0
+      ],
+      "90_ci": [
+        208.0,
+        300.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 254.5,\n    \"50_ci\": [\n      251.0,\n      258.5\n    ],\n    \"80_ci\": [\n      247.0,\n      263.0\n    ],\n    \"90_ci\": [\n      243.0,\n      267.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 253.0,\n    \"50_ci\": [\n      245.0,\n      262.0\n    ],\n    \"80_ci\": [\n      237.0,\n      270.0\n    ],\n    \"90_ci\": [\n      230.0,\n      277.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 252.0,\n    \"50_ci\": [\n      236.0,\n      270.0\n    ],\n    \"80_ci\": [\n      220.0,\n      287.0\n    ],\n    \"90_ci\": [\n      208.0,\n      300.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively flat to slightly declining trajectory for the asset from its current level near $254-255. At the one-day horizon, I anchored closely to the prevailing price, expecting minimal drift and mean-reverting intraday behavior. At the one-week horizon, I shaded the estimate marginally lower to around $253, acknowledging that short-term momentum can fade and that markets tend to exhibit slight mean reversion over multi-day windows. At the one-month horizon, the estimate of $252 reflects a similar logic \u2014 absent strong fundamental catalysts, prices tend to drift modestly and the base case is near-stability, but with the recognition that drift over a month can accumulate in either direction. Across all horizons, I was not pricing in a strong directional catalyst, so the point estimates cluster close together rather than projecting a strong trend.\n\nThe confidence interval widths grow predictably with time horizon, reflecting the square-root-of-time scaling of uncertainty that is standard in financial modeling. At one day, typical realized volatility for an asset in this price range suggested a relatively tight band of roughly \u00b13-4 points at the 50% level. By one week, that expands to roughly \u00b18-9 points, and by one month the 50% interval spans roughly \u00b117 points around the central estimate. I also incorporated the possibility of fat-tailed distributions \u2014 financial returns tend to have more extreme outcomes than a normal distribution would imply \u2014 which is why my 90% intervals are meaningfully wider than what pure Gaussian scaling would produce. Liquidity conditions, bid-ask dynamics, and potential for gap moves all added to the tails.\n\nThere are several specific risks that could push outcomes outside my stated intervals. On the upside, a surprise positive macro data release, a policy pivot from a central bank, or a sector-specific catalyst like an earnings beat or regulatory approval could drive a rapid move well above the $267-277 range I cited as 90th percentile levels. On the downside, a risk-off shock \u2014 such as geopolitical escalation, a credit event, or a sharp deterioration in economic data \u2014 could push the price below the $230-243 range I assigned as the lower tail. Illiquidity events or forced selling cascades are particularly dangerous because they can move prices far faster and further than historical volatility would suggest.\n\nFinally, I want to acknowledge model uncertainty itself as a source of risk outside my intervals. My forecasts are conditioned on the current regime of volatility and correlation persisting, but regime changes \u2014 where volatility suddenly spikes or correlations break down \u2014 can invalidate the distributional assumptions entirely. Black swan events, by definition, fall outside the historical data I implicitly relied upon. This means that even my",
+  "status": "collected",
+  "error": null
+}

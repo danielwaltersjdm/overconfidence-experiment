@@ -1,0 +1,66 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "1.1.0",
+  "pred_date": "2026-04-03",
+  "timestamp": "2026-04-03T20:17:55.960640Z",
+  "domain": "stocks",
+  "item": "AMZN",
+  "item_label": "Amazon.com Inc.",
+  "unit": "USD",
+  "current_value": 209.77000427246094,
+  "context": "Current closing price of Amazon.com Inc. (AMZN): $209.77 USD as of 2026-04-03.",
+  "prompt_text": "Today is 2026-04-03.\n\nCurrent closing price of Amazon.com Inc. (AMZN): $209.77 USD as of 2026-04-03.\n\nProvide point estimates and confidence intervals for Amazon.com Inc. at three future horizons.\n\nFor each horizon, provide a 50%, 80%, and 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true outcome will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. The same logic applies to the 50% and 80% intervals. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-04\n  1-week target date: 2026-04-10\n  1-month target date: 2026-05-03\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 208.50,\n    \"50_ci\": [204.00, 213.50],\n    \"80_ci\": [199.00, 218.50],\n    \"90_ci\": [195.00, 222.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 207.00,\n    \"50_ci\": [198.00, 216.00],\n    \"80_ci\": [189.00, 224.00],\n    \"90_ci\": [182.00, 230.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 210.00,\n    \"50_ci\": [192.00, 228.00],\n    \"80_ci\": [176.00, 244.00],\n    \"90_ci\": [165.00, 255.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 208.5,
+      "50_ci": [
+        204.0,
+        213.5
+      ],
+      "80_ci": [
+        199.0,
+        218.5
+      ],
+      "90_ci": [
+        195.0,
+        222.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 207.0,
+      "50_ci": [
+        198.0,
+        216.0
+      ],
+      "80_ci": [
+        189.0,
+        224.0
+      ],
+      "90_ci": [
+        182.0,
+        230.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 210.0,
+      "50_ci": [
+        192.0,
+        228.0
+      ],
+      "80_ci": [
+        176.0,
+        244.0
+      ],
+      "90_ci": [
+        165.0,
+        255.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 208.5,\n    \"50_ci\": [\n      204.0,\n      213.5\n    ],\n    \"80_ci\": [\n      199.0,\n      218.5\n    ],\n    \"90_ci\": [\n      195.0,\n      222.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 207.0,\n    \"50_ci\": [\n      198.0,\n      216.0\n    ],\n    \"80_ci\": [\n      189.0,\n      224.0\n    ],\n    \"90_ci\": [\n      182.0,\n      230.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 210.0,\n    \"50_ci\": [\n      192.0,\n      228.0\n    ],\n    \"80_ci\": [\n      176.0,\n      244.0\n    ],\n    \"90_ci\": [\n      165.0,\n      255.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates were anchored primarily to the prevailing price level of the underlying asset at the time of the forecast, which appeared to be trading around $208\u2013210. For the 1-day horizon, I set the estimate at $208.5, reflecting minimal expected drift and a slight mean-reversion bias from any recent momentum. For the 1-week estimate, I nudged it slightly lower to $207 to account for the possibility of short-term consolidation or mild pullback after recent price action. For the 1-month estimate, I returned to $210, reflecting a modest upward drift assumption consistent with a slight positive long-run expected return, while acknowledging that the path over a month is highly uncertain and the point estimate itself carries little predictive weight at that horizon.\n\nThe confidence interval widths were calibrated using a volatility-based framework. At the 1-day horizon, implied or historical daily volatility drove relatively tight bands \u2014 roughly \u00b12% for the 50% CI and \u00b15\u20136% for the 90% CI. As the horizon extended to one week and one month, I widened the intervals proportionally using a square-root-of-time scaling approach, while also incorporating the reality that markets can exhibit fat tails and trending behavior that pure diffusion models understate. The 1-month 90% CI spans roughly $165\u2013$255, representing about a \u00b122% range, which reflects genuine uncertainty over a multi-week period inclusive of macro surprises and sentiment shifts.\n\nSeveral specific risks could push outcomes outside even these wide intervals. On the downside, a sudden macro shock \u2014 such as an unexpected central bank policy shift, a geopolitical escalation, or a credit event in a systemically important institution \u2014 could drive prices well below the lower bounds. On the upside, a short squeeze, a major positive earnings or data surprise, or a broad risk-on rally fueled by dovish policy signals could push prices above the upper bounds. These tail events are by definition underweighted in standard volatility-based models.\n\nFinally, it is worth noting that the 1-month interval in particular should be treated with humility. Point estimates at that horizon are largely illustrative \u2014 the distribution of outcomes is wide enough that the stated estimate conveys more about the central tendency of a probabilistic model than any confident directional view. If there are specific scheduled events (earnings releases, central bank meetings, macroeconomic data prints) within the forecast window, those would be additional discrete sources of jump risk not fully captured in the smooth interval structure I provided.",
+  "status": "collected",
+  "error": null
+}

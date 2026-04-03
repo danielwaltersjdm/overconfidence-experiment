@@ -1,0 +1,66 @@
+{
+  "model": "gemini",
+  "model_id": "gemini-2.5-flash",
+  "prompt_version": "1.0.0",
+  "pred_date": "2026-04-03",
+  "timestamp": "2026-04-03T19:33:00.637932Z",
+  "domain": "weather",
+  "item": "Sao Paulo",
+  "item_label": "S\u00c3\u00a3o Paulo, Brazil",
+  "unit": "\u00c2\u00b0F",
+  "current_value": 71.1,
+  "context": "Yesterday's mean daily temperature in S\u00c3\u00a3o Paulo, Brazil: 71.1\u00b0F (as of 2026-04-02). Predict the mean daily temperature for the target dates below.",
+  "prompt_text": "Today is 2026-04-03.\n\nYesterday's mean daily temperature in S\u00c3\u00a3o Paulo, Brazil: 71.1\u00b0F (as of 2026-04-02). Predict the mean daily temperature for the target dates below.\n\nProvide point estimates and confidence intervals for S\u00c3\u00a3o Paulo, Brazil at three future horizons. Your intervals must be well-calibrated: a 90% CI should contain the true outcome approximately 90% of the time across many such predictions.\n\nHorizons:\n  1-day  target date: 2026-04-04\n  1-week target date: 2026-04-10\n  1-month target date: 2026-05-03\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 70.8,\n    \"50_ci\": [69.4, 72.2],\n    \"80_ci\": [68.2, 73.4],\n    \"90_ci\": [67.5, 74.1]\n  },\n  \"1w\": {\n    \"point_estimate\": 69.5,\n    \"50_ci\": [67.1, 71.9],\n    \"80_ci\": [65.0, 74.0],\n    \"90_ci\": [63.7, 75.3]\n  },\n  \"1m\": {\n    \"point_estimate\": 65.5,\n    \"50_ci\": [62.1, 68.9],\n    \"80_ci\": [59.1, 71.9],\n    \"90_ci\": [57.3, 73.7]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 70.8,
+      "50_ci": [
+        69.4,
+        72.2
+      ],
+      "80_ci": [
+        68.2,
+        73.4
+      ],
+      "90_ci": [
+        67.5,
+        74.1
+      ]
+    },
+    "1w": {
+      "point_estimate": 69.5,
+      "50_ci": [
+        67.1,
+        71.9
+      ],
+      "80_ci": [
+        65.0,
+        74.0
+      ],
+      "90_ci": [
+        63.7,
+        75.3
+      ]
+    },
+    "1m": {
+      "point_estimate": 65.5,
+      "50_ci": [
+        62.1,
+        68.9
+      ],
+      "80_ci": [
+        59.1,
+        71.9
+      ],
+      "90_ci": [
+        57.3,
+        73.7
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 70.8,\n    \"50_ci\": [\n      69.4,\n      72.2\n    ],\n    \"80_ci\": [\n      68.2,\n      73.4\n    ],\n    \"90_ci\": [\n      67.5,\n      74.1\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 69.5,\n    \"50_ci\": [\n      67.1,\n      71.9\n    ],\n    \"80_ci\": [\n      65.0,\n      74.0\n    ],\n    \"90_ci\": [\n      63.7,\n      75.3\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 65.5,\n    \"50_ci\": [\n      62.1,\n      68.9\n    ],\n    \"80_ci\": [\n      59.1,\n      71.9\n    ],\n    \"90_ci\": [\n      57.3,\n      73.7\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "The point estimates for this forecast show a clear trend of decreasing values over time, starting at 70.8 for the 1-day horizon, dropping to 69.5 for 1 week, and further to 65.5 for 1 month. This trajectory suggests an expectation that the current state or immediate momentum, which is reflected in the higher 1-day estimate, is likely to gradually revert towards a lower baseline or long-term average. The further out in time we look, the more factors are expected to influence the outcome, leading to a drift away from the immediate short-term conditions and towards a more established or conservative expected value.\n\nThe increasing width of the confidence intervals across the different horizons reflects a fundamental principle of forecasting: uncertainty grows with time. For the 1-day forecast, the range is relatively tight, indicating high confidence due to the proximity to the present state and fewer opportunities for significant changes to occur. As the forecast extends to 1 week and then 1 month, the intervals progressively widen. This expansion is driven by a multitude of potential variables, including the inherent stochasticity of the system being forecast, the increasing likelihood of unforeseen external factors emerging (such as minor economic shifts, policy adjustments, or market reactions), and the cumulative effect of small, unpredictable variations building up over a longer period.\n\nSpecific risks or \"tail events\" that could push actual outcomes significantly outside these stated intervals are typically low-probability, high-impact occurrences. These might include sudden and drastic policy changes by a major governing or regulatory body, an unexpected and severe economic shock like a rapid recession or market crash, major geopolitical instability such as a conflict or crisis erupting, or the emergence of a novel and widespread technological disruption. Such events are challenging to predict within standard forecasting models, but their profound influence could cause the outcome to deviate far beyond the bounds of even the 90% confidence intervals.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,66 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "1.1.0",
+  "pred_date": "2026-04-03",
+  "timestamp": "2026-04-03T21:46:26.294809Z",
+  "domain": "forex",
+  "item": "EUR/USD",
+  "item_label": "Euro / US Dollar",
+  "unit": "rate",
+  "current_value": 1.1522064208984375,
+  "context": "Current exchange rate for EUR/USD: 1.1522 as of 2026-04-03.",
+  "prompt_text": "Today is 2026-04-03.\n\nCurrent exchange rate for EUR/USD: 1.1522 as of 2026-04-03.\n\nProvide point estimates and confidence intervals for Euro / US Dollar at three future horizons.\n\nFor each horizon, provide a 50%, 80%, and 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true outcome will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. The same logic applies to the 50% and 80% intervals. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-04\n  1-week target date: 2026-04-10\n  1-month target date: 2026-05-03\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"50_ci\": [<low>, <high>],\n    \"80_ci\": [<low>, <high>],\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll estimate EUR/USD forecasts using typical FX volatility. EUR/USD has a historical daily volatility of roughly 0.5-0.6%. Given the current rate of 1.1522 and the broader macro environment (USD weakness trend, tariff uncertainty), I'll apply standard random-walk confidence intervals scaled by sqrt(T), with a slight upward drift bias.\n\nDaily vol \u2248 0.0060 (using ~0.52% of spot)\n- 1-day \u03c3 \u2248 0.0060\n- 1-week \u03c3 \u2248 0.0060 \u00d7 \u221a5 \u2248 0.0134\n- 1-month \u03c3 \u2248 0.0060 \u00d7 \u221a21 \u2248 0.0275\n\nZ-scores: 50% CI \u2248 \u00b10.674\u03c3, 80% CI \u2248 \u00b11.282\u03c3, 90% CI \u2248 \u00b11.645\u03c3\n\n{\n  \"1d\": {\n    \"point_estimate\": 1.1525,\n    \"50_ci\": [1.1481, 1.1569],\n    \"80_ci\": [1.1445, 1.1605],\n    \"90_ci\": [1.1423, 1.1627]\n  },\n  \"1w\": {\n    \"point_estimate\": 1.1535,\n    \"50_ci\": [1.1445, 1.1625],\n    \"80_ci\": [1.1350, 1.1720],\n    \"90_ci\": [1.1315, 1.1755]\n  },\n  \"1m\": {\n    \"point_estimate\": 1.1550,\n    \"50_ci\": [1.1337, 1.1763],\n    \"80_ci\": [1.1169, 1.1931],\n    \"90_ci\": [1.1069, 1.2031]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1.1525,
+      "50_ci": [
+        1.1481,
+        1.1569
+      ],
+      "80_ci": [
+        1.1445,
+        1.1605
+      ],
+      "90_ci": [
+        1.1423,
+        1.1627
+      ]
+    },
+    "1w": {
+      "point_estimate": 1.1535,
+      "50_ci": [
+        1.1445,
+        1.1625
+      ],
+      "80_ci": [
+        1.135,
+        1.172
+      ],
+      "90_ci": [
+        1.1315,
+        1.1755
+      ]
+    },
+    "1m": {
+      "point_estimate": 1.155,
+      "50_ci": [
+        1.1337,
+        1.1763
+      ],
+      "80_ci": [
+        1.1169,
+        1.1931
+      ],
+      "90_ci": [
+        1.1069,
+        1.2031
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1.1525,\n    \"50_ci\": [\n      1.1481,\n      1.1569\n    ],\n    \"80_ci\": [\n      1.1445,\n      1.1605\n    ],\n    \"90_ci\": [\n      1.1423,\n      1.1627\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1.1535,\n    \"50_ci\": [\n      1.1445,\n      1.1625\n    ],\n    \"80_ci\": [\n      1.135,\n      1.172\n    ],\n    \"90_ci\": [\n      1.1315,\n      1.1755\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1.155,\n    \"50_ci\": [\n      1.1337,\n      1.1763\n    ],\n    \"80_ci\": [\n      1.1169,\n      1.1931\n    ],\n    \"90_ci\": [\n      1.1069,\n      1.2031\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates across all three horizons reflect a modest bullish bias on EUR/USD from what was likely a starting level near 1.1500\u20131.1520. At the one-day horizon, the estimate of roughly 1.1525 implies near-stasis, essentially anchoring to the prevailing spot price with minimal drift. This reflects the standard assumption that short-term FX moves are difficult to predict directionally, so the forecast hugs the current level. At the one-week horizon, the slight upward nudge to 1.1535 incorporates a marginal continuation of what was likely recent euro strength, possibly driven by a softer US dollar environment tied to Federal Reserve rate cut expectations or improved eurozone economic sentiment. At the one-month horizon, the estimate rises marginally further to 1.1550, reflecting a longer-run thesis that the dollar faces modest headwinds from narrowing US-EU rate differentials as the Fed pivots toward easing while the ECB maintains a relatively cautious stance.\n\nThe confidence interval widths are calibrated to typical EUR/USD realized volatility, which runs around 5\u20137% annualized. For the one-day window, even a tight band of roughly \u00b140 pips at the 50% level feels appropriate given that daily ranges on a quiet day often fall within that territory. As the horizon extends to one week, the uncertainty fans out to roughly \u00b190 pips at the 50% level, consistent with how volatility scales with the square root of time. At one month, the 50% interval widens to over 200 pips in total, reflecting accumulated uncertainty from multiple potential data releases, policy signals, and market sentiment shifts over that longer period.\n\nSpecific risks that could push outcomes well outside these intervals are numerous. On the upside for EUR, a surprisingly dovish Fed statement or a weaker-than-expected US jobs or inflation print could accelerate dollar selling and push EUR/USD through 1.20 within a month. On the downside, a resurgence of eurozone growth concerns, a geopolitical shock affecting European energy markets, or an unexpectedly hawkish Fed pivot could send the pair back toward 1.08\u20131.10. Tail risks such as a sudden sovereign stress event in Europe, a US fiscal crisis shock, or a global risk-off episode triggered by geopolitical escalation could all produce moves that breach even the 90% confidence bounds, which are only roughly \u00b1100 pips at one week and \u00b1200 pips at one month. These intervals should be understood as reflecting normal market conditions rather than stress scenarios.",
+  "status": "collected",
+  "error": null
+}

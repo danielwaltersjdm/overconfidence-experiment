@@ -21,14 +21,28 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import anthropic
+import httpx
 import openai
 import requests
+import urllib3
 import yaml
 from dotenv import load_dotenv
 from google import genai as google_genai
 from rich.console import Console
 
+# ── Tulane corporate proxy: disable SSL verification (see global CLAUDE.md) ────
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+requests.packages.urllib3.disable_warnings()
+# Factory for fresh httpx clients with SSL verification disabled
+def _make_httpx():
+    return httpx.Client(verify=False, timeout=90.0)
+
 load_dotenv()
+
+import sys
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 console = Console(legacy_windows=False)
 
@@ -107,7 +121,7 @@ def _get_yesterday_mean_temp(lat: float, lon: float) -> float:
         "daily": "temperature_2m_mean",
         "temperature_unit": "fahrenheit",
     }
-    resp = requests.get(url, params=params, timeout=20)
+    resp = requests.get(url, params=params, timeout=20, verify=False)
     resp.raise_for_status()
     data = resp.json()
     return float(data["daily"]["temperature_2m_mean"][0])
@@ -129,7 +143,7 @@ def get_reference_value(item_cfg: dict, domain: str) -> float:
         coin_id = item_cfg["coingecko_id"]
         url = "https://api.coingecko.com/api/v3/simple/price"
         params = {"ids": coin_id, "vs_currencies": "usd"}
-        resp = requests.get(url, params=params, timeout=20)
+        resp = requests.get(url, params=params, timeout=20, verify=False)
         resp.raise_for_status()
         return float(resp.json()[coin_id]["usd"])
 
@@ -164,11 +178,22 @@ def build_context(item_cfg: dict, domain: str, domain_cfg: dict,
 # ── API calling ────────────────────────────────────────────────────────────────
 
 def parse_json_response(text: str) -> dict:
+    import re
     text = text.strip()
+    # Strip markdown code fences
     if text.startswith("```"):
         lines = [l for l in text.split("\n") if not l.startswith("```")]
         text = "\n".join(lines).strip()
-    return json.loads(text)
+    # Try direct parse
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+    # Extract first JSON object from surrounding text
+    match = re.search(r"\{[\s\S]*\}", text)
+    if match:
+        return json.loads(match.group(0))
+    raise ValueError(f"No valid JSON found in response: {text[:200]}")
 
 
 def call_with_retry(fn, retries: int = 3, base_delay: float = 2.0):
@@ -188,7 +213,10 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
     model_id = model_cfg["model_id"]
 
     if api == "anthropic":
-        client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+        client = anthropic.Anthropic(
+            api_key=os.environ["ANTHROPIC_API_KEY"],
+            http_client=_make_httpx(),
+        )
         def _call():
             msg = client.messages.create(
                 model=model_id, max_tokens=max_tokens,
@@ -197,7 +225,10 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
             return msg.content[0].text
 
     elif api == "openai":
-        client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+        client = openai.OpenAI(
+            api_key=os.environ["OPENAI_API_KEY"],
+            http_client=_make_httpx(),
+        )
         def _call():
             resp = client.chat.completions.create(
                 model=model_id, max_tokens=max_tokens,
@@ -207,7 +238,10 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
 
     elif api == "google":
         def _call():
-            client = google_genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
+            client = google_genai.Client(
+                api_key=os.environ["GOOGLE_API_KEY"],
+                http_options={"api_version": "v1beta"},
+            )
             return client.models.generate_content(model=model_id, contents=prompt).text
 
     else:
