@@ -142,7 +142,11 @@ There is a mandatory temporal separation: Call 2 cannot begin until Call 1's res
 
 ## 8. Prompt Text (Verbatim)
 
-All prompts are versioned. The current version is `PROMPT_VERSION = "1.0.0"`. Any change to prompt wording requires incrementing this version and logging it as a methodological event.
+All prompts are versioned. The current version is `PROMPT_VERSION = "1.1.0"`. Any change to prompt wording requires incrementing this version and logging it as a methodological event.
+
+Version history:
+- 1.0.0: Initial prompt. Brief calibration instruction ("Your intervals must be well-calibrated").
+- 1.1.0: Expanded calibration instruction with explicit frequency framing, adapted from Soll & Klayman (2004). Explains what a 90% CI means and spells out the 100-trials interpretation.
 
 ### Prediction prompt template
 
@@ -153,7 +157,9 @@ Today is {date}.
 
 {context}
 
-Provide point estimates and confidence intervals for {item_label} at three future horizons. Your intervals must be well-calibrated: a 90% CI should contain the true outcome approximately 90% of the time across many such predictions.
+Provide point estimates and confidence intervals for {item_label} at three future horizons.
+
+For each horizon, provide a 50%, 80%, and 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true outcome will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. The same logic applies to the 50% and 80% intervals. Choose your bounds accordingly.
 
 Horizons:
   1-day  target date: {date_1d}

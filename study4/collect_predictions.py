@@ -39,16 +39,21 @@ LOGS_DIR       = BASE_DIR / "logs"
 # ── Prompt versioning ──────────────────────────────────────────────────────────
 # Increment PROMPT_VERSION whenever prompt wording changes. Any change is a
 # methodological event and should be noted in config.yaml model_version_changes.
-PROMPT_VERSION = "1.0.0"
+PROMPT_VERSION = "1.1.0"
 
 PREDICTION_PROMPT = """\
 Today is {date}.
 
 {context}
 
-Provide point estimates and confidence intervals for {item_label} at three future horizons. \
-Your intervals must be well-calibrated: a 90% CI should contain the true outcome \
-approximately 90% of the time across many such predictions.
+Provide point estimates and confidence intervals for {item_label} at three future horizons.
+
+For each horizon, provide a 50%, 80%, and 90% confidence interval. A 90% confidence \
+interval means you are providing a low value and a high value such that you believe \
+there is a 90% chance the true outcome will fall between them. If we asked you to make \
+this kind of estimate 100 times, the true value should fall inside your interval on \
+about 90 of those occasions. The same logic applies to the 50% and 80% intervals. \
+Choose your bounds accordingly.
 
 Horizons:
   1-day  target date: {date_1d}
