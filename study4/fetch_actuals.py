@@ -22,11 +22,15 @@ import urllib3
 
 # Tulane corporate proxy: disable SSL verification
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+import sys
 import yaml
 from rich.console import Console
 
-Console_obj = Console(legacy_windows=False)
-console = Console_obj
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+console = Console(legacy_windows=False)
 
 BASE_DIR     = Path(__file__).parent
 PRED_DIR     = BASE_DIR / "data" / "predictions"
