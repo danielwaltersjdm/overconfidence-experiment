@@ -18,6 +18,10 @@ from pathlib import Path
 
 import pandas as pd
 import requests
+import urllib3
+
+# Tulane corporate proxy: disable SSL verification
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import yaml
 from rich.console import Console
 
@@ -75,7 +79,11 @@ def fetch_stock_price(yf_ticker: str, target: date) -> tuple[float, date, str]:
     if df.empty:
         raise RuntimeError(f"yfinance returned no data for {yf_ticker} from {adjusted}")
     actual_date = df.index[0].date()
-    price = float(df["Close"].iloc[0])
+    close_val = df["Close"].iloc[0]
+    # yfinance may return a Series (multi-ticker) or scalar; flatten
+    if hasattr(close_val, "iloc"):
+        close_val = close_val.iloc[0]
+    price = float(close_val)
     if actual_date != adjusted:
         note = f"original {adjusted.isoformat()} unavailable; used {actual_date.isoformat()}"
     return price, actual_date, note
@@ -88,7 +96,7 @@ def fetch_crypto_price(coingecko_id: str, target: date,
     params = {"date": target.strftime("%d-%m-%Y"), "localization": "false"}
     for attempt in range(retries):
         try:
-            resp = requests.get(url, params=params, timeout=20)
+            resp = requests.get(url, params=params, timeout=20, verify=False)
             resp.raise_for_status()
             data = resp.json()
             price = float(data["market_data"]["current_price"]["usd"])
@@ -116,7 +124,7 @@ def fetch_weather_temp(lat: float, lon: float, target: date) -> tuple[float, dat
         "daily":            "temperature_2m_mean",
         "temperature_unit": "fahrenheit",
     }
-    resp = requests.get(url, params=params, timeout=20)
+    resp = requests.get(url, params=params, timeout=20, verify=False)
     resp.raise_for_status()
     data = resp.json()
     val = data["daily"]["temperature_2m_mean"][0]
