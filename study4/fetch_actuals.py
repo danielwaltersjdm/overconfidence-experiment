@@ -150,7 +150,7 @@ def fetch_actual(domain: str, item_cfg: dict, domain_cfg: dict,
                  target: date) -> tuple[float, date, str]:
     """Dispatch to the correct source."""
     if domain == "stocks":
-        return fetch_stock_price(item_cfg["yfinance_ticker"], target)
+        return fetch_stock_price(item_cfg.get("yfinance_ticker", item_cfg["id"]), target)
     if domain == "crypto":
         return fetch_crypto_price(item_cfg["coingecko_id"], target)
     if domain == "forex":

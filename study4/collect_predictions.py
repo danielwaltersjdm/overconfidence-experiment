@@ -124,11 +124,13 @@ def get_reference_value(item_cfg: dict, domain: str) -> float:
     import yfinance as yf
 
     if domain == "stocks":
-        ticker = yf.Ticker(item_cfg["yfinance_ticker"])
+        yf_ticker = item_cfg.get("yfinance_ticker", item_cfg["id"])
+        ticker = yf.Ticker(yf_ticker)
         return float(ticker.fast_info["lastPrice"])
 
     if domain == "forex":
-        ticker = yf.Ticker(item_cfg["yfinance_ticker"])
+        yf_ticker = item_cfg.get("yfinance_ticker", item_cfg["id"])
+        ticker = yf.Ticker(yf_ticker)
         return float(ticker.fast_info["lastPrice"])
 
     if domain == "crypto":
