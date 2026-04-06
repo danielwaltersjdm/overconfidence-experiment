@@ -41,8 +41,6 @@ ACTUALS_COLUMNS = [
     "model", "domain", "item", "pred_date", "horizon", "horizon_days",
     "target_date", "adjusted_target_date", "unit", "current_value",
     "point_estimate",
-    "ci_50_low", "ci_50_high",
-    "ci_80_low", "ci_80_high",
     "ci_90_low", "ci_90_high",
     "actual_value", "adjustment_note",
     "status", "fetched_at",
@@ -241,8 +239,6 @@ def main():
             # Extract CI bounds from stored prediction
             h_data = horizons.get(h_id, {})
             pe = h_data.get("point_estimate")
-            ci50 = h_data.get("50_ci", [None, None])
-            ci80 = h_data.get("80_ci", [None, None])
             ci90 = h_data.get("90_ci", [None, None])
 
             actual_val  = None
@@ -282,10 +278,6 @@ def main():
                 "unit":                unit,
                 "current_value":       ref_val,
                 "point_estimate":      pe,
-                "ci_50_low":           ci50[0] if ci50 else None,
-                "ci_50_high":          ci50[1] if ci50 else None,
-                "ci_80_low":           ci80[0] if ci80 else None,
-                "ci_80_high":          ci80[1] if ci80 else None,
                 "ci_90_low":           ci90[0] if ci90 else None,
                 "ci_90_high":          ci90[1] if ci90 else None,
                 "actual_value":        actual_val,

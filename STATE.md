@@ -1,6 +1,6 @@
 # STATE.md — Current Project Status
 
-_Last updated: 2026-04-03_
+_Last updated: 2026-04-06_
 
 ---
 
@@ -15,13 +15,15 @@ _Last updated: 2026-04-03_
 - **Abstract** — written in PNAS `main.tex`
 - **Significance statement** — written in PNAS `main.tex`
 - **Study 4 pipeline** — all scripts, GitHub Actions workflows, static website, and README built (2026-04-03); not yet deployed or collecting data
+- **Study 4 website** — production-ready static site built (2026-04-06): index.html dashboard with model cards, Chart.js time-series, domain table, explainer; about.html with full methodology; mock data fallback; mobile-responsive
 
 ---
 
 ## In Progress
 
-- **Study 4**: pipeline live as of 2026-04-03. GitHub Actions + secrets configured. First collection pending (16:30 UTC trigger).
-- **TODO today**: deploy `study4/website/` to Vercel or Netlify (root dir = `study4/website`)
+- **Study 4 data gap**: Only Day 1 (2026-04-03) predictions exist. No April 4 collection — GitHub Actions may not be triggering. Diagnose before Monday.
+- **Study 4 venv**: No Python venv exists at project root. Need to create and install `study4/requirements.txt` to run pipeline locally.
+- **Study 4 deploy**: Website ready; deploy `study4/website/` to Vercel or Netlify
 
 ---
 
@@ -32,7 +34,9 @@ _Last updated: 2026-04-03_
 | Table 2 (Study 2) | Partial | Only 4 of 9 horizon rows present; remaining rows in `study2/data/results/summary.csv` |
 | MS abstract | Placeholder | `main_pre_PNAS_style.tex` still has placeholder abstract; not actively edited |
 | Journal submission | Not started | Both formats compiled; submission workflow not started |
-| Study 4 launch | Not started | Pipeline built; set `config.yaml → study.start_date`, add GitHub secrets, deploy website |
+| Study 4 data gap | Blocked | Only Day 1 data; GitHub Actions not collecting since April 3 |
+| Study 4 deploy | Ready | Website built; needs Vercel/Netlify deployment |
+| Study 4 venv | Missing | No local venv — can't run pipeline scripts locally |
 | Longitudinal replication | Addressed by Study 4 | Live tracking study now built |
 
 ---

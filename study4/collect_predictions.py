@@ -53,21 +53,19 @@ LOGS_DIR       = BASE_DIR / "logs"
 # ── Prompt versioning ──────────────────────────────────────────────────────────
 # Increment PROMPT_VERSION whenever prompt wording changes. Any change is a
 # methodological event and should be noted in config.yaml model_version_changes.
-PROMPT_VERSION = "1.1.0"
+PROMPT_VERSION = "2.0.0"
 
 PREDICTION_PROMPT = """\
 Today is {date}.
 
 {context}
 
-Provide point estimates and confidence intervals for {item_label} at three future horizons.
-
-For each horizon, provide a 50%, 80%, and 90% confidence interval. A 90% confidence \
-interval means you are providing a low value and a high value such that you believe \
-there is a 90% chance the true outcome will fall between them. If we asked you to make \
+Predict the closing price of {item_label} at three future horizons. For each horizon, \
+provide a point estimate and a 90% confidence interval. A 90% confidence interval \
+means you are providing a low value and a high value such that you believe there is \
+a 90% chance the true closing price will fall between them. If we asked you to make \
 this kind of estimate 100 times, the true value should fall inside your interval on \
-about 90 of those occasions. The same logic applies to the 50% and 80% intervals. \
-Choose your bounds accordingly.
+about 90 of those occasions. Choose your bounds accordingly.
 
 Horizons:
   1-day  target date: {date_1d}
@@ -78,20 +76,14 @@ Respond ONLY with valid JSON and no markdown fences:
 {{
   "1d": {{
     "point_estimate": <number>,
-    "50_ci": [<low>, <high>],
-    "80_ci": [<low>, <high>],
     "90_ci": [<low>, <high>]
   }},
   "1w": {{
     "point_estimate": <number>,
-    "50_ci": [<low>, <high>],
-    "80_ci": [<low>, <high>],
     "90_ci": [<low>, <high>]
   }},
   "1m": {{
     "point_estimate": <number>,
-    "50_ci": [<low>, <high>],
-    "80_ci": [<low>, <high>],
     "90_ci": [<low>, <high>]
   }}
 }}"""
@@ -257,8 +249,6 @@ def make_mock_prediction(ref_val: float, run_date: date) -> dict:
         pt = round(ref_val * (1 + random.uniform(-0.02, 0.02)), 6)
         result[horizon_id] = {
             "point_estimate": pt,
-            "50_ci": [round(pt - spread * 0.5, 6), round(pt + spread * 0.5, 6)],
-            "80_ci": [round(pt - spread, 6),        round(pt + spread, 6)],
             "90_ci": [round(pt - spread * 1.5, 6),  round(pt + spread * 1.5, 6)],
         }
     return result
@@ -268,11 +258,7 @@ def make_mock_prediction(ref_val: float, run_date: date) -> dict:
 
 def safe_item_id(item_cfg: dict, domain: str) -> str:
     """Filesystem-safe item identifier."""
-    if domain == "forex":
-        return item_cfg["safe_id"]
-    if domain == "weather":
-        return item_cfg["safe_id"]
-    return item_cfg["id"].replace("-", "_")
+    return item_cfg.get("safe_id", item_cfg["id"]).replace("-", "_")
 
 
 def collect_item(item_cfg: dict, domain: str, domain_cfg: dict,

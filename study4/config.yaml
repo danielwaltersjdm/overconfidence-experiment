@@ -1,14 +1,13 @@
-# Study 4 Configuration — Longitudinal LLM CI Tracking
-# IMPORTANT: Do not change model_id values mid-study without adding a
-# version_change entry below.
+# Study 4 Configuration — Longitudinal LLM CI Tracking (v2)
+# Redesigned 2026-04-06: 200 stocks only, point estimate + 90% CI
 
 study:
   name: "Study 4 — Longitudinal LLM Confidence Interval Tracking"
-  start_date: "2026-04-03"
+  start_date: "2026-04-07"
+  version: 2
+  version_note: "v2: 200 stocks, 90% CI only, 3 horizons. v1 (pilot) archived."
 
 # ── Model configuration ────────────────────────────────────────────────────────
-# Pin exact API model version strings. Record any mid-study updates in
-# model_version_changes below.
 models:
   - name: claude
     api: anthropic
@@ -22,14 +21,7 @@ models:
     api: google
     model_id: gemini-2.5-flash
 
-# Append here when a model version changes mid-study.
 model_version_changes: []
-# Example:
-# - date: "2026-06-01"
-#   model_name: claude
-#   old_model_id: claude-sonnet-4-6
-#   new_model_id: claude-sonnet-4-7
-#   note: "Upgraded to next Sonnet release"
 
 # ── Prediction horizons ────────────────────────────────────────────────────────
 horizons:
@@ -43,83 +35,225 @@ horizons:
     days: 30
     label: "1-Month"
 
-# Confidence interval levels collected on every prediction call
-ci_levels: [50, 80, 90]
+# Only 90% CI collected (point estimate + upper/lower bounds)
+ci_levels: [90]
 
 # Rolling window for the public index (days)
 rolling_window_days: 30
 
 # ── Weekend / holiday collection behaviour ────────────────────────────────────
 weekend_collection:
-  weather: true    # weather has no market hours; collect 7 days/week
-  financial: false # stocks, crypto, forex: skip on Sat/Sun
+  stocks: false  # skip Sat/Sun (no market data)
 
-# ── Domains and items ─────────────────────────────────────────────────────────
+# ── Stocks: 200 tickers ───────────────────────────────────────────────────────
+# S&P 100 + next 100 largest by market cap. All via yfinance.
 
 domains:
-
   stocks:
     enabled: true
     unit: USD
     actuals_source: yfinance
     items:
-      - {id: SPY,   label: "S&P 500 ETF",          yfinance_ticker: "SPY"}
-      - {id: AAPL,  label: "Apple Inc.",             yfinance_ticker: "AAPL"}
-      - {id: MSFT,  label: "Microsoft Corp.",        yfinance_ticker: "MSFT"}
-      - {id: GOOGL, label: "Alphabet Inc.",          yfinance_ticker: "GOOGL"}
-      - {id: NVDA,  label: "NVIDIA Corp.",           yfinance_ticker: "NVDA"}
-      - {id: AMZN,  label: "Amazon.com Inc.",        yfinance_ticker: "AMZN"}
-      - {id: META,  label: "Meta Platforms",         yfinance_ticker: "META"}
-      - {id: TSLA,  label: "Tesla Inc.",             yfinance_ticker: "TSLA"}
-      - {id: JPM,   label: "JPMorgan Chase",         yfinance_ticker: "JPM"}
-      - {id: BRK-B, label: "Berkshire Hathaway B",  yfinance_ticker: "BRK-B"}
-
-  crypto:
-    enabled: true
-    unit: USD
-    actuals_source: coingecko
-    items:
-      - {id: BTC,  label: "Bitcoin",   coingecko_id: bitcoin}
-      - {id: ETH,  label: "Ethereum",  coingecko_id: ethereum}
-      - {id: SOL,  label: "Solana",    coingecko_id: solana}
-      - {id: BNB,  label: "BNB",       coingecko_id: binancecoin}
-      - {id: XRP,  label: "XRP",       coingecko_id: ripple}
-      - {id: ADA,  label: "Cardano",   coingecko_id: cardano}
-      - {id: AVAX, label: "Avalanche", coingecko_id: avalanche-2}
-      - {id: DOGE, label: "Dogecoin",  coingecko_id: dogecoin}
-      - {id: DOT,  label: "Polkadot",  coingecko_id: polkadot}
-      - {id: LINK, label: "Chainlink", coingecko_id: chainlink}
-
-  forex:
-    enabled: true
-    unit: rate
-    actuals_source: yfinance
-    items:
-      - {id: "EUR/USD", label: "Euro / US Dollar",               yfinance_ticker: "EURUSD=X", safe_id: "EURUSD"}
-      - {id: "GBP/USD", label: "British Pound / US Dollar",      yfinance_ticker: "GBPUSD=X", safe_id: "GBPUSD"}
-      - {id: "USD/JPY", label: "US Dollar / Japanese Yen",       yfinance_ticker: "USDJPY=X", safe_id: "USDJPY"}
-      - {id: "AUD/USD", label: "Australian Dollar / US Dollar",  yfinance_ticker: "AUDUSD=X", safe_id: "AUDUSD"}
-      - {id: "USD/CAD", label: "US Dollar / Canadian Dollar",    yfinance_ticker: "USDCAD=X", safe_id: "USDCAD"}
-      - {id: "USD/CHF", label: "US Dollar / Swiss Franc",        yfinance_ticker: "USDCHF=X", safe_id: "USDCHF"}
-      - {id: "NZD/USD", label: "New Zealand Dollar / US Dollar", yfinance_ticker: "NZDUSD=X", safe_id: "NZDUSD"}
-      - {id: "USD/CNY", label: "US Dollar / Chinese Yuan",       yfinance_ticker: "USDCNY=X", safe_id: "USDCNY"}
-      - {id: "USD/MXN", label: "US Dollar / Mexican Peso",       yfinance_ticker: "USDMXN=X", safe_id: "USDMXN"}
-      - {id: "USD/SGD", label: "US Dollar / Singapore Dollar",   yfinance_ticker: "USDSGD=X", safe_id: "USDSGD"}
-
-  weather:
-    enabled: true
-    unit: "°F"
-    actuals_source: open_meteo
-    # Actuals = daily mean temperature (temperature_2m_mean) from Open-Meteo archive
-    # Reference value = prior day's mean (also from archive) so units are consistent
-    items:
-      - {id: "New York",  label: "New York, USA",       safe_id: "NewYork",   lat: 40.7128,  lon: -74.0060}
-      - {id: "London",    label: "London, UK",          safe_id: "London",    lat: 51.5074,  lon: -0.1278}
-      - {id: "Tokyo",     label: "Tokyo, Japan",        safe_id: "Tokyo",     lat: 35.6762,  lon: 139.6503}
-      - {id: "Sydney",    label: "Sydney, Australia",   safe_id: "Sydney",    lat: -33.8688, lon: 151.2093}
-      - {id: "Sao Paulo", label: "São Paulo, Brazil",   safe_id: "SaoPaulo",  lat: -23.5505, lon: -46.6333}
-      - {id: "Lagos",     label: "Lagos, Nigeria",      safe_id: "Lagos",     lat: 6.5244,   lon: 3.3792}
-      - {id: "Mumbai",    label: "Mumbai, India",       safe_id: "Mumbai",    lat: 19.0760,  lon: 72.8777}
-      - {id: "Toronto",   label: "Toronto, Canada",     safe_id: "Toronto",   lat: 43.6532,  lon: -79.3832}
-      - {id: "Dubai",     label: "Dubai, UAE",          safe_id: "Dubai",     lat: 25.2048,  lon: 55.2708}
-      - {id: "Berlin",    label: "Berlin, Germany",     safe_id: "Berlin",    lat: 52.5200,  lon: 13.4050}
+      # ── S&P 100 (top 100 by market cap) ──────────────────────────────────
+      - {id: AAPL,  label: "Apple"}
+      - {id: MSFT,  label: "Microsoft"}
+      - {id: NVDA,  label: "NVIDIA"}
+      - {id: AMZN,  label: "Amazon"}
+      - {id: GOOGL, label: "Alphabet A"}
+      - {id: META,  label: "Meta Platforms"}
+      - {id: BRK-B, label: "Berkshire Hathaway B"}
+      - {id: LLY,   label: "Eli Lilly"}
+      - {id: AVGO,  label: "Broadcom"}
+      - {id: JPM,   label: "JPMorgan Chase"}
+      - {id: TSLA,  label: "Tesla"}
+      - {id: UNH,   label: "UnitedHealth"}
+      - {id: XOM,   label: "Exxon Mobil"}
+      - {id: V,     label: "Visa"}
+      - {id: MA,    label: "Mastercard"}
+      - {id: COST,  label: "Costco"}
+      - {id: PG,    label: "Procter & Gamble"}
+      - {id: JNJ,   label: "Johnson & Johnson"}
+      - {id: HD,    label: "Home Depot"}
+      - {id: ABBV,  label: "AbbVie"}
+      - {id: WMT,   label: "Walmart"}
+      - {id: NFLX,  label: "Netflix"}
+      - {id: MRK,   label: "Merck"}
+      - {id: BAC,   label: "Bank of America"}
+      - {id: CRM,   label: "Salesforce"}
+      - {id: CVX,   label: "Chevron"}
+      - {id: KO,    label: "Coca-Cola"}
+      - {id: ORCL,  label: "Oracle"}
+      - {id: AMD,   label: "AMD"}
+      - {id: PEP,   label: "PepsiCo"}
+      - {id: ACN,   label: "Accenture"}
+      - {id: TMO,   label: "Thermo Fisher"}
+      - {id: MCD,   label: "McDonald's"}
+      - {id: LIN,   label: "Linde"}
+      - {id: CSCO,  label: "Cisco"}
+      - {id: ADBE,  label: "Adobe"}
+      - {id: ABT,   label: "Abbott Labs"}
+      - {id: WFC,   label: "Wells Fargo"}
+      - {id: IBM,   label: "IBM"}
+      - {id: PM,    label: "Philip Morris"}
+      - {id: GE,    label: "GE Aerospace"}
+      - {id: ISRG,  label: "Intuitive Surgical"}
+      - {id: NOW,   label: "ServiceNow"}
+      - {id: CAT,   label: "Caterpillar"}
+      - {id: INTU,  label: "Intuit"}
+      - {id: QCOM,  label: "Qualcomm"}
+      - {id: VZ,    label: "Verizon"}
+      - {id: GS,    label: "Goldman Sachs"}
+      - {id: TXN,   label: "Texas Instruments"}
+      - {id: BKNG,  label: "Booking Holdings"}
+      - {id: AXP,   label: "American Express"}
+      - {id: BLK,   label: "BlackRock"}
+      - {id: T,     label: "AT&T"}
+      - {id: SPGI,  label: "S&P Global"}
+      - {id: MS,    label: "Morgan Stanley"}
+      - {id: DHR,   label: "Danaher"}
+      - {id: NEE,   label: "NextEra Energy"}
+      - {id: PFE,   label: "Pfizer"}
+      - {id: RTX,   label: "RTX Corp"}
+      - {id: LOW,   label: "Lowe's"}
+      - {id: AMGN,  label: "Amgen"}
+      - {id: HON,   label: "Honeywell"}
+      - {id: UNP,   label: "Union Pacific"}
+      - {id: AMAT,  label: "Applied Materials"}
+      - {id: SYK,   label: "Stryker"}
+      - {id: ELV,   label: "Elevance Health"}
+      - {id: TJX,   label: "TJX Companies"}
+      - {id: SBUX,  label: "Starbucks"}
+      - {id: C,     label: "Citigroup"}
+      - {id: CB,    label: "Chubb"}
+      - {id: ADP,   label: "ADP"}
+      - {id: DE,    label: "Deere"}
+      - {id: BMY,   label: "Bristol-Myers Squibb"}
+      - {id: LRCX,  label: "Lam Research"}
+      - {id: MDLZ,  label: "Mondelez"}
+      - {id: PLD,   label: "Prologis"}
+      - {id: VRTX,  label: "Vertex Pharma"}
+      - {id: GILD,  label: "Gilead Sciences"}
+      - {id: MMC,   label: "Marsh McLennan"}
+      - {id: SCHW,  label: "Charles Schwab"}
+      - {id: PANW,  label: "Palo Alto Networks"}
+      - {id: ADI,   label: "Analog Devices"}
+      - {id: SO,    label: "Southern Company"}
+      - {id: CI,    label: "Cigna"}
+      - {id: FI,    label: "Fiserv"}
+      - {id: MU,    label: "Micron"}
+      - {id: DUK,   label: "Duke Energy"}
+      - {id: KLAC,  label: "KLA Corp"}
+      - {id: CME,   label: "CME Group"}
+      - {id: BSX,   label: "Boston Scientific"}
+      - {id: CL,    label: "Colgate-Palmolive"}
+      - {id: ICE,   label: "ICE"}
+      - {id: SHW,   label: "Sherwin-Williams"}
+      - {id: REGN,  label: "Regeneron"}
+      - {id: EQIX,  label: "Equinix"}
+      - {id: MCK,   label: "McKesson"}
+      - {id: SNPS,  label: "Synopsys"}
+      - {id: CDNS,  label: "Cadence Design"}
+      - {id: USB,   label: "US Bancorp"}
+      - {id: CMG,   label: "Chipotle"}
+      - {id: MO,    label: "Altria"}
+      # ── Next 100 by market cap ───────────────────────────────────────────
+      - {id: SPY,   label: "SPDR S&P 500 ETF"}
+      - {id: QQQ,   label: "Invesco QQQ ETF"}
+      - {id: IWM,   label: "iShares Russell 2000"}
+      - {id: DIA,   label: "SPDR Dow Jones ETF"}
+      - {id: PYPL,  label: "PayPal"}
+      - {id: PNC,   label: "PNC Financial"}
+      - {id: TGT,   label: "Target"}
+      - {id: ZTS,   label: "Zoetis"}
+      - {id: WELL,  label: "Welltower"}
+      - {id: AON,   label: "Aon"}
+      - {id: APD,   label: "Air Products"}
+      - {id: EMR,   label: "Emerson Electric"}
+      - {id: MRVL,  label: "Marvell Technology"}
+      - {id: ORLY,  label: "O'Reilly Auto"}
+      - {id: COP,   label: "ConocoPhillips"}
+      - {id: AJG,   label: "Arthur J Gallagher"}
+      - {id: HCA,   label: "HCA Healthcare"}
+      - {id: ECL,   label: "Ecolab"}
+      - {id: APH,   label: "Amphenol"}
+      - {id: CARR,  label: "Carrier Global"}
+      - {id: ABNB,  label: "Airbnb"}
+      - {id: FDX,   label: "FedEx"}
+      - {id: AFL,   label: "Aflac"}
+      - {id: TRV,   label: "Travelers"}
+      - {id: PSA,   label: "Public Storage"}
+      - {id: SLB,   label: "Schlumberger"}
+      - {id: MPC,   label: "Marathon Petroleum"}
+      - {id: GM,    label: "General Motors"}
+      - {id: F,     label: "Ford Motor"}
+      - {id: ROST,  label: "Ross Stores"}
+      - {id: AZO,   label: "AutoZone"}
+      - {id: NSC,   label: "Norfolk Southern"}
+      - {id: PCAR,  label: "PACCAR"}
+      - {id: KMB,   label: "Kimberly-Clark"}
+      - {id: OXY,   label: "Occidental Petroleum"}
+      - {id: HLT,   label: "Hilton"}
+      - {id: AIG,   label: "AIG"}
+      - {id: FTNT,  label: "Fortinet"}
+      - {id: D,     label: "Dominion Energy"}
+      - {id: STZ,   label: "Constellation Brands"}
+      - {id: BK,    label: "Bank of New York Mellon"}
+      - {id: KDP,   label: "Keurig Dr Pepper"}
+      - {id: GD,    label: "General Dynamics"}
+      - {id: ALL,   label: "Allstate"}
+      - {id: JCI,   label: "Johnson Controls"}
+      - {id: FAST,  label: "Fastenal"}
+      - {id: WMB,   label: "Williams Companies"}
+      - {id: MSCI,  label: "MSCI"}
+      - {id: YUM,   label: "Yum! Brands"}
+      - {id: SRE,   label: "Sempra"}
+      - {id: KR,    label: "Kroger"}
+      - {id: O,     label: "Realty Income"}
+      - {id: CTAS,  label: "Cintas"}
+      - {id: HSY,   label: "Hershey"}
+      - {id: EA,    label: "Electronic Arts"}
+      - {id: DXCM,  label: "DexCom"}
+      - {id: MNST,  label: "Monster Beverage"}
+      - {id: A,     label: "Agilent Technologies"}
+      - {id: EW,    label: "Edwards Lifesciences"}
+      - {id: BIIB,  label: "Biogen"}
+      - {id: DLTR,  label: "Dollar Tree"}
+      - {id: RCL,   label: "Royal Caribbean"}
+      - {id: VRSK,  label: "Verisk Analytics"}
+      - {id: GIS,   label: "General Mills"}
+      - {id: IDXX,  label: "IDEXX Labs"}
+      - {id: IT,    label: "Gartner"}
+      - {id: EXR,   label: "Extra Space Storage"}
+      - {id: CTSH,  label: "Cognizant"}
+      - {id: ODFL,  label: "Old Dominion Freight"}
+      - {id: GEHC,  label: "GE HealthCare"}
+      - {id: XEL,   label: "Xcel Energy"}
+      - {id: ED,    label: "Consolidated Edison"}
+      - {id: WAB,   label: "Wabtec"}
+      - {id: LHX,   label: "L3Harris"}
+      - {id: NDAQ,  label: "Nasdaq Inc"}
+      - {id: MTD,   label: "Mettler-Toledo"}
+      - {id: DD,    label: "DuPont"}
+      - {id: DOW,   label: "Dow Inc"}
+      - {id: AWK,   label: "American Water Works"}
+      - {id: CPRT,  label: "Copart"}
+      - {id: FANG,  label: "Diamondback Energy"}
+      - {id: ROK,   label: "Rockwell Automation"}
+      - {id: TSCO,  label: "Tractor Supply"}
+      - {id: PPG,   label: "PPG Industries"}
+      - {id: NUE,   label: "Nucor"}
+      - {id: WST,   label: "West Pharmaceutical"}
+      - {id: HES,   label: "Hess Corp"}
+      - {id: CDW,   label: "CDW Corp"}
+      - {id: TTWO,  label: "Take-Two Interactive"}
+      - {id: IRM,   label: "Iron Mountain"}
+      - {id: TRGP,  label: "Targa Resources"}
+      - {id: DG,    label: "Dollar General"}
+      - {id: RMD,   label: "ResMed"}
+      - {id: HAL,   label: "Halliburton"}
+      - {id: ON,    label: "ON Semiconductor"}
+      - {id: GPN,   label: "Global Payments"}
+      - {id: KEYS,  label: "Keysight Technologies"}
+      - {id: LUV,   label: "Southwest Airlines"}
+      - {id: DAL,   label: "Delta Air Lines"}
+      - {id: UAL,   label: "United Airlines"}

@@ -30,7 +30,7 @@ RESULTS_DIR  = BASE_DIR / "data" / "results"
 SCORED_FILE  = RESULTS_DIR / "scored.csv"
 SUMMARY_FILE = RESULTS_DIR / "summary.csv"
 
-CONFIDENCE_LEVELS = [50, 80, 90]
+CONFIDENCE_LEVELS = [90]
 
 
 def compute_hit(row: pd.Series, level: int) -> float | None:

@@ -3,166 +3,314 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About — LLM CI Index</title>
+  <title>About &mdash; LLM Confidence Index</title>
+  <meta name="description" content="Study design, methodology, and scoring formulas for the LLM Confidence Index." />
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
 
 <header>
-  <span class="site-title">LLM CI Index</span>
-  <nav>
-    <a href="./index.html">Index</a>
-    <a href="./about.html" class="active">About</a>
-  </nav>
+  <div class="header-inner">
+    <a href="./index.html" class="site-title">LLM Confidence Index</a>
+    <nav>
+      <a href="./index.html">Dashboard</a>
+      <a href="./about.html" class="active">About</a>
+    </nav>
+  </div>
 </header>
 
 <main>
-  <div class="hero">
-    <h1>About this study</h1>
-    <p>Study 4 of an ongoing empirical research project on overconfidence in frontier LLMs.</p>
-  </div>
 
-  <div class="about-content">
+  <section class="hero">
+    <h1>About This Study</h1>
+    <p class="hero-sub">
+      Study 4 of an ongoing empirical research project on overconfidence in
+      frontier large language models.
+    </p>
+  </section>
 
-    <h2>What we're measuring</h2>
+  <div class="prose">
+
+    <h2>What we measure</h2>
     <p>
-      Frontier AI models routinely produce <strong>confidence intervals</strong> alongside their
-      predictions. A well-calibrated 90% confidence interval should capture the true outcome
-      90% of the time. If a model's stated 90% CIs only contain the true value 60% of the time,
-      the model is <strong>overconfident</strong> — it expresses more certainty than its accuracy warrants.
+      Frontier AI models routinely produce <strong>confidence intervals</strong>
+      alongside their predictions. A well-calibrated 90% confidence interval should
+      contain the true outcome 90% of the time. If a model's stated 90% intervals only
+      capture the actual value 60% of the time, the model is
+      <strong>overconfident</strong> &mdash; it expresses more certainty than its
+      accuracy warrants.
     </p>
     <p>
-      This study tracks that gap continuously and publicly, across four domains and three
-      prediction horizons.
+      This study tracks that gap continuously and publicly, across four prediction
+      domains and three time horizons.
+    </p>
+
+    <h2>Study design</h2>
+    <div class="spec-grid">
+      <div class="spec-card">
+        <div class="spec-value">3</div>
+        <div class="spec-label">AI models</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value">4</div>
+        <div class="spec-label">Domains</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value">40</div>
+        <div class="spec-label">Items per day</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value">3</div>
+        <div class="spec-label">Horizons</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value">3</div>
+        <div class="spec-label">CI levels</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value">360</div>
+        <div class="spec-label">Predictions / day</div>
+      </div>
+    </div>
+    <p>
+      Each weekday at 16:30 UTC (after US market close), we query three AI models
+      with the same set of 40 prediction items. Each model produces a point estimate
+      and three confidence intervals (50%, 80%, 90%) for three future horizons
+      (1-day, 1-week, 1-month).
+    </p>
+    <p>
+      A <strong>separate follow-up API call</strong> then collects the model's
+      free-text reasoning for its prediction. The justification is always collected
+      after the numeric prediction, never combined with it, to avoid the reasoning
+      influencing the numbers.
+    </p>
+    <p>
+      When each prediction's horizon elapses, we fetch the resolved outcome from
+      public data sources and score the prediction. The index updates daily.
     </p>
 
     <h2>The index metric</h2>
     <div class="metric-box">
       <p>
-        <strong>90% CI Hit Rate</strong> = proportion of predictions where the true outcome
-        fell within the model's stated 90% confidence interval, over a rolling 30-day window.
+        <strong>90% CI Hit Rate</strong> = proportion of predictions where the true
+        outcome fell within the model's stated 90% confidence interval, over a
+        rolling 30-day window.
       </p>
-      <p style="margin-top:0.5rem">
-        <strong>Target: 0.90 (90%)</strong>. Below 0.90 = overconfident; above 0.90 = underconfident.
-      </p>
-      <p style="margin-top:0.5rem">
-        We also compute <strong>ECE</strong> (Expected Calibration Error) =
-        mean |stated coverage − empirical coverage| across 50%, 80%, and 90% confidence levels,
-        and a <strong>Brier score</strong> =
-        <code>((point_estimate − actual) / reference_value)²</code> for point-estimate accuracy.
+      <p>
+        <strong>Target: 90%.</strong> Below 90% = overconfident. Above 90% = underconfident.
       </p>
     </div>
 
-    <h2>Study design</h2>
+    <h2>Scoring formulas</h2>
+
+    <h3>Hit rate</h3>
     <p>
-      Each weekday at 16:30 UTC (after US market close), we query three AI models with
-      the same set of 40 prediction items. Each model produces a point estimate and
-      three confidence intervals (50%, 80%, 90%) for three future horizons.
-      A separate follow-up call collects the model's free-text reasoning — always after
-      the prediction, never combined with it.
+      For each confidence level <em>c</em> (50%, 80%, 90%), the hit rate is the
+      proportion of predictions where:
     </p>
+    <div class="formula">CI<sub>c,low</sub> &le; actual &le; CI<sub>c,high</sub></div>
     <p>
-      When each prediction's horizon elapses, we fetch the resolved outcome from public
-      data sources and score the prediction. The index updates daily.
+      A perfectly calibrated model achieves hit rate = <em>c</em> at each level.
+    </p>
+
+    <h3>Expected Calibration Error (ECE)</h3>
+    <div class="formula">ECE = mean( |stated coverage &minus; empirical coverage| )</div>
+    <p>
+      Averaged across the three CI levels (50%, 80%, 90%). Lower is better.
+      ECE = 0 means perfect calibration.
+    </p>
+
+    <h3>Brier score (normalized)</h3>
+    <div class="formula">Brier = ((point_estimate &minus; actual) / reference_value)<sup>2</sup></div>
+    <p>
+      Measures point-estimate accuracy. Normalizing by a reference value (e.g., current
+      stock price) makes the score comparable across items with different scales.
+      Lower is better.
     </p>
 
     <h2>Models</h2>
-    <ul>
-      <li><strong>Claude</strong> — claude-sonnet-4-6 (Anthropic)</li>
-      <li><strong>GPT-4o</strong> — gpt-4o-2024-11-20 (OpenAI)</li>
-      <li><strong>Gemini</strong> — gemini-2.5-flash (Google)</li>
-    </ul>
+    <table class="about-table">
+      <thead>
+        <tr><th>Display name</th><th>Provider</th><th>Model ID</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Claude</strong></td><td>Anthropic</td><td><code>claude-sonnet-4-6</code></td></tr>
+        <tr><td><strong>GPT-4o</strong></td><td>OpenAI</td><td><code>gpt-4o-2024-11-20</code></td></tr>
+        <tr><td><strong>Gemini</strong></td><td>Google</td><td><code>gemini-2.5-flash</code></td></tr>
+      </tbody>
+    </table>
     <p>
-      Model version strings are pinned and recorded verbatim in every prediction file.
-      Any mid-study model update is logged as a version-change event and noted in the data.
+      Model version strings are pinned and recorded verbatim in every prediction
+      file. Any mid-study model update is logged as a version-change event and
+      noted in the data.
     </p>
 
-    <h2>Domains and items</h2>
-    <ul>
-      <li>
-        <strong>Stocks (10)</strong> — SPY, AAPL, MSFT, GOOGL, NVDA, AMZN, META, TSLA, JPM, BRK-B.
-        Actuals from Yahoo Finance (closing price).
-      </li>
-      <li>
-        <strong>Crypto (10)</strong> — BTC, ETH, SOL, BNB, XRP, ADA, AVAX, DOGE, DOT, LINK.
-        Actuals from CoinGecko public API.
-      </li>
-      <li>
-        <strong>Forex (10)</strong> — EUR/USD, GBP/USD, USD/JPY, AUD/USD, USD/CAD, USD/CHF,
-        NZD/USD, USD/CNY, USD/MXN, USD/SGD. Actuals from Yahoo Finance.
-      </li>
-      <li>
-        <strong>Weather (10 cities)</strong> — New York, London, Tokyo, Sydney, São Paulo, Lagos,
-        Mumbai, Toronto, Dubai, Berlin. Metric: mean daily temperature in °F.
-        Actuals from Open-Meteo historical archive (free, no API key).
-      </li>
-    </ul>
+    <h2>Domains and items (40 total)</h2>
+
+    <h3>Stocks (10)</h3>
+    <p>Actuals from Yahoo Finance (closing price, USD).</p>
+    <div class="item-chips">
+      <span class="chip">SPY</span>
+      <span class="chip">AAPL</span>
+      <span class="chip">MSFT</span>
+      <span class="chip">GOOGL</span>
+      <span class="chip">NVDA</span>
+      <span class="chip">AMZN</span>
+      <span class="chip">META</span>
+      <span class="chip">TSLA</span>
+      <span class="chip">JPM</span>
+      <span class="chip">BRK-B</span>
+    </div>
+
+    <h3>Crypto (10)</h3>
+    <p>Actuals from CoinGecko public API (USD).</p>
+    <div class="item-chips">
+      <span class="chip">BTC</span>
+      <span class="chip">ETH</span>
+      <span class="chip">SOL</span>
+      <span class="chip">BNB</span>
+      <span class="chip">XRP</span>
+      <span class="chip">ADA</span>
+      <span class="chip">AVAX</span>
+      <span class="chip">DOGE</span>
+      <span class="chip">DOT</span>
+      <span class="chip">LINK</span>
+    </div>
+
+    <h3>Forex (10)</h3>
+    <p>Actuals from Yahoo Finance (exchange rate).</p>
+    <div class="item-chips">
+      <span class="chip">EUR/USD</span>
+      <span class="chip">GBP/USD</span>
+      <span class="chip">USD/JPY</span>
+      <span class="chip">AUD/USD</span>
+      <span class="chip">USD/CAD</span>
+      <span class="chip">USD/CHF</span>
+      <span class="chip">NZD/USD</span>
+      <span class="chip">USD/CNY</span>
+      <span class="chip">USD/MXN</span>
+      <span class="chip">USD/SGD</span>
+    </div>
+
+    <h3>Weather (10 cities)</h3>
+    <p>
+      Metric: daily mean temperature in degrees F. Actuals from Open-Meteo
+      historical archive (free, no API key required).
+    </p>
+    <div class="item-chips">
+      <span class="chip">New York</span>
+      <span class="chip">London</span>
+      <span class="chip">Tokyo</span>
+      <span class="chip">Sydney</span>
+      <span class="chip">S&atilde;o Paulo</span>
+      <span class="chip">Lagos</span>
+      <span class="chip">Mumbai</span>
+      <span class="chip">Toronto</span>
+      <span class="chip">Dubai</span>
+      <span class="chip">Berlin</span>
+    </div>
 
     <h2>Prediction horizons</h2>
-    <ul>
-      <li><strong>1-day</strong> — target date is prediction date + 1 calendar day</li>
-      <li><strong>1-week</strong> — target date is prediction date + 7 calendar days</li>
-      <li><strong>1-month</strong> — target date is prediction date + 30 calendar days</li>
-    </ul>
+    <table class="about-table">
+      <thead>
+        <tr><th>Horizon</th><th>Target date</th><th>First data available</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>1-Day</strong></td><td>Prediction date + 1 calendar day</td><td>Day 2</td></tr>
+        <tr><td><strong>1-Week</strong></td><td>Prediction date + 7 calendar days</td><td>Day 8</td></tr>
+        <tr><td><strong>1-Month</strong></td><td>Prediction date + 30 calendar days</td><td>Day 31</td></tr>
+      </tbody>
+    </table>
     <p>
-      For financial items, if the target date falls on a weekend or non-trading day,
-      the next available trading day close is used and the adjustment is logged.
+      For financial items, if the target date falls on a weekend or non-trading
+      day, the next available trading day close is used and the adjustment is logged.
+    </p>
+
+    <h2>How predictions are collected</h2>
+    <ol>
+      <li>
+        <strong>Prediction call</strong> &mdash; the model receives the item name,
+        current value, and date. It returns a structured JSON response with a point
+        estimate and three confidence intervals (50%, 80%, 90%) for each of the three
+        horizons.
+      </li>
+      <li>
+        <strong>Justification call</strong> &mdash; a separate follow-up API call
+        asks the model to explain its reasoning. This is always a distinct request,
+        never combined with the prediction, to prevent the reasoning from influencing
+        the numbers.
+      </li>
+    </ol>
+    <p>
+      Each item is predicted once per model per day (no replications). All prompts
+      include a frequency-framed calibration instruction asking the model to consider
+      its interval widths in terms of how often outcomes should fall within them.
     </p>
 
     <h2>Ramp-up period</h2>
     <p>
-      1-day outcomes are available from Day 1. 1-week outcomes from Day 7.
-      1-month outcomes from Day 30. The index for each horizon is withheld until
-      sufficient data is available.
+      1-day outcomes are available starting Day 2 of collection. 1-week outcomes
+      become available from Day 8. 1-month outcomes from Day 31. The index for
+      each horizon is withheld until sufficient data has accumulated. During
+      ramp-up, the dashboard shows a friendly countdown message instead of
+      empty charts.
     </p>
 
     <h2>Limitations</h2>
     <ul>
       <li>
-        <strong>Fixed item set</strong> — the same 40 items are predicted every day.
-        Models may implicitly "learn" the item list over time, though each query is
-        stateless (no conversation history).
+        <strong>Fixed item set</strong> &mdash; the same 40 items are predicted
+        every day. Models may implicitly &ldquo;learn&rdquo; the item list over
+        time, though each query is stateless (no conversation history).
       </li>
       <li>
-        <strong>Single daily snapshot</strong> — predictions are made once per day,
-        not continuously. Intraday volatility is not captured.
+        <strong>Single daily snapshot</strong> &mdash; predictions are collected
+        once per day, not continuously. Intraday volatility is not captured.
       </li>
       <li>
-        <strong>Free API rate limits</strong> — CoinGecko's free tier imposes rate limits.
-        On rare occasions a crypto actual may not be retrieved; affected predictions are
-        marked as status=failed and excluded from hit rate calculations.
+        <strong>Model version pinning</strong> &mdash; API providers may silently
+        update models behind fixed version strings. We log exact model IDs per
+        prediction but cannot fully control for undisclosed upstream changes.
       </li>
       <li>
-        <strong>Model version pinning</strong> — API providers may silently update models
-        behind fixed version strings. We log exact model IDs per prediction but cannot
-        fully control for undisclosed upstream changes.
+        <strong>Free API rate limits</strong> &mdash; CoinGecko's free tier
+        imposes rate limits. On rare occasions a crypto actual may not be retrieved;
+        affected predictions are marked as failed and excluded from scoring.
       </li>
       <li>
-        <strong>No replication across API calls</strong> — each prediction is made once
-        (one run per item per model per day). Stochasticity in model outputs is not averaged.
+        <strong>No replication across API calls</strong> &mdash; each prediction is
+        made once per item per model per day. Stochasticity in model outputs is not
+        averaged out.
       </li>
     </ul>
 
     <h2>Data and code</h2>
     <p>
-      All prediction files, actuals, scored data, and analysis code are available
-      in the project's GitHub repository. This site is a read-only view on those data files.
+      All prediction files, actuals, scored results, and pipeline code are
+      available in the project's
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub repository</a>.
+      This site is a read-only view of those data files, updated automatically
+      by a daily CI/CD pipeline.
     </p>
     <p>
-      This is Study 4 of an ongoing project. Studies 1–3 investigated overconfidence in
-      1-day equity predictions (Study 1), multi-horizon equity predictions (Study 2), and
-      a multi-domain cross-section (Study 3).
-      A research paper covering Studies 1–3 is in preparation.
+      This is <strong>Study 4</strong> of an ongoing project. Studies 1&ndash;3
+      investigated overconfidence in 1-day equity predictions (Study 1),
+      multi-horizon equity predictions (Study 2), and a multi-domain cross-section
+      (Study 3). A research paper covering Studies 1&ndash;3 is in preparation.
     </p>
 
   </div>
+
 </main>
 
 <footer>
-  <p>
-    Data updated automatically each weekday after US market close.
-    Part of an ongoing empirical research project on LLM calibration.
-  </p>
+  <div class="footer-inner">
+    <p>Data updated automatically each weekday after US market close.</p>
+    <p>
+      Part of an ongoing empirical research project on LLM calibration.
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
 </footer>
 
 </body>
