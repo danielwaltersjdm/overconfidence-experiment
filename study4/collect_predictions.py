@@ -417,9 +417,10 @@ def main():
         console.print(f"\n[bold blue]Domain: {domain}[/bold blue]")
 
         for item_cfg in domain_cfg["items"]:
-            # CoinGecko free API rate limit: brief pause between crypto items
+            # CoinGecko free API rate limit: pause between crypto items
+            # Free tier allows ~10-30 calls/min; we need 1 ref call + 2 model calls per item×model
             if domain == "crypto" and not args.dry_run:
-                time.sleep(3)
+                time.sleep(8)
 
             for model_cfg in config["models"]:
                 if args.model and model_cfg["name"] != args.model:
