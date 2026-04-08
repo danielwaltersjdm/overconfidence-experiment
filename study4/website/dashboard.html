@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard &mdash; Center for AI Forecasting and Calibration</title>
+  <meta name="description" content="Live dashboard tracking 90% confidence interval hit rates for Claude, GPT-4o, and Gemini across stocks, crypto, forex, and weather." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="./index.html" class="site-title">CAFC</a>
+    <nav>
+      <a href="./index.html">Home</a>
+      <a href="./dashboard.html" class="active">Dashboard</a>
+      <a href="./blog/">Blog</a>
+      <a href="./research.html">Research</a>
+      <a href="./about.html">About</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>LLM Confidence Index</h1>
+    <p class="hero-sub">
+      Live tracking of AI model calibration. A 90% confidence interval should contain
+      the true outcome 90% of the time. How close do the models get?
+    </p>
+  </section>
+
+  <!-- Status bar -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span class="status-text" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <!-- Model cards -->
+  <section>
+    <div class="section-head">
+      <h2>Current Index</h2>
+      <span class="section-sub">Rolling 30-day &middot; 90% CI hit rate &middot; <span id="cards-horizon-label">1-day horizon</span></span>
+    </div>
+    <div class="cards" id="model-cards"></div>
+  </section>
+
+  <!-- Horizon tabs + chart -->
+  <section>
+    <div class="section-head">
+      <h2>Index Over Time</h2>
+      <div class="tabs" id="horizon-tabs" role="tablist">
+        <button class="tab active" data-hz="1d" role="tab" aria-selected="true">1-Day</button>
+        <button class="tab" data-hz="1w" role="tab" aria-selected="false">1-Week</button>
+        <button class="tab" data-hz="20d" role="tab" aria-selected="false">20-Day</button>
+      </div>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-label">Rolling 30-day 90% CI hit rate &mdash; all models</div>
+      <div class="chart-area" id="chart-area">
+        <canvas id="main-chart"></canvas>
+      </div>
+      <div class="rampup-overlay" id="chart-rampup" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- Domain breakdown -->
+  <section>
+    <div class="section-head">
+      <h2>By Domain</h2>
+      <span class="section-sub">90% CI hit rate &middot; 30-day rolling</span>
+    </div>
+    <div class="table-wrap" id="domain-table"></div>
+  </section>
+
+  <!-- Explainer -->
+  <section class="explainer">
+    <h3>What does this mean?</h3>
+    <p>
+      When an AI model gives a <strong>90% confidence interval</strong>, it claims:
+      &ldquo;I&rsquo;m 90% sure the true value falls between these two numbers.&rdquo;
+      If it really were 90% sure, the true outcome should land inside that interval
+      about 9 times out of 10.
+    </p>
+    <p>
+      The <strong>LLM Confidence Index</strong> measures exactly this. A hit rate
+      near 90% means well-calibrated confidence. A hit rate well below 90% means the
+      model is <strong>overconfident</strong> &mdash; its stated certainty exceeds its
+      actual accuracy.
+    </p>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#dc2626"></span>
+        <span><strong>Target line (90%)</strong> &mdash; perfect calibration</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#16a34a"></span>
+        <span><strong>Above 85%</strong> &mdash; well calibrated</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#d97706"></span>
+        <span><strong>70&ndash;85%</strong> &mdash; slightly overconfident</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#dc2626"></span>
+        <span><strong>Below 70%</strong> &mdash; substantially overconfident</span>
+      </div>
+    </div>
+    <p class="explainer-link">
+      <a href="./about.html">Read more about the methodology &rarr;</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>Center for AI Forecasting and Calibration</strong>
+      <span>Tulane University</span>
+    </div>
+    <div class="footer-links">
+      <a href="./dashboard.html">Dashboard</a>
+      <a href="./blog/">Blog</a>
+      <a href="./research.html">Research</a>
+      <a href="./about.html">About</a>
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="footer-copy">Data updated automatically each weekday after US market close.</p>
+  </div>
+</footer>
+
+<script src="./js/app.js"></script>
+</body>
+</html>

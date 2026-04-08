@@ -181,8 +181,38 @@ def _aggregate(grp: pd.DataFrame) -> dict | None:
     valid_nead = grp["norm_expected_abs_dev"].dropna() if "norm_expected_abs_dev" in grp.columns else pd.Series(dtype=float)
     mad  = valid_nad.mean()  if len(valid_nad)  > 0 else float("nan")
     mead = valid_nead.mean() if len(valid_nead) > 0 else float("nan")
+    mu_val = mead / mad if (not np.isnan(mad) and not np.isnan(mead) and mad > 0) else float("nan")
     result["accuracy"] = _nan_to_none(mad)
-    result["mu"]       = _nan_to_none(mead / mad if (not np.isnan(mad) and not np.isnan(mead) and mad > 0) else float("nan"))
+    result["mu"]       = _nan_to_none(mu_val)
+
+    # Standard errors for error bars (95% CI = mean ± 1.96 * SE)
+    # Accuracy SE: std of normalized absolute deviations / sqrt(n)
+    if len(valid_nad) > 1:
+        acc_se = float(valid_nad.std() / np.sqrt(len(valid_nad)))
+        result["accuracy_se"] = _nan_to_none(acc_se)
+    else:
+        result["accuracy_se"] = None
+
+    # Hit rate SE: sqrt(p*(1-p)/n) for binomial proportion
+    for level in LEVELS:
+        col = f"hit_{level}"
+        if col in grp.columns:
+            hits = grp[col].dropna()
+            if len(hits) > 0:
+                p = hits.mean()
+                hr_se = float(np.sqrt(p * (1 - p) / len(hits))) if len(hits) > 0 else float("nan")
+                result[f"hit_rate_{level}_se"] = _nan_to_none(hr_se)
+
+    # Mu SE: propagated from MEAD and MAD standard errors via delta method
+    # Approximate: SE(mu) ≈ mu * sqrt((SE_mead/mead)^2 + (SE_mad/mad)^2)
+    if len(valid_nad) > 1 and len(valid_nead) > 1 and not np.isnan(mu_val) and mad > 0 and mead > 0:
+        se_mad  = float(valid_nad.std()  / np.sqrt(len(valid_nad)))
+        se_mead = float(valid_nead.std() / np.sqrt(len(valid_nead)))
+        mu_se = abs(mu_val) * np.sqrt((se_mead / mead) ** 2 + (se_mad / mad) ** 2)
+        result["mu_se"] = _nan_to_none(float(mu_se))
+    else:
+        result["mu_se"] = None
+
     return result
 
 

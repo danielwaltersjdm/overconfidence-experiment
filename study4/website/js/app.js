@@ -411,7 +411,7 @@ async function onFilterChange() {
   updateFilterLabel();
   renderCards();
   renderDomainTable();
-  await renderChart();
+  renderChart();
 }
 
 function updateFilterLabel() {
@@ -494,33 +494,79 @@ function renderCards() {
   }).join("");
 }
 
-// ── Time-series chart ────────────────────────────────────────────────────────
+// ── Chart.js error-bars plugin ───────────────────────────────────────────────
 
-async function renderChart() {
+const errorBarPlugin = {
+  id: "errorBars",
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((dataset, i) => {
+      if (!dataset.errorBars) return;
+      const meta = chart.getDatasetMeta(i);
+      if (meta.hidden) return;
+      ctx.save();
+      ctx.strokeStyle = dataset.borderColor || "#333";
+      ctx.lineWidth = 1.5;
+      const capW = 4;
+      dataset.errorBars.forEach((eb, j) => {
+        if (!eb || eb.plus == null || eb.minus == null) return;
+        const pt = meta.data[j];
+        if (!pt) return;
+        const x = pt.x;
+        const yTop = chart.scales.y.getPixelForValue(eb.plus);
+        const yBot = chart.scales.y.getPixelForValue(eb.minus);
+        // Vertical line
+        ctx.beginPath();
+        ctx.moveTo(x, yTop);
+        ctx.lineTo(x, yBot);
+        ctx.stroke();
+        // Top cap
+        ctx.beginPath();
+        ctx.moveTo(x - capW, yTop);
+        ctx.lineTo(x + capW, yTop);
+        ctx.stroke();
+        // Bottom cap
+        ctx.beginPath();
+        ctx.moveTo(x - capW, yBot);
+        ctx.lineTo(x + capW, yBot);
+        ctx.stroke();
+      });
+      ctx.restore();
+    });
+  }
+};
+
+// ── Horizon comparison chart ────────────────────────────────────────────────
+
+function getHorizonData(modelKey, hz) {
+  /** Get aggregate data for a model at a given horizon, respecting filters. */
+  const hData = rolling?.models?.[modelKey]?.horizons?.[hz];
+  if (!hData || hData.status !== "active") return null;
+  if (filterStock) return hData.items?.[filterStock] || null;
+  if (filterSector !== "all") return hData.sectors?.[filterSector] || null;
+  return hData;
+}
+
+function renderChart() {
   const canvas = document.getElementById("main-chart");
   const rampup = document.getElementById("chart-rampup");
   if (!canvas || !rampup) return;
 
-  let chartData = null;
+  // Check if any horizon has data
+  const hasAnyData = horizonsList.some(hz =>
+    modelKeys.some(m => {
+      const d = getHorizonData(m, hz);
+      return d && d.n > 0;
+    })
+  );
 
-  if (filterStock) {
-    const itemSeries = await fetchItemSeries(filterStock);
-    chartData = itemSeries?.horizons?.[horizon];
-  } else if (filterSector !== "all") {
-    const secData = series?.horizons?.[horizon]?.sectors?.[filterSector];
-    if (secData) chartData = { ...secData, dates: series.horizons[horizon].dates };
-  } else {
-    chartData = series?.horizons?.[horizon];
-  }
-
-  if (!chartData || chartData.status === "insufficient_data" || !chartData.dates?.length) {
+  if (!hasAnyData) {
     canvas.style.display = "none";
     rampup.style.display = "flex";
-    const hLabel = horizonLabel(horizon);
     rampup.innerHTML = `
       <div class="rampup-icon">\u23F3</div>
-      <div class="rampup-title">${hLabel} data unavailable</div>
-      <div class="rampup-body">No resolved data for the ${hLabel.toLowerCase()} horizon yet.</div>`;
+      <div class="rampup-title">Data unavailable</div>
+      <div class="rampup-body">No resolved predictions yet. Check back soon.</div>`;
     return;
   }
 
@@ -528,23 +574,47 @@ async function renderChart() {
   rampup.style.display = "none";
 
   const mcfg = METRIC_CONFIG[metric];
-  const labels = chartData.dates || [];
+  const seKey = metric === "hit_rate_90" ? "hit_rate_90_se" : metric + "_se";
+  const labels = horizonsList.map(h => horizonLabel(h));
+
   const datasets = modelKeys.map(m => {
     const cfg = MODELS[m] || { label: m, color: "#6b7280" };
+    const values = [];
+    const errors = [];
+    const sampleSizes = [];
+
+    horizonsList.forEach(hz => {
+      const d = getHorizonData(m, hz);
+      const val = d?.[metric] ?? NaN;
+      const se = d?.[seKey] ?? null;
+      const n = d?.n ?? 0;
+      values.push(val !== null ? val : NaN);
+      sampleSizes.push(n);
+      if (se !== null && se !== undefined && !isNaN(val)) {
+        errors.push({ plus: val + 1.96 * se, minus: val - 1.96 * se });
+      } else {
+        errors.push(null);
+      }
+    });
+
     return {
       label:           cfg.label,
-      data:            (chartData.models?.[m]?.[metric] || []).map(v => v !== null && v !== undefined ? v : NaN),
+      data:            values,
       borderColor:     cfg.color,
-      backgroundColor: cfg.color + "18",
+      backgroundColor: cfg.color + "30",
       borderWidth:     2.5,
-      pointRadius:     labels.length > 25 ? 0 : 3,
-      pointHoverRadius: 5,
-      tension:         0.3,
+      pointRadius:     5,
+      pointHoverRadius: 7,
+      pointBackgroundColor: cfg.color,
+      tension:         0.2,
       spanGaps:        true,
       fill:            false,
+      errorBars:       errors,
+      _sampleSizes:    sampleSizes,
     };
   });
 
+  // Target line
   if (mcfg.target !== null) {
     datasets.push({
       label:       "Target (" + (metric === "mu" ? "1.0" : "90%") + ")",
@@ -563,6 +633,7 @@ async function renderChart() {
   chart = new Chart(canvas.getContext("2d"), {
     type: "line",
     data: { labels, datasets },
+    plugins: [errorBarPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -570,23 +641,34 @@ async function renderChart() {
       plugins: {
         legend: {
           position: "top",
-          labels: { usePointStyle: true, pointStyle: "line", padding: 16, font: { size: 12 } },
+          labels: { usePointStyle: true, pointStyle: "circle", padding: 16, font: { size: 12 } },
         },
         tooltip: {
           backgroundColor: "rgba(15, 23, 42, 0.92)",
           titleFont: { size: 12 }, bodyFont: { size: 12 },
-          padding: 10, cornerRadius: 6,
+          padding: 12, cornerRadius: 6,
           callbacks: {
             label: ctx => {
+              const ds = ctx.dataset;
               const v = ctx.parsed.y;
-              return " " + ctx.dataset.label + ": " + (isNaN(v) ? "\u2014" : mcfg.fmt(v));
+              const valStr = isNaN(v) ? "\u2014" : mcfg.fmt(v);
+              const n = ds._sampleSizes ? ds._sampleSizes[ctx.dataIndex] : null;
+              const eb = ds.errorBars ? ds.errorBars[ctx.dataIndex] : null;
+              let line = " " + ds.label + ": " + valStr;
+              if (n) line += "  (n=" + n.toLocaleString() + ")";
+              if (eb) line += "  [" + mcfg.fmt(eb.minus) + ", " + mcfg.fmt(eb.plus) + "]";
+              return line;
             }
           }
         }
       },
       scales: {
         x: {
-          ticks: { maxTicksLimit: 10, font: { size: 11 }, color: "#94a3b8" },
+          title: {
+            display: true, text: "Prediction Horizon",
+            font: { size: 12, weight: "600" }, color: "#64748b",
+          },
+          ticks: { font: { size: 11 }, color: "#94a3b8" },
           grid: { display: false },
         },
         y: {

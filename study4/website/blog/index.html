@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog &mdash; Center for AI Forecasting and Calibration</title>
+  <meta name="description" content="Posts on AI calibration, overconfidence, and forecasting from the Center for AI Forecasting and Calibration." />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="../index.html" class="site-title">CAFC</a>
+    <nav>
+      <a href="../index.html">Home</a>
+      <a href="../dashboard.html">Dashboard</a>
+      <a href="../blog/" class="active">Blog</a>
+      <a href="../research.html">Research</a>
+      <a href="../about.html">About</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero">
+    <h1>Blog</h1>
+    <p class="hero-sub">
+      Updates, findings, and commentary on AI calibration and forecasting.
+    </p>
+  </section>
+
+  <div class="blog-list" id="blog-list">
+    <p class="loading-text">Loading posts&hellip;</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <strong>Center for AI Forecasting and Calibration</strong>
+      <span>Tulane University</span>
+    </div>
+    <div class="footer-links">
+      <a href="../dashboard.html">Dashboard</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research.html">Research</a>
+      <a href="../about.html">About</a>
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="footer-copy">Data updated automatically each weekday after US market close.</p>
+  </div>
+</footer>
+
+<script>
+(function() {
+  const list = document.getElementById("blog-list");
+  fetch("./posts.json")
+    .then(r => r.json())
+    .then(posts => {
+      if (!posts.length) {
+        list.innerHTML = '<p class="empty-text">No posts yet. Check back soon.</p>';
+        return;
+      }
+      // Sort newest first
+      posts.sort((a, b) => b.date.localeCompare(a.date));
+      list.innerHTML = posts.map(p => {
+        const d = new Date(p.date + "T00:00:00");
+        const dateStr = d.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+        const tags = (p.tags || []).map(t => '<span class="post-tag">' + t + '</span>').join("");
+        return '<a href="./posts/' + p.slug + '.html" class="post-card">' +
+          '<div class="post-card-date">' + dateStr + '</div>' +
+          '<h3 class="post-card-title">' + p.title + '</h3>' +
+          '<p class="post-card-summary">' + p.summary + '</p>' +
+          '<div class="post-card-meta">' +
+            '<span class="post-author">' + (p.author || "") + '</span>' +
+            '<div class="post-tags">' + tags + '</div>' +
+          '</div>' +
+        '</a>';
+      }).join("");
+    })
+    .catch(() => {
+      list.innerHTML = '<p class="empty-text">Could not load posts.</p>';
+    });
+})();
+</script>
+
+</body>
+</html>
