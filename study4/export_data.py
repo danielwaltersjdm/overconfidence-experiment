@@ -26,8 +26,16 @@ BASE_DIR     = Path(__file__).parent
 SCORED_FILE  = BASE_DIR / "data" / "results" / "scored.csv"
 WEBSITE_DATA = BASE_DIR / "website" / "data"
 
-HORIZONS     = ["1d", "1w", "1m"]
-HORIZON_DAYS = {"1d": 1, "1w": 7, "1m": 30}
+# Horizons are discovered dynamically from scored.csv.
+# Fallback defaults if none found:
+DEFAULT_HORIZONS = ["1d", "1w", "1m"]
+
+# Map horizon labels to day counts (for ramp-up calculations)
+HORIZON_DAYS = {
+    "1d": 1, "2d": 2, "3d": 3, "6d": 6, "7d": 7,
+    "14d": 14, "18d": 18, "20d": 20, "21d": 21, "22d": 22, "30d": 30,
+    "1w": 7, "1m": 30,
+}
 LEVELS       = [90]
 
 # ── GICS Sector Mapping ──────────────────────────────────────────────────────
@@ -125,6 +133,14 @@ SECTOR_MAP = {
     "DIA": "Index ETFs",
     # Remaining — mapped individually
     "ON": "Technology", "PYPL": "Financials",
+    # Study 2 tickers not in Study 4's 200
+    "NKE": "Consumer Discretionary", "DIS": "Communication Services",
+    "UBER": "Technology", "PLTR": "Technology",
+    "LMT": "Industrials", "BA": "Industrials", "UPS": "Industrials",
+    "ETN": "Industrials", "MMM": "Industrials", "ITW": "Industrials",
+    "ANET": "Technology", "CRWD": "Technology",
+    "MCO": "Financials", "AMT": "Real Estate",
+    "MDT": "Healthcare", "TFC": "Financials",
 }
 
 
@@ -191,7 +207,20 @@ def _compute_series_point(m_df: pd.DataFrame) -> dict:
     }
 
 
-def build_rolling_index(df: pd.DataFrame, config: dict) -> dict:
+def _sort_horizons(horizons: list[str]) -> list[str]:
+    """Sort horizon labels by day count (e.g., '1d', '2d', ..., '30d')."""
+    def _days(h):
+        return HORIZON_DAYS.get(h, int(h.replace("d", "").replace("w", "").replace("m", "")))
+    return sorted(horizons, key=_days)
+
+
+def _discover_horizons(df: pd.DataFrame) -> list[str]:
+    """Get sorted unique horizon labels from the data."""
+    horizons = df["horizon"].dropna().unique().tolist()
+    return _sort_horizons(horizons) if horizons else DEFAULT_HORIZONS
+
+
+def build_rolling_index(df: pd.DataFrame, config: dict, horizons: list[str]) -> dict:
     """Rolling 30-day stats per model / horizon, with sector + item breakdowns."""
     window  = config.get("rolling_window_days", 30)
     today   = datetime.utcnow().date()
@@ -210,14 +239,15 @@ def build_rolling_index(df: pd.DataFrame, config: dict) -> dict:
         "window_days":      window,
         "study_start_date": study_start,
         "data_through":     today.isoformat(),
+        "horizons_list":    horizons,
         "models":           {},
     }
 
     for model in model_names:
         model_data = {"model_id": model_ids.get(model), "horizons": {}}
 
-        for h_id in HORIZONS:
-            h_days = HORIZON_DAYS[h_id]
+        for h_id in horizons:
+            h_days = HORIZON_DAYS.get(h_id, 1)
             if study_start:
                 first_possible = datetime.fromisoformat(study_start).date() + timedelta(days=h_days)
                 days_until_first = max(0, (first_possible - today).days)
@@ -262,7 +292,7 @@ def build_rolling_index(df: pd.DataFrame, config: dict) -> dict:
     return out
 
 
-def build_time_series(df: pd.DataFrame, config: dict) -> dict:
+def build_time_series(df: pd.DataFrame, config: dict, horizons: list[str]) -> dict:
     """Daily rolling 30-day metrics per model per horizon, aggregate + per-sector."""
     window      = config.get("rolling_window_days", 30)
     model_names = [m["name"] for m in config["models"]]
@@ -277,7 +307,7 @@ def build_time_series(df: pd.DataFrame, config: dict) -> dict:
         "horizons":     {},
     }
 
-    for h_id in HORIZONS:
+    for h_id in horizons:
         h_df = df[(df["horizon"] == h_id) & (df["status"] == "resolved")]
         if h_df.empty:
             out["horizons"][h_id] = {"status": "insufficient_data"}
@@ -328,7 +358,7 @@ def build_time_series(df: pd.DataFrame, config: dict) -> dict:
     return out
 
 
-def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict]):
+def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict], horizons: list[str]):
     """Write per-ticker time series JSON files to website/data/items/."""
     window      = config.get("rolling_window_days", 30)
     model_names = [m["name"] for m in config["models"]]
@@ -350,7 +380,7 @@ def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict]):
 
         i_df = df[df["item_id"] == item_id]
 
-        for h_id in HORIZONS:
+        for h_id in horizons:
             h_df = i_df[(i_df["horizon"] == h_id) & (i_df["status"] == "resolved")]
             if h_df.empty:
                 item_out["horizons"][h_id] = {"status": "insufficient_data"}
@@ -390,17 +420,31 @@ def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict]):
     console.print(f"[bold]Written → {items_dir}/[/bold] ({written} item files)")
 
 
-def build_items_list(config: dict) -> list[dict]:
-    """Build items_list.json from config, adding sector info."""
+def build_items_list(config: dict, df: pd.DataFrame = None) -> list[dict]:
+    """Build items_list.json from config + scored data, adding sector info."""
     items = []
+    seen = set()
+    # From config
     for domain_name, domain_cfg in config.get("domains", {}).items():
         for item in domain_cfg.get("items", []):
             item_id = item["id"]
-            items.append({
-                "id":     item_id,
-                "label":  item.get("label", item_id),
-                "sector": SECTOR_MAP.get(item_id, "Other"),
-            })
+            if item_id not in seen:
+                items.append({
+                    "id":     item_id,
+                    "label":  item.get("label", item_id),
+                    "sector": SECTOR_MAP.get(item_id, "Other"),
+                })
+                seen.add(item_id)
+    # From data (covers tickers not in config, e.g. Study 2 backfill)
+    if df is not None:
+        for item_id in sorted(df["item_id"].unique()):
+            if item_id not in seen:
+                items.append({
+                    "id":     item_id,
+                    "label":  item_id,
+                    "sector": SECTOR_MAP.get(item_id, "Other"),
+                })
+                seen.add(item_id)
     return items
 
 
@@ -419,8 +463,12 @@ def main():
 
     WEBSITE_DATA.mkdir(parents=True, exist_ok=True)
 
+    # Discover horizons from data
+    horizons = _discover_horizons(df)
+    console.print(f"[bold]Horizons discovered:[/bold] {horizons}")
+
     # items_list.json + sectors.json
-    items_meta = build_items_list(config)
+    items_meta = build_items_list(config, df)
     items_path = WEBSITE_DATA / "items_list.json"
     items_path.write_text(json.dumps(items_meta, indent=1))
     console.print(f"[bold]Written → {items_path}[/bold] ({len(items_meta)} items)")
@@ -431,19 +479,19 @@ def main():
     console.print(f"[bold]Written → {sectors_path}[/bold]")
 
     # rolling_index.json
-    rolling = build_rolling_index(df, config)
+    rolling = build_rolling_index(df, config, horizons)
     out_path = WEBSITE_DATA / "rolling_index.json"
     out_path.write_text(json.dumps(rolling, indent=2))
     console.print(f"[bold]Written → {out_path}[/bold]")
 
     # time_series.json (aggregate + per-sector)
-    ts = build_time_series(df, config)
+    ts = build_time_series(df, config, horizons)
     ts_path = WEBSITE_DATA / "time_series.json"
     ts_path.write_text(json.dumps(ts, indent=2))
     console.print(f"[bold]Written → {ts_path}[/bold]")
 
     # Per-item time series
-    build_item_series(df, config, items_meta)
+    build_item_series(df, config, items_meta, horizons)
 
 
 if __name__ == "__main__":
