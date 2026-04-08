@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LLM Confidence Index</title>
-  <meta name="description" content="A live public index tracking whether frontier AI models know what they don't know — measured by confidence interval hit rates across stocks, crypto, forex, and weather." />
+  <meta name="description" content="A live public index tracking whether frontier AI models know what they don't know — measured by calibration metrics across 200 stocks." />
   <link rel="stylesheet" href="./css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -26,8 +26,8 @@
   <section class="hero">
     <h1>Do AI Models Know What They Don't Know?</h1>
     <p class="hero-sub">
-      Every weekday, three frontier AI models predict 40 real-world outcomes across
-      stocks, crypto, forex, and weather. We score their confidence intervals against
+      Every weekday, three frontier AI models predict closing prices for 200 stocks
+      across three time horizons. We score their accuracy and calibration against
       what actually happens and publish the results here &mdash; live.
     </p>
   </section>
@@ -38,16 +38,36 @@
     <span class="status-text" id="status-text">Loading&hellip;</span>
   </div>
 
+  <!-- Filters -->
+  <section>
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label" for="sector-select">Sector</label>
+        <select id="sector-select" class="filter-select">
+          <option value="all">All Sectors</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label" for="stock-search">Stock</label>
+        <div class="stock-search-wrap">
+          <input type="text" id="stock-search" class="filter-input" placeholder="Search ticker or name&hellip;" autocomplete="off" />
+          <div class="stock-dropdown" id="stock-dropdown"></div>
+        </div>
+      </div>
+      <button class="filter-clear" id="filter-clear" style="display:none">Clear filters</button>
+    </div>
+  </section>
+
   <!-- Model cards -->
   <section>
     <div class="section-head">
       <h2>Current Index</h2>
-      <span class="section-sub">Rolling 30-day &middot; 90% CI hit rate &middot; <span id="cards-horizon-label">1-day horizon</span></span>
+      <span class="section-sub">Rolling 30-day &middot; <span id="cards-horizon-label">1-day horizon</span> &middot; <span id="cards-filter-label">all stocks</span></span>
     </div>
     <div class="cards" id="model-cards"></div>
   </section>
 
-  <!-- Horizon tabs + chart -->
+  <!-- Horizon tabs + metric toggle + chart -->
   <section>
     <div class="section-head">
       <h2>Index Over Time</h2>
@@ -58,7 +78,13 @@
       </div>
     </div>
     <div class="chart-panel">
-      <div class="chart-label">Rolling 30-day 90% CI hit rate &mdash; all models</div>
+      <div class="chart-controls">
+        <div class="metric-tabs" id="metric-tabs">
+          <button class="mtab active" data-metric="mu">&mu; (Meta-knowledge)</button>
+          <button class="mtab" data-metric="accuracy">Accuracy</button>
+          <button class="mtab" data-metric="hit_rate_90">90% CI Hit Rate</button>
+        </div>
+      </div>
       <div class="chart-area" id="chart-area">
         <canvas id="main-chart"></canvas>
       </div>
@@ -66,46 +92,50 @@
     </div>
   </section>
 
-  <!-- Domain breakdown -->
+  <!-- Sector breakdown -->
   <section>
     <div class="section-head">
-      <h2>By Domain</h2>
-      <span class="section-sub">90% CI hit rate &middot; 30-day rolling</span>
+      <h2>By Sector</h2>
+      <span class="section-sub">&mu; (MEAD/MAD) &middot; 30-day rolling</span>
     </div>
     <div class="table-wrap" id="domain-table"></div>
   </section>
 
   <!-- Explainer -->
   <section class="explainer">
-    <h3>What does this mean?</h3>
+    <h3>What do these metrics mean?</h3>
     <p>
-      When an AI model gives a <strong>90% confidence interval</strong>, it claims:
-      &ldquo;I&rsquo;m 90% sure the true value falls between these two numbers.&rdquo;
-      If it really were 90% sure, the true outcome should land inside that interval
-      about 9 times out of 10.
+      <strong>&mu; (mu, meta-knowledge ratio)</strong> measures whether a model's
+      confidence intervals match the actual spread of outcomes. A &mu; of 1.0 means
+      the model's stated uncertainty matches reality perfectly. Below 1.0 means
+      <strong>overconfident</strong> (intervals too narrow); above 1.0 means
+      <strong>underconfident</strong> (intervals too wide).
+      Based on <a href="./about.html">Soll &amp; Klayman (2004)</a>.
     </p>
     <p>
-      The <strong>LLM Confidence Index</strong> measures exactly this. A hit rate
-      near 90% means well-calibrated confidence. A hit rate well below 90% means the
-      model is <strong>overconfident</strong> &mdash; its stated certainty exceeds its
-      actual accuracy.
+      <strong>Accuracy</strong> (normalized MAD) is the average prediction error as
+      a percentage of price. Lower is better.
+    </p>
+    <p>
+      <strong>90% CI hit rate</strong> measures how often the true outcome falls
+      inside the model's stated 90% confidence interval. Perfect calibration = 90%.
     </p>
     <div class="legend-grid">
       <div class="legend-item">
         <span class="legend-dot" style="background:#dc2626"></span>
-        <span><strong>Target line (90%)</strong> &mdash; perfect calibration</span>
+        <span><strong>&mu; target = 1.0</strong> &mdash; perfect calibration</span>
       </div>
       <div class="legend-item">
         <span class="legend-dot" style="background:#16a34a"></span>
-        <span><strong>Above 85%</strong> &mdash; well calibrated</span>
+        <span><strong>&mu; 0.85&ndash;1.15</strong> &mdash; well calibrated</span>
       </div>
       <div class="legend-item">
         <span class="legend-dot" style="background:#d97706"></span>
-        <span><strong>70&ndash;85%</strong> &mdash; slightly overconfident</span>
+        <span><strong>&mu; 0.70&ndash;0.85</strong> &mdash; slightly overconfident</span>
       </div>
       <div class="legend-item">
         <span class="legend-dot" style="background:#dc2626"></span>
-        <span><strong>Below 70%</strong> &mdash; substantially overconfident</span>
+        <span><strong>&mu; &lt; 0.70</strong> &mdash; substantially overconfident</span>
       </div>
     </div>
     <p class="explainer-link">

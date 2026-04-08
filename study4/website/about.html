@@ -41,8 +41,8 @@
       accuracy warrants.
     </p>
     <p>
-      This study tracks that gap continuously and publicly, across four prediction
-      domains and three time horizons.
+      This study tracks that gap continuously and publicly, using the calibration
+      framework of Soll &amp; Klayman (2004), across 200 stocks and three time horizons.
     </p>
 
     <h2>Study design</h2>
@@ -52,30 +52,22 @@
         <div class="spec-label">AI models</div>
       </div>
       <div class="spec-card">
-        <div class="spec-value">4</div>
-        <div class="spec-label">Domains</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-value">40</div>
-        <div class="spec-label">Items per day</div>
+        <div class="spec-value">200</div>
+        <div class="spec-label">Stocks</div>
       </div>
       <div class="spec-card">
         <div class="spec-value">3</div>
         <div class="spec-label">Horizons</div>
       </div>
       <div class="spec-card">
-        <div class="spec-value">3</div>
-        <div class="spec-label">CI levels</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-value">360</div>
+        <div class="spec-value">600</div>
         <div class="spec-label">Predictions / day</div>
       </div>
     </div>
     <p>
-      Each weekday at 16:30 UTC (after US market close), we query three AI models
-      with the same set of 40 prediction items. Each model produces a point estimate
-      and three confidence intervals (50%, 80%, 90%) for three future horizons
+      Each weekday after US market close, we query three AI models
+      with the same set of 200 stocks. Each model produces a point estimate
+      and a 90% confidence interval for three future horizons
       (1-day, 1-week, 1-month).
     </p>
     <p>
@@ -85,46 +77,86 @@
       influencing the numbers.
     </p>
     <p>
-      When each prediction's horizon elapses, we fetch the resolved outcome from
-      public data sources and score the prediction. The index updates daily.
+      When each prediction's horizon elapses, we fetch the resolved closing price from
+      Yahoo Finance and score the prediction. The index updates daily.
     </p>
 
-    <h2>The index metric</h2>
+    <h2>Calibration metrics</h2>
+
+    <h3>&mu; (mu) &mdash; Meta-knowledge ratio</h3>
     <div class="metric-box">
       <p>
-        <strong>90% CI Hit Rate</strong> = proportion of predictions where the true
-        outcome fell within the model's stated 90% confidence interval, over a
-        rolling 30-day window.
+        The primary metric on the dashboard. Based on Soll &amp; Klayman (2004),
+        &ldquo;Overconfidence in Interval Estimates,&rdquo;
+        <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>.
       </p>
       <p>
+        &mu; = MEAD / MAD, where:
+      </p>
+    </div>
+    <div class="formula">&mu; = MEAD / MAD</div>
+    <p>
+      <strong>MAD</strong> (Mean Absolute Deviation) is the average absolute difference
+      between the model's point estimate and the actual outcome, normalized by price:
+    </p>
+    <div class="formula">MAD = mean( |actual &minus; point_estimate| / current_price )</div>
+    <p>
+      <strong>MEAD</strong> (Mean Expected Absolute Deviation) is the spread the model
+      <em>expected</em>, derived from its confidence interval width. For a 90% CI
+      assuming normality:
+    </p>
+    <div class="formula">&sigma;<sub>implied</sub> = (CI<sub>high</sub> &minus; CI<sub>low</sub>) / (2 &times; 1.645)</div>
+    <div class="formula">MEAD = mean( &sigma;<sub>implied</sub> &times; &radic;(2/&pi;) / current_price )</div>
+    <p>
+      <strong>Interpretation:</strong>
+    </p>
+    <ul>
+      <li><strong>&mu; = 1.0</strong> &mdash; perfectly calibrated. The model's stated
+        uncertainty matches the actual spread of outcomes.</li>
+      <li><strong>&mu; &lt; 1</strong> &mdash; overconfident. Confidence intervals are
+        too narrow relative to actual prediction error.</li>
+      <li><strong>&mu; &gt; 1</strong> &mdash; underconfident. Confidence intervals are
+        wider than necessary.</li>
+    </ul>
+
+    <h3>Accuracy (normalized MAD)</h3>
+    <div class="metric-box">
+      <p>
+        The average prediction error as a percentage of the current price.
+        This measures raw forecasting skill, independent of calibration.
+        <strong>Lower is better.</strong>
+      </p>
+    </div>
+    <div class="formula">Accuracy = mean( |actual &minus; point_estimate| / current_price ) &times; 100%</div>
+    <p>
+      This is mathematically identical to the MAD in the &mu; formula, just displayed
+      as a standalone percentage. A model can have good accuracy (low error) but poor
+      calibration (intervals that don't match the error), or vice versa.
+    </p>
+
+    <h3>90% CI Hit Rate</h3>
+    <div class="metric-box">
+      <p>
+        The proportion of predictions where the actual outcome fell within the
+        model's stated 90% confidence interval.
         <strong>Target: 90%.</strong> Below 90% = overconfident. Above 90% = underconfident.
       </p>
     </div>
+    <div class="formula">Hit Rate = count(CI<sub>low</sub> &le; actual &le; CI<sub>high</sub>) / N</div>
 
-    <h2>Scoring formulas</h2>
-
-    <h3>Hit rate</h3>
-    <p>
-      For each confidence level <em>c</em> (50%, 80%, 90%), the hit rate is the
-      proportion of predictions where:
-    </p>
-    <div class="formula">CI<sub>c,low</sub> &le; actual &le; CI<sub>c,high</sub></div>
-    <p>
-      A perfectly calibrated model achieves hit rate = <em>c</em> at each level.
-    </p>
+    <h3>Additional metrics (in scored data)</h3>
 
     <h3>Expected Calibration Error (ECE)</h3>
-    <div class="formula">ECE = mean( |stated coverage &minus; empirical coverage| )</div>
+    <div class="formula">ECE = |stated coverage &minus; empirical coverage|</div>
     <p>
-      Averaged across the three CI levels (50%, 80%, 90%). Lower is better.
-      ECE = 0 means perfect calibration.
+      For the 90% CI level. Lower is better. ECE = 0 means perfect calibration.
     </p>
 
     <h3>Brier score (normalized)</h3>
-    <div class="formula">Brier = ((point_estimate &minus; actual) / reference_value)<sup>2</sup></div>
+    <div class="formula">Brier = ((point_estimate &minus; actual) / current_price)<sup>2</sup></div>
     <p>
-      Measures point-estimate accuracy. Normalizing by a reference value (e.g., current
-      stock price) makes the score comparable across items with different scales.
+      Measures point-estimate accuracy as squared error. Normalizing by current
+      price makes the score comparable across stocks at different price levels.
       Lower is better.
     </p>
 
@@ -141,74 +173,15 @@
     </table>
     <p>
       Model version strings are pinned and recorded verbatim in every prediction
-      file. Any mid-study model update is logged as a version-change event and
-      noted in the data.
+      file. Any mid-study model update is logged as a version-change event.
     </p>
 
-    <h2>Domains and items (40 total)</h2>
-
-    <h3>Stocks (10)</h3>
-    <p>Actuals from Yahoo Finance (closing price, USD).</p>
-    <div class="item-chips">
-      <span class="chip">SPY</span>
-      <span class="chip">AAPL</span>
-      <span class="chip">MSFT</span>
-      <span class="chip">GOOGL</span>
-      <span class="chip">NVDA</span>
-      <span class="chip">AMZN</span>
-      <span class="chip">META</span>
-      <span class="chip">TSLA</span>
-      <span class="chip">JPM</span>
-      <span class="chip">BRK-B</span>
-    </div>
-
-    <h3>Crypto (10)</h3>
-    <p>Actuals from CoinGecko public API (USD).</p>
-    <div class="item-chips">
-      <span class="chip">BTC</span>
-      <span class="chip">ETH</span>
-      <span class="chip">SOL</span>
-      <span class="chip">BNB</span>
-      <span class="chip">XRP</span>
-      <span class="chip">ADA</span>
-      <span class="chip">AVAX</span>
-      <span class="chip">DOGE</span>
-      <span class="chip">DOT</span>
-      <span class="chip">LINK</span>
-    </div>
-
-    <h3>Forex (10)</h3>
-    <p>Actuals from Yahoo Finance (exchange rate).</p>
-    <div class="item-chips">
-      <span class="chip">EUR/USD</span>
-      <span class="chip">GBP/USD</span>
-      <span class="chip">USD/JPY</span>
-      <span class="chip">AUD/USD</span>
-      <span class="chip">USD/CAD</span>
-      <span class="chip">USD/CHF</span>
-      <span class="chip">NZD/USD</span>
-      <span class="chip">USD/CNY</span>
-      <span class="chip">USD/MXN</span>
-      <span class="chip">USD/SGD</span>
-    </div>
-
-    <h3>Weather (10 cities)</h3>
+    <h2>Stocks (200)</h2>
     <p>
-      Metric: daily mean temperature in degrees F. Actuals from Open-Meteo
-      historical archive (free, no API key required).
+      The S&amp;P 100 plus the next 100 largest US equities by market cap, plus 4
+      major index ETFs (SPY, QQQ, IWM, DIA). All actuals from Yahoo Finance (closing
+      price, USD). Stocks are grouped by GICS sector for aggregate analysis.
     </p>
-    <div class="item-chips">
-      <span class="chip">New York</span>
-      <span class="chip">London</span>
-      <span class="chip">Tokyo</span>
-      <span class="chip">Sydney</span>
-      <span class="chip">S&atilde;o Paulo</span>
-      <span class="chip">Lagos</span>
-      <span class="chip">Mumbai</span>
-      <span class="chip">Toronto</span>
-      <span class="chip">Dubai</span>
-      <span class="chip">Berlin</span>
-    </div>
 
     <h2>Prediction horizons</h2>
     <table class="about-table">
@@ -222,46 +195,16 @@
       </tbody>
     </table>
     <p>
-      For financial items, if the target date falls on a weekend or non-trading
-      day, the next available trading day close is used and the adjustment is logged.
-    </p>
-
-    <h2>How predictions are collected</h2>
-    <ol>
-      <li>
-        <strong>Prediction call</strong> &mdash; the model receives the item name,
-        current value, and date. It returns a structured JSON response with a point
-        estimate and three confidence intervals (50%, 80%, 90%) for each of the three
-        horizons.
-      </li>
-      <li>
-        <strong>Justification call</strong> &mdash; a separate follow-up API call
-        asks the model to explain its reasoning. This is always a distinct request,
-        never combined with the prediction, to prevent the reasoning from influencing
-        the numbers.
-      </li>
-    </ol>
-    <p>
-      Each item is predicted once per model per day (no replications). All prompts
-      include a frequency-framed calibration instruction asking the model to consider
-      its interval widths in terms of how often outcomes should fall within them.
-    </p>
-
-    <h2>Ramp-up period</h2>
-    <p>
-      1-day outcomes are available starting Day 2 of collection. 1-week outcomes
-      become available from Day 8. 1-month outcomes from Day 31. The index for
-      each horizon is withheld until sufficient data has accumulated. During
-      ramp-up, the dashboard shows a friendly countdown message instead of
-      empty charts.
+      If the target date falls on a weekend or non-trading day, the next available
+      trading day close is used and the adjustment is logged.
     </p>
 
     <h2>Limitations</h2>
     <ul>
       <li>
-        <strong>Fixed item set</strong> &mdash; the same 40 items are predicted
-        every day. Models may implicitly &ldquo;learn&rdquo; the item list over
-        time, though each query is stateless (no conversation history).
+        <strong>Single asset class</strong> &mdash; this study tracks US equities
+        only. Cross-domain generalization (crypto, forex, weather) was explored
+        in Study 3.
       </li>
       <li>
         <strong>Single daily snapshot</strong> &mdash; predictions are collected
@@ -273,14 +216,22 @@
         prediction but cannot fully control for undisclosed upstream changes.
       </li>
       <li>
-        <strong>Free API rate limits</strong> &mdash; CoinGecko's free tier
-        imposes rate limits. On rare occasions a crypto actual may not be retrieved;
-        affected predictions are marked as failed and excluded from scoring.
+        <strong>No replication</strong> &mdash; each prediction is made once per
+        item per model per day. Stochasticity in model outputs is not averaged out.
       </li>
       <li>
-        <strong>No replication across API calls</strong> &mdash; each prediction is
-        made once per item per model per day. Stochasticity in model outputs is not
-        averaged out.
+        <strong>Normality assumption</strong> &mdash; the &mu; calculation assumes
+        returns are normally distributed when converting CI width to implied standard
+        deviation. Fat-tailed distributions would affect the MEAD estimate.
+      </li>
+    </ul>
+
+    <h2>References</h2>
+    <ul>
+      <li>
+        Soll, J. B., &amp; Klayman, J. (2004). Overconfidence in interval estimates.
+        <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>,
+        30(2), 299&ndash;314.
       </li>
     </ul>
 
