@@ -42,7 +42,9 @@ def convert():
 
     # Map columns to Study 4 schema
     out = pd.DataFrame()
-    out["model"] = df["model"]
+    # Map Study 2 model names to Study 4 names (gpt4 → gpt4o)
+    model_map = {"gpt4": "gpt4o"}
+    out["model"] = df["model"].map(lambda m: model_map.get(m, m))
     out["domain"] = "stocks"
     out["item_id"] = df["ticker"]
     out["pred_date"] = df["pred_date"]

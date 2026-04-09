@@ -1,215 +1,42 @@
 /**
  * app.js — LLM Confidence Index Dashboard
  *
- * Reads rolling_index.json, time_series.json, items_list.json from ./data/.
- * Falls back to inline mock data if files are unavailable.
- * Supports filtering by sector and individual stock (on-demand loading).
- * Horizons discovered dynamically from the data (supports 1–30+ day horizons).
+ * Reads rolling_index.json, items_list.json from ./data/.
+ * Chart: all prediction horizons on x-axis with 95% CI error bars.
+ * Cards + sector table: filterable by horizon, sector, stock.
  */
 
 "use strict";
 
-// ── Model config ─────────────────────────────────────────────────────────────
+// ── Model config (static display props; models discovered from data) ────────
 
-const MODELS = {
+const MODEL_DISPLAY = {
   claude: { label: "Claude",  color: "#7c3aed" },
   gpt4o:  { label: "GPT-4o", color: "#059669" },
   gpt4:   { label: "GPT-4",  color: "#059669" },
   gemini: { label: "Gemini", color: "#d97706" },
 };
-const MODEL_KEYS_DEFAULT = ["claude", "gpt4o", "gemini"];
 
 const METRIC_CONFIG = {
-  mu:          { label: "\u03bc (MEAD / MAD)", target: 1.0, min: 0, max: 2, fmt: v => v === null || isNaN(v) ? "\u2014" : v.toFixed(2) },
-  accuracy:    { label: "Accuracy (normalized MAD)", target: null, min: 0, max: null, fmt: v => v === null || isNaN(v) ? "\u2014" : (v * 100).toFixed(2) + "%" },
-  hit_rate_90: { label: "90% CI Hit Rate", target: 0.90, min: 0, max: 1, fmt: v => pct(v) },
+  mu:          { label: "\u03bc (MEAD / MAD)", seKey: "mu_se", target: 1.0, fmt: v => v == null || isNaN(v) ? "\u2014" : v.toFixed(2) },
+  accuracy:    { label: "Accuracy (norm. MAD)", seKey: "accuracy_se", target: null, fmt: v => v == null || isNaN(v) ? "\u2014" : (v * 100).toFixed(2) + "%" },
+  hit_rate_90: { label: "90% CI Hit Rate", seKey: "hit_rate_90_se", target: 0.90, fmt: v => v == null || isNaN(v) ? "\u2014" : (v * 100).toFixed(1) + "%" },
 };
 
 // ── State ────────────────────────────────────────────────────────────────────
 
 let rolling = null;
-let series = null;
 let itemsList = [];
-let horizonsList = [];
-let modelKeys = [];
-let horizon = "1d";
+let modelKeys = [];     // discovered from data
+let allHorizons = [];   // discovered from data, sorted short-to-long
+let horizon = null;     // selected horizon for cards/table
 let metric = "mu";
 let chart = null;
-let usingMock = false;
 
+// Filter state
 let filterSector = "all";
 let filterStock = null;
 let stockSeriesCache = {};
-
-// ── Horizon helpers ──────────────────────────────────────────────────────────
-
-function horizonDays(h) {
-  const m = h.match(/^(\d+)/);
-  return m ? parseInt(m[1], 10) : 1;
-}
-
-function horizonLabel(h) {
-  const days = horizonDays(h);
-  if (days === 1) return "1-Day";
-  if (days === 7) return "1-Week";
-  if (days === 30) return "1-Month";
-  return days + "-Day";
-}
-
-function sortHorizons(arr) {
-  return arr.slice().sort((a, b) => horizonDays(a) - horizonDays(b));
-}
-
-// ── Mock data ────────────────────────────────────────────────────────────────
-
-function generateMockData() {
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(startDate.getDate() - 40);
-  const startStr = startDate.toISOString().split("T")[0];
-  const todayStr = today.toISOString().split("T")[0];
-
-  const dates = [];
-  const d = new Date(startDate);
-  while (dates.length < 25) {
-    d.setDate(d.getDate() + 1);
-    if (d.getDay() !== 0 && d.getDay() !== 6) dates.push(d.toISOString().split("T")[0]);
-  }
-
-  function noisySeries(base, len, spread) {
-    const arr = []; let v = base;
-    for (let i = 0; i < len; i++) {
-      v += (Math.random() - 0.5) * spread;
-      v = Math.max(0.1, Math.min(2.0, v));
-      arr.push(Math.round(v * 1000) / 1000);
-    }
-    return arr;
-  }
-
-  const sectors = ["Technology", "Financials", "Healthcare", "Consumer Discretionary",
-                   "Consumer Staples", "Industrials", "Energy", "Utilities"];
-  const mockHorizons = ["1d", "2d", "3d", "6d", "7d", "14d", "18d", "20d", "21d", "22d", "30d"];
-  const mockModels = ["claude", "gpt4", "gemini"];
-
-  const mockItems = [
-    {id:"AAPL",label:"Apple",sector:"Technology"},{id:"MSFT",label:"Microsoft",sector:"Technology"},
-    {id:"NVDA",label:"NVIDIA",sector:"Technology"},{id:"GOOGL",label:"Alphabet A",sector:"Technology"},
-    {id:"JPM",label:"JPMorgan Chase",sector:"Financials"},{id:"BAC",label:"Bank of America",sector:"Financials"},
-    {id:"UNH",label:"UnitedHealth",sector:"Healthcare"},{id:"LLY",label:"Eli Lilly",sector:"Healthcare"},
-    {id:"AMZN",label:"Amazon",sector:"Consumer Discretionary"},{id:"TSLA",label:"Tesla",sector:"Consumer Discretionary"},
-    {id:"XOM",label:"Exxon Mobil",sector:"Energy"},{id:"CVX",label:"Chevron",sector:"Energy"},
-  ];
-
-  const baseMu  = { claude: 0.92, gpt4: 0.65, gemini: 0.80 };
-  const baseAcc = { claude: 0.025, gpt4: 0.038, gemini: 0.030 };
-  const baseHR  = { claude: 0.85, gpt4: 0.55, gemini: 0.72 };
-
-  const rollingIndex = {
-    generated_at: new Date().toISOString(), window_days: 30,
-    study_start_date: startStr, data_through: todayStr,
-    horizons_list: mockHorizons, _mock: true, models: {}
-  };
-
-  mockModels.forEach(m => {
-    const hzData = {};
-    mockHorizons.forEach(hz => {
-      const hDays = horizonDays(hz);
-      // Degrade calibration slightly with longer horizons
-      const degradation = hDays * 0.003;
-      const sectorData = {};
-      sectors.forEach(sec => {
-        const offset = (Math.random() - 0.5) * 0.15;
-        sectorData[sec] = {
-          n: 15 + Math.round(Math.random() * 30),
-          mu: Math.round(Math.max(0.3, Math.min(1.8, baseMu[m] - degradation + offset)) * 1000) / 1000,
-          accuracy: Math.round(Math.max(0.005, baseAcc[m] + degradation * 0.3 + (Math.random() - 0.5) * 0.01) * 10000) / 10000,
-          hit_rate_90: Math.round(Math.max(0.3, Math.min(1.0, baseHR[m] - degradation + offset * 0.5)) * 1000) / 1000,
-        };
-      });
-      const itemData = {};
-      mockItems.forEach(it => {
-        const offset = (Math.random() - 0.5) * 0.2;
-        itemData[it.id] = {
-          n: 3 + Math.round(Math.random() * 5),
-          mu: Math.round(Math.max(0.2, Math.min(2.0, baseMu[m] - degradation + offset)) * 1000) / 1000,
-          accuracy: Math.round(Math.max(0.003, baseAcc[m] + degradation * 0.3 + (Math.random() - 0.5) * 0.02) * 10000) / 10000,
-          hit_rate_90: Math.round(Math.max(0.2, Math.min(1.0, baseHR[m] - degradation + offset * 0.4)) * 1000) / 1000,
-        };
-      });
-      hzData[hz] = {
-        status: "active", days_until_first: 0,
-        n: dates.length * 50,
-        mu: Math.round((baseMu[m] - degradation) * 1000) / 1000,
-        accuracy: Math.round((baseAcc[m] + degradation * 0.3) * 10000) / 10000,
-        hit_rate_90: Math.round((baseHR[m] - degradation) * 1000) / 1000,
-        mean_ece: Math.round(Math.abs(0.90 - baseHR[m] + degradation) * 0.7 * 1000) / 1000,
-        sectors: sectorData, items: itemData,
-      };
-    });
-    rollingIndex.models[m] = {
-      model_id: m === "claude" ? "claude-sonnet-4-20250514" : m === "gpt4" ? "gpt-4o" : "gemini-2.5-flash",
-      horizons: hzData,
-    };
-  });
-
-  const timeSeries = {
-    generated_at: new Date().toISOString(), window_days: 30, _mock: true, horizons: {}
-  };
-  mockHorizons.forEach(hz => {
-    const hDays = horizonDays(hz);
-    const deg = hDays * 0.003;
-    const hzSectors = {};
-    sectors.forEach(sec => {
-      hzSectors[sec] = { models: {} };
-      mockModels.forEach(m => {
-        hzSectors[sec].models[m] = {
-          hit_rate_90: noisySeries(baseHR[m] - deg, dates.length, 0.1),
-          mu: noisySeries(baseMu[m] - deg, dates.length, 0.12),
-          accuracy: noisySeries(baseAcc[m] + deg * 0.3, dates.length, 0.01),
-          n: dates.map(() => 3 + Math.round(Math.random() * 5)),
-        };
-      });
-    });
-    timeSeries.horizons[hz] = {
-      status: "active", dates: dates,
-      models: {},
-      sectors: hzSectors,
-    };
-    mockModels.forEach(m => {
-      timeSeries.horizons[hz].models[m] = {
-        hit_rate_90: noisySeries(baseHR[m] - deg, dates.length, 0.06),
-        mu: noisySeries(baseMu[m] - deg, dates.length, 0.08),
-        accuracy: noisySeries(baseAcc[m] + deg * 0.3, dates.length, 0.008),
-        n: dates.map((_, i) => 20 * (i + 1)),
-      };
-    });
-  });
-
-  return { rollingIndex, timeSeries, itemsList: mockItems };
-}
-
-function generateMockItemSeries(ticker) {
-  const today = new Date();
-  const dates = [];
-  const d = new Date(today);
-  d.setDate(d.getDate() - 30);
-  while (dates.length < 15) {
-    d.setDate(d.getDate() + 1);
-    if (d.getDay() !== 0 && d.getDay() !== 6) dates.push(d.toISOString().split("T")[0]);
-  }
-  function ns(b,l,s){const a=[];let v=b;for(let i=0;i<l;i++){v+=(Math.random()-0.5)*s;v=Math.max(0.1,Math.min(2,v));a.push(Math.round(v*1000)/1000);}return a;}
-  const hzs = {};
-  horizonsList.forEach(hz => {
-    hzs[hz] = { status:"active", dates, models:{} };
-    modelKeys.forEach(m => {
-      hzs[hz].models[m] = {
-        hit_rate_90:ns(0.75,dates.length,0.15), mu:ns(0.85,dates.length,0.2),
-        accuracy:ns(0.03,dates.length,0.015), n:dates.map(()=>1),
-      };
-    });
-  });
-  return { ticker, label: ticker, sector: "Unknown", horizons: hzs };
-}
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
@@ -217,32 +44,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   setStatus("amber", "Loading data\u2026");
 
   try {
-    const [ri, ts, il] = await Promise.all([
+    const [ri, il] = await Promise.all([
       fetchJSON("./data/rolling_index.json"),
-      fetchJSON("./data/time_series.json"),
       fetchJSON("./data/items_list.json"),
     ]);
     rolling = ri;
-    series = ts;
-    itemsList = Array.isArray(il) ? il : [];
-    usingMock = false;
-  } catch {
-    const mock = generateMockData();
-    rolling = mock.rollingIndex;
-    series = mock.timeSeries;
-    itemsList = mock.itemsList;
-    usingMock = true;
+    itemsList = il;
+  } catch (err) {
+    console.error("Failed to load data:", err);
+    setStatus("red", "Failed to load data");
+    return;
   }
 
-  // Discover models and horizons from data
+  // Discover models + horizons from data
   modelKeys = Object.keys(rolling.models || {});
-  if (modelKeys.length === 0) modelKeys = MODEL_KEYS_DEFAULT;
-
-  horizonsList = rolling.horizons_list
-    ? sortHorizons(rolling.horizons_list)
-    : sortHorizons(Object.keys(series?.horizons || {}));
-  if (horizonsList.length === 0) horizonsList = ["1d"];
-  horizon = horizonsList[0];
+  allHorizons = rolling.horizons || discoverHorizons();
+  horizon = allHorizons[0] || "1d";
 
   populateHorizonSelect();
   populateSectorFilter();
@@ -254,27 +71,46 @@ document.addEventListener("DOMContentLoaded", async () => {
   bindFilters();
 });
 
+function discoverHorizons() {
+  const hSet = new Set();
+  for (const m of Object.values(rolling.models || {})) {
+    for (const h of Object.keys(m.horizons || {})) {
+      if (m.horizons[h].status === "active") hSet.add(h);
+    }
+  }
+  return sortHorizons([...hSet]);
+}
+
+function sortHorizons(arr) {
+  return arr.sort((a, b) => horizonDays(a) - horizonDays(b));
+}
+
+function horizonDays(h) {
+  h = h.toLowerCase();
+  if (h.endsWith("d")) return parseInt(h);
+  if (h.endsWith("w")) return parseInt(h) * 7;
+  if (h.endsWith("m")) return parseInt(h) * 30;
+  return 9999;
+}
+
+function horizonLabel(h) {
+  const d = horizonDays(h);
+  if (d === 1) return "1-Day";
+  if (d < 7) return d + "-Day";
+  if (d === 7) return "1-Week";
+  if (d < 30) return d + "-Day";
+  if (d === 30) return "1-Month";
+  return h;
+}
+
 // ── Data loading ─────────────────────────────────────────────────────────────
 
 async function fetchJSON(url) {
-  const r = await fetch(url);
+  const r = await fetch(url, { cache: "no-store" });
   if (!r.ok) throw new Error("HTTP " + r.status);
   const data = await r.json();
   if (!data || typeof data !== "object") throw new Error("Empty");
   return data;
-}
-
-async function fetchItemSeries(ticker) {
-  if (stockSeriesCache[ticker]) return stockSeriesCache[ticker];
-  try {
-    const data = await fetchJSON("./data/items/" + ticker + ".json");
-    stockSeriesCache[ticker] = data;
-    return data;
-  } catch {
-    const mock = generateMockItemSeries(ticker);
-    stockSeriesCache[ticker] = mock;
-    return mock;
-  }
 }
 
 // ── Status bar ───────────────────────────────────────────────────────────────
@@ -287,22 +123,18 @@ function setStatus(color, text) {
 }
 
 function updateStatus() {
-  if (usingMock) { setStatus("amber", "Showing sample data \u2014 live data not yet available"); return; }
-  const gen = rolling?.generated_at;
-  if (!gen) { setStatus("red", "Data unavailable"); return; }
-  const hours = (Date.now() - new Date(gen).getTime()) / (1000 * 60 * 60);
-  if (hours < 26)      setStatus("green", "Updated " + fmtDate(gen));
-  else if (hours < 72) setStatus("amber", "Updated " + fmtDate(gen));
-  else                 setStatus("red", "Last update: " + fmtDate(gen));
+  const dt = rolling?.data_through;
+  if (!dt) { setStatus("red", "Data unavailable"); return; }
+  setStatus("green", "Data through " + dt);
 }
 
-// ── Horizon selector ─────────────────────────────────────────────────────────
+// ── Filters ──────────────────────────────────────────────────────────────────
 
 function populateHorizonSelect() {
   const sel = document.getElementById("horizon-select");
   if (!sel) return;
   sel.innerHTML = "";
-  horizonsList.forEach(h => {
+  allHorizons.forEach(h => {
     const opt = document.createElement("option");
     opt.value = h;
     opt.textContent = horizonLabel(h);
@@ -310,17 +142,6 @@ function populateHorizonSelect() {
   });
   sel.value = horizon;
 }
-
-function bindHorizonSelect() {
-  const sel = document.getElementById("horizon-select");
-  if (!sel) return;
-  sel.addEventListener("change", () => {
-    horizon = sel.value;
-    renderForHorizon();
-  });
-}
-
-// ── Filters ──────────────────────────────────────────────────────────────────
 
 function populateSectorFilter() {
   const sel = document.getElementById("sector-select");
@@ -380,6 +201,28 @@ function selectStock(ticker) {
   onFilterChange();
 }
 
+function bindHorizonSelect() {
+  const sel = document.getElementById("horizon-select");
+  if (!sel) return;
+  sel.addEventListener("change", () => {
+    horizon = sel.value;
+    renderCards();
+    renderDomainTable();
+  });
+}
+
+function bindMetricTabs() {
+  document.querySelectorAll("#metric-tabs .mtab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      metric = btn.dataset.metric;
+      document.querySelectorAll("#metric-tabs .mtab").forEach(b => {
+        b.classList.toggle("active", b.dataset.metric === metric);
+      });
+      renderChart();
+    });
+  });
+}
+
 function bindFilters() {
   const secSel = document.getElementById("sector-select");
   const clearBtn = document.getElementById("filter-clear");
@@ -407,7 +250,7 @@ function bindFilters() {
   }
 }
 
-async function onFilterChange() {
+function onFilterChange() {
   updateFilterLabel();
   renderCards();
   renderDomainTable();
@@ -431,28 +274,6 @@ function render() {
   updateFilterLabel();
 }
 
-function renderForHorizon() {
-  renderCards();
-  renderChart();
-  renderDomainTable();
-  document.getElementById("cards-horizon-label").textContent =
-    horizonLabel(horizon).toLowerCase() + " horizon";
-}
-
-// ── Metric tabs ──────────────────────────────────────────────────────────────
-
-function bindMetricTabs() {
-  document.querySelectorAll("#metric-tabs .mtab").forEach(btn => {
-    btn.addEventListener("click", () => {
-      metric = btn.dataset.metric;
-      document.querySelectorAll("#metric-tabs .mtab").forEach(b => {
-        b.classList.toggle("active", b.dataset.metric === metric);
-      });
-      renderChart();
-    });
-  });
-}
-
 // ── Model cards ──────────────────────────────────────────────────────────────
 
 function getCardData(modelKey) {
@@ -468,7 +289,7 @@ function renderCards() {
   if (!container) return;
 
   container.innerHTML = modelKeys.map(m => {
-    const cfg = MODELS[m] || { label: m, color: "#6b7280" };
+    const cfg = MODEL_DISPLAY[m] || { label: m, color: "#64748b" };
     const d = getCardData(m);
     const mu = d?.mu ?? null;
     const acc = d?.accuracy ?? null;
@@ -494,53 +315,53 @@ function renderCards() {
   }).join("");
 }
 
-// ── Chart.js error-bars plugin ───────────────────────────────────────────────
+// ── Chart: all horizons on x-axis with error bars ───────────────────────────
 
+// Custom Chart.js plugin for vertical error bars
 const errorBarPlugin = {
   id: "errorBars",
   afterDatasetsDraw(chart) {
     const ctx = chart.ctx;
-    chart.data.datasets.forEach((dataset, i) => {
-      if (!dataset.errorBars) return;
-      const meta = chart.getDatasetMeta(i);
-      if (meta.hidden) return;
-      ctx.save();
-      ctx.strokeStyle = dataset.borderColor || "#333";
-      ctx.lineWidth = 1.5;
-      const capW = 4;
-      dataset.errorBars.forEach((eb, j) => {
-        if (!eb || eb.plus == null || eb.minus == null) return;
-        const pt = meta.data[j];
+    chart.data.datasets.forEach((ds, dsIdx) => {
+      if (!ds._errorBars) return;
+      const meta = chart.getDatasetMeta(dsIdx);
+      ds._errorBars.forEach((eb, i) => {
+        if (!eb || eb.lo == null || eb.hi == null) return;
+        const pt = meta.data[i];
         if (!pt) return;
         const x = pt.x;
-        const yTop = chart.scales.y.getPixelForValue(eb.plus);
-        const yBot = chart.scales.y.getPixelForValue(eb.minus);
+        const yScale = chart.scales.y;
+        const yLo = yScale.getPixelForValue(eb.lo);
+        const yHi = yScale.getPixelForValue(eb.hi);
+        const capW = 4;
+        ctx.save();
+        ctx.strokeStyle = ds.borderColor || "#666";
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.6;
         // Vertical line
         ctx.beginPath();
-        ctx.moveTo(x, yTop);
-        ctx.lineTo(x, yBot);
-        ctx.stroke();
-        // Top cap
-        ctx.beginPath();
-        ctx.moveTo(x - capW, yTop);
-        ctx.lineTo(x + capW, yTop);
+        ctx.moveTo(x, yLo);
+        ctx.lineTo(x, yHi);
         ctx.stroke();
         // Bottom cap
         ctx.beginPath();
-        ctx.moveTo(x - capW, yBot);
-        ctx.lineTo(x + capW, yBot);
+        ctx.moveTo(x - capW, yLo);
+        ctx.lineTo(x + capW, yLo);
         ctx.stroke();
+        // Top cap
+        ctx.beginPath();
+        ctx.moveTo(x - capW, yHi);
+        ctx.lineTo(x + capW, yHi);
+        ctx.stroke();
+        ctx.restore();
       });
-      ctx.restore();
     });
   }
 };
+Chart.register(errorBarPlugin);
 
-// ── Horizon comparison chart ────────────────────────────────────────────────
-
-function getHorizonData(modelKey, hz) {
-  /** Get aggregate data for a model at a given horizon, respecting filters. */
-  const hData = rolling?.models?.[modelKey]?.horizons?.[hz];
+function getHorizonData(modelKey, h) {
+  const hData = rolling?.models?.[modelKey]?.horizons?.[h];
   if (!hData || hData.status !== "active") return null;
   if (filterStock) return hData.items?.[filterStock] || null;
   if (filterSector !== "all") return hData.sectors?.[filterSector] || null;
@@ -550,75 +371,74 @@ function getHorizonData(modelKey, hz) {
 function renderChart() {
   const canvas = document.getElementById("main-chart");
   const rampup = document.getElementById("chart-rampup");
-  if (!canvas || !rampup) return;
+  if (!canvas) return;
 
-  // Check if any horizon has data
-  const hasAnyData = horizonsList.some(hz =>
-    modelKeys.some(m => {
-      const d = getHorizonData(m, hz);
-      return d && d.n > 0;
-    })
-  );
+  const mcfg = METRIC_CONFIG[metric];
+  const labels = allHorizons.map(h => horizonLabel(h));
 
-  if (!hasAnyData) {
+  // Check if any data at all
+  let anyData = false;
+  for (const m of modelKeys) {
+    for (const h of allHorizons) {
+      if (getHorizonData(m, h)) { anyData = true; break; }
+    }
+    if (anyData) break;
+  }
+
+  if (!anyData) {
     canvas.style.display = "none";
-    rampup.style.display = "flex";
-    rampup.innerHTML = `
-      <div class="rampup-icon">\u23F3</div>
-      <div class="rampup-title">Data unavailable</div>
-      <div class="rampup-body">No resolved predictions yet. Check back soon.</div>`;
+    if (rampup) {
+      rampup.style.display = "flex";
+      rampup.innerHTML = '<div class="rampup-icon">\u23F3</div><div class="rampup-title">No data available</div>';
+    }
     return;
   }
 
   canvas.style.display = "";
-  rampup.style.display = "none";
-
-  const mcfg = METRIC_CONFIG[metric];
-  const seKey = metric === "hit_rate_90" ? "hit_rate_90_se" : metric + "_se";
-  const labels = horizonsList.map(h => horizonLabel(h));
+  if (rampup) rampup.style.display = "none";
 
   const datasets = modelKeys.map(m => {
-    const cfg = MODELS[m] || { label: m, color: "#6b7280" };
+    const cfg = MODEL_DISPLAY[m] || { label: m, color: "#64748b" };
     const values = [];
-    const errors = [];
-    const sampleSizes = [];
+    const errorBars = [];
+    const nValues = [];
 
-    horizonsList.forEach(hz => {
-      const d = getHorizonData(m, hz);
-      const val = d?.[metric] ?? NaN;
-      const se = d?.[seKey] ?? null;
-      const n = d?.n ?? 0;
-      values.push(val !== null ? val : NaN);
-      sampleSizes.push(n);
-      if (se !== null && se !== undefined && !isNaN(val)) {
-        errors.push({ plus: val + 1.96 * se, minus: val - 1.96 * se });
+    allHorizons.forEach(h => {
+      const d = getHorizonData(m, h);
+      const val = d?.[metric] ?? null;
+      values.push(val);
+
+      // 95% CI error bars (1.96 * SE)
+      const se = d?.[mcfg.seKey] ?? null;
+      if (val != null && se != null) {
+        errorBars.push({ lo: val - 1.96 * se, hi: val + 1.96 * se });
       } else {
-        errors.push(null);
+        errorBars.push(null);
       }
+      nValues.push(d?.n ?? null);
     });
 
     return {
       label:           cfg.label,
-      data:            values,
+      data:            values.map(v => v != null ? v : NaN),
       borderColor:     cfg.color,
       backgroundColor: cfg.color + "30",
       borderWidth:     2.5,
       pointRadius:     5,
       pointHoverRadius: 7,
-      pointBackgroundColor: cfg.color,
-      tension:         0.2,
-      spanGaps:        true,
+      tension:         0.3,
+      spanGaps:        false,
       fill:            false,
-      errorBars:       errors,
-      _sampleSizes:    sampleSizes,
+      _errorBars:      errorBars,
+      _nValues:        nValues,
     };
   });
 
-  // Target line
+  // Add target line
   if (mcfg.target !== null) {
     datasets.push({
-      label:       "Target (" + (metric === "mu" ? "1.0" : "90%") + ")",
-      data:        labels.map(() => mcfg.target),
+      label:       "Target (" + mcfg.fmt(mcfg.target) + ")",
+      data:        allHorizons.map(() => mcfg.target),
       borderColor: "#dc2626",
       borderDash:  [6, 4],
       borderWidth: 1.5,
@@ -633,7 +453,6 @@ function renderChart() {
   chart = new Chart(canvas.getContext("2d"), {
     type: "line",
     data: { labels, datasets },
-    plugins: [errorBarPlugin],
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -645,18 +464,28 @@ function renderChart() {
         },
         tooltip: {
           backgroundColor: "rgba(15, 23, 42, 0.92)",
-          titleFont: { size: 12 }, bodyFont: { size: 12 },
-          padding: 12, cornerRadius: 6,
+          titleFont: { size: 13 },
+          bodyFont: { size: 12 },
+          padding: 12,
+          cornerRadius: 6,
           callbacks: {
+            title: ctx => ctx[0]?.label || "",
             label: ctx => {
               const ds = ctx.dataset;
               const v = ctx.parsed.y;
-              const valStr = isNaN(v) ? "\u2014" : mcfg.fmt(v);
-              const n = ds._sampleSizes ? ds._sampleSizes[ctx.dataIndex] : null;
-              const eb = ds.errorBars ? ds.errorBars[ctx.dataIndex] : null;
-              let line = " " + ds.label + ": " + valStr;
-              if (n) line += "  (n=" + n.toLocaleString() + ")";
-              if (eb) line += "  [" + mcfg.fmt(eb.minus) + ", " + mcfg.fmt(eb.plus) + "]";
+              const fmtV = isNaN(v) ? "\u2014" : mcfg.fmt(v);
+              let line = " " + ds.label + ": " + fmtV;
+              // Add n= and CI bounds
+              const nArr = ds._nValues;
+              const ebArr = ds._errorBars;
+              if (nArr) {
+                const n = nArr[ctx.dataIndex];
+                if (n != null) line += "  (n=" + n.toLocaleString() + ")";
+              }
+              if (ebArr) {
+                const eb = ebArr[ctx.dataIndex];
+                if (eb) line += "\n   95% CI: [" + mcfg.fmt(eb.lo) + ", " + mcfg.fmt(eb.hi) + "]";
+              }
               return line;
             }
           }
@@ -665,25 +494,27 @@ function renderChart() {
       scales: {
         x: {
           title: {
-            display: true, text: "Prediction Horizon",
-            font: { size: 12, weight: "600" }, color: "#64748b",
+            display: true,
+            text: "Prediction Horizon",
+            font: { size: 12, weight: "600" },
+            color: "#64748b",
           },
           ticks: { font: { size: 11 }, color: "#94a3b8" },
           grid: { display: false },
         },
         y: {
-          min: mcfg.min,
-          max: mcfg.max,
+          title: {
+            display: true,
+            text: mcfg.label,
+            font: { size: 12, weight: "600" },
+            color: "#64748b",
+          },
           ticks: {
             callback: v => mcfg.fmt(v),
-            font: { size: 11 }, color: "#94a3b8",
-            stepSize: metric === "mu" ? 0.2 : metric === "accuracy" ? undefined : 0.1,
+            font: { size: 11 },
+            color: "#94a3b8",
           },
           grid: { color: "#f1f5f9" },
-          title: {
-            display: true, text: mcfg.label,
-            font: { size: 12, weight: "600" }, color: "#64748b",
-          },
         },
       },
     },
@@ -716,7 +547,7 @@ function renderDomainTable() {
   const sectors = Array.from(sectorSet).sort();
 
   const headerCells = modelKeys.map(m => {
-    const cfg = MODELS[m] || { label: m, color: "#6b7280" };
+    const cfg = MODEL_DISPLAY[m] || { label: m, color: "#64748b" };
     return `<th style="color:${cfg.color}">${cfg.label}</th>`;
   }).join("");
 
@@ -728,7 +559,7 @@ function renderDomainTable() {
       }
       const mu = d.mu;
       return `<td>
-        <span class="cell-val" style="color:${muColor(mu)}">${mu !== null && mu !== undefined ? mu.toFixed(2) : "\u2014"}</span>
+        <span class="cell-val" style="color:${muColor(mu)}">${mu != null ? mu.toFixed(2) : "\u2014"}</span>
         <span class="cell-n">n=${d.n}</span>
       </td>`;
     }).join("");
@@ -745,19 +576,19 @@ function renderDomainTable() {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function pct(v) {
-  if (v === null || v === undefined || isNaN(v)) return "\u2014";
+  if (v == null || isNaN(v)) return "\u2014";
   return (v * 100).toFixed(1) + "%";
 }
 
 function muColor(mu) {
-  if (mu === null || mu === undefined || isNaN(mu)) return "var(--muted)";
+  if (mu == null || isNaN(mu)) return "var(--muted)";
   if (mu >= 0.85 && mu <= 1.15) return "var(--good)";
   if ((mu >= 0.70 && mu < 0.85) || (mu > 1.15 && mu <= 1.30)) return "var(--warn)";
   return "var(--bad)";
 }
 
 function getMuBadge(mu) {
-  if (mu === null || mu === undefined || isNaN(mu)) return { cls: "badge-none", text: "Building data" };
+  if (mu == null || isNaN(mu)) return { cls: "badge-none", text: "No data" };
   if (mu >= 0.85 && mu <= 1.15) return { cls: "badge-good", text: "Well calibrated" };
   if (mu >= 0.70 && mu < 0.85) return { cls: "badge-warn", text: "Slightly overconfident" };
   if (mu < 0.70) return { cls: "badge-bad", text: "Overconfident" };
@@ -773,13 +604,3 @@ function fmtDate(iso) {
     });
   } catch { return iso; }
 }
-
-// ── Mobile nav toggle ───────────────────────────────────────────────────────
-
-document.addEventListener("DOMContentLoaded", () => {
-  const toggle = document.querySelector(".nav-toggle");
-  const nav = document.querySelector("header nav");
-  if (toggle && nav) {
-    toggle.addEventListener("click", () => { nav.classList.toggle("open"); });
-  }
-});
