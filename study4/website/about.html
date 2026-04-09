@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About &mdash; LLM Confidence Index</title>
-  <meta name="description" content="Study design, methodology, and scoring formulas for the LLM Confidence Index." />
+  <title>About &mdash; LLM Overconfidence Dashboard</title>
+  <meta name="description" content="Study design, methodology, and scoring formulas for Study 2 of the LLM overconfidence project." />
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <a href="./index.html" class="site-title">LLM Confidence Index</a>
+    <a href="./index.html" class="site-title">LLM Overconfidence</a>
     <nav>
       <a href="./index.html">Dashboard</a>
       <a href="./about.html" class="active">About</a>
@@ -24,8 +24,8 @@
   <section class="hero">
     <h1>About This Study</h1>
     <p class="hero-sub">
-      Study 4 of an ongoing empirical research project on overconfidence in
-      frontier large language models.
+      Study 2 of an ongoing empirical research project on overconfidence in
+      confidence interval estimates produced by frontier large language models.
     </p>
   </section>
 
@@ -41,8 +41,8 @@
       accuracy warrants.
     </p>
     <p>
-      This study tracks that gap continuously and publicly, using the calibration
-      framework of Soll &amp; Klayman (2004), across 200 stocks and three time horizons.
+      This study measures that gap using the calibration framework of
+      Soll &amp; Klayman (2004), across 100 stocks and nine prediction horizons.
     </p>
 
     <h2>Study design</h2>
@@ -52,33 +52,53 @@
         <div class="spec-label">AI models</div>
       </div>
       <div class="spec-card">
-        <div class="spec-value">200</div>
+        <div class="spec-value">100</div>
         <div class="spec-label">Stocks</div>
       </div>
       <div class="spec-card">
-        <div class="spec-value">3</div>
+        <div class="spec-value">9</div>
         <div class="spec-label">Horizons</div>
       </div>
       <div class="spec-card">
-        <div class="spec-value">600</div>
-        <div class="spec-label">Predictions / day</div>
+        <div class="spec-value">18,832</div>
+        <div class="spec-label">Scored predictions</div>
       </div>
     </div>
     <p>
-      Each weekday after US market close, we query three AI models
-      with the same set of 200 stocks. Each model produces a point estimate
-      and a 90% confidence interval for three future horizons
-      (1-day, 1-week, 1-month).
+      Each model was queried with date-blinded prompts for each of 100 stocks,
+      with <strong>five independent runs per ticker</strong>. Predictions were
+      collected across nine prediction horizons ranging from 1 to 22 days.
+      Each prediction consists of a point estimate and three confidence intervals
+      (50%, 80%, 90%).
     </p>
     <p>
-      A <strong>separate follow-up API call</strong> then collects the model's
-      free-text reasoning for its prediction. The justification is always collected
-      after the numeric prediction, never combined with it, to avoid the reasoning
-      influencing the numbers.
+      This is a <strong>backtest study</strong>: predictions were elicited for
+      historical dates without providing the model access to future price data.
+      The prediction period spans February 18 to March 23, 2026.
     </p>
+
+    <h2>Prediction horizons</h2>
+    <table class="about-table">
+      <thead>
+        <tr><th>Horizon</th><th>Days ahead</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1d</td><td>1</td></tr>
+        <tr><td>2d</td><td>2</td></tr>
+        <tr><td>3d</td><td>3</td></tr>
+        <tr><td>6d</td><td>6</td></tr>
+        <tr><td>7d</td><td>7</td></tr>
+        <tr><td>18d</td><td>18</td></tr>
+        <tr><td>20d</td><td>20</td></tr>
+        <tr><td>21d</td><td>21</td></tr>
+        <tr><td>22d</td><td>22</td></tr>
+      </tbody>
+    </table>
     <p>
-      When each prediction's horizon elapses, we fetch the resolved closing price from
-      Yahoo Finance and score the prediction. The index updates daily.
+      Horizons were sampled from four buckets (1&ndash;5, 6&ndash;12, 13&ndash;20,
+      21&ndash;30 days) to test how calibration changes as the prediction window
+      increases. If a target date fell on a non-trading day, the next available
+      trading day close was used.
     </p>
 
     <h2>Calibration metrics</h2>
@@ -89,9 +109,6 @@
         The primary metric on the dashboard. Based on Soll &amp; Klayman (2004),
         &ldquo;Overconfidence in Interval Estimates,&rdquo;
         <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>.
-      </p>
-      <p>
-        &mu; = MEAD / MAD, where:
       </p>
     </div>
     <div class="formula">&mu; = MEAD / MAD</div>
@@ -144,21 +161,16 @@
     </div>
     <div class="formula">Hit Rate = count(CI<sub>low</sub> &le; actual &le; CI<sub>high</sub>) / N</div>
 
-    <h3>Additional metrics (in scored data)</h3>
-
-    <h3>Expected Calibration Error (ECE)</h3>
-    <div class="formula">ECE = |stated coverage &minus; empirical coverage|</div>
+    <h3>Error bars</h3>
     <p>
-      For the 90% CI level. Lower is better. ECE = 0 means perfect calibration.
+      The chart shows 95% confidence intervals around each metric estimate,
+      computed as &plusmn;1.96 &times; SE. Standard errors are:
     </p>
-
-    <h3>Brier score (normalized)</h3>
-    <div class="formula">Brier = ((point_estimate &minus; actual) / current_price)<sup>2</sup></div>
-    <p>
-      Measures point-estimate accuracy as squared error. Normalizing by current
-      price makes the score comparable across stocks at different price levels.
-      Lower is better.
-    </p>
+    <ul>
+      <li><strong>Accuracy SE:</strong> std(normalized absolute deviations) / &radic;n</li>
+      <li><strong>&mu; SE:</strong> delta method, propagating uncertainty in both MAD and MEAD</li>
+      <li><strong>Hit rate SE:</strong> binomial standard error &radic;(p(1&minus;p)/n)</li>
+    </ul>
 
     <h2>Models</h2>
     <table class="about-table">
@@ -166,63 +178,41 @@
         <tr><th>Display name</th><th>Provider</th><th>Model ID</th></tr>
       </thead>
       <tbody>
-        <tr><td><strong>Claude</strong></td><td>Anthropic</td><td><code>claude-sonnet-4-6</code></td></tr>
-        <tr><td><strong>GPT-4o</strong></td><td>OpenAI</td><td><code>gpt-4o-2024-11-20</code></td></tr>
+        <tr><td><strong>Claude</strong></td><td>Anthropic</td><td><code>claude-sonnet-4-20250514</code></td></tr>
+        <tr><td><strong>GPT-4o</strong></td><td>OpenAI</td><td><code>gpt-4o</code></td></tr>
         <tr><td><strong>Gemini</strong></td><td>Google</td><td><code>gemini-2.5-flash</code></td></tr>
       </tbody>
     </table>
-    <p>
-      Model version strings are pinned and recorded verbatim in every prediction
-      file. Any mid-study model update is logged as a version-change event.
-    </p>
 
-    <h2>Stocks (200)</h2>
+    <h2>Stocks (100)</h2>
     <p>
-      The S&amp;P 100 plus the next 100 largest US equities by market cap, plus 4
-      major index ETFs (SPY, QQQ, IWM, DIA). All actuals from Yahoo Finance (closing
-      price, USD). Stocks are grouped by GICS sector for aggregate analysis.
-    </p>
-
-    <h2>Prediction horizons</h2>
-    <table class="about-table">
-      <thead>
-        <tr><th>Horizon</th><th>Target date</th><th>First data available</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>1-Day</strong></td><td>Prediction date + 1 calendar day</td><td>Day 2</td></tr>
-        <tr><td><strong>1-Week</strong></td><td>Prediction date + 7 calendar days</td><td>Day 8</td></tr>
-        <tr><td><strong>1-Month</strong></td><td>Prediction date + 30 calendar days</td><td>Day 31</td></tr>
-      </tbody>
-    </table>
-    <p>
-      If the target date falls on a weekend or non-trading day, the next available
-      trading day close is used and the adjustment is logged.
+      100 large-cap US equities plus the SPY index ETF, spanning mega-cap tech,
+      financials, healthcare, consumer, energy, industrials, telecom, utilities,
+      and real estate. Grouped by GICS sector for aggregate analysis. All actual
+      closing prices from Yahoo Finance (USD).
     </p>
 
     <h2>Limitations</h2>
     <ul>
+      <li>
+        <strong>Backtest design</strong> &mdash; predictions were elicited for
+        historical dates using date-blinded prompts. Models may behave differently
+        in a live forecasting setting.
+      </li>
       <li>
         <strong>Single asset class</strong> &mdash; this study tracks US equities
         only. Cross-domain generalization (crypto, forex, weather) was explored
         in Study 3.
       </li>
       <li>
-        <strong>Single daily snapshot</strong> &mdash; predictions are collected
-        once per day, not continuously. Intraday volatility is not captured.
-      </li>
-      <li>
-        <strong>Model version pinning</strong> &mdash; API providers may silently
-        update models behind fixed version strings. We log exact model IDs per
-        prediction but cannot fully control for undisclosed upstream changes.
-      </li>
-      <li>
-        <strong>No replication</strong> &mdash; each prediction is made once per
-        item per model per day. Stochasticity in model outputs is not averaged out.
-      </li>
-      <li>
         <strong>Normality assumption</strong> &mdash; the &mu; calculation assumes
         returns are normally distributed when converting CI width to implied standard
         deviation. Fat-tailed distributions would affect the MEAD estimate.
+      </li>
+      <li>
+        <strong>Non-uniform horizon spacing</strong> &mdash; the nine horizons are
+        not evenly spaced; gaps between 7d and 18d, and 3d and 6d, make interpolation
+        in the chart approximate.
       </li>
     </ul>
 
@@ -240,14 +230,13 @@
       All prediction files, actuals, scored results, and pipeline code are
       available in the project's
       <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub repository</a>.
-      This site is a read-only view of those data files, updated automatically
-      by a daily CI/CD pipeline.
     </p>
     <p>
-      This is <strong>Study 4</strong> of an ongoing project. Studies 1&ndash;3
-      investigated overconfidence in 1-day equity predictions (Study 1),
-      multi-horizon equity predictions (Study 2), and a multi-domain cross-section
-      (Study 3). A research paper covering Studies 1&ndash;3 is in preparation.
+      This is <strong>Study 2</strong> of an ongoing project. Study 1
+      investigated overconfidence in 1-day equity predictions (20 tickers),
+      Study 3 extended to a multi-domain cross-section (stocks, crypto, forex,
+      weather, commodities, NBA), and Study 4 (forthcoming) will track
+      calibration longitudinally with a live daily pipeline.
     </p>
 
   </div>
@@ -256,9 +245,8 @@
 
 <footer>
   <div class="footer-inner">
-    <p>Data updated automatically each weekday after US market close.</p>
     <p>
-      Part of an ongoing empirical research project on LLM calibration.
+      Study 2 of an ongoing empirical research project on LLM calibration.
       <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
     </p>
   </div>
