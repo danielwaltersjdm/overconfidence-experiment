@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-09",
+  "timestamp": "2026-04-09T21:34:33.347837Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 34.2400016784668,
+  "context": "Current closing price of Chipotle (CMG): $34.24 USD as of 2026-04-09.",
+  "prompt_text": "Today is 2026-04-09.\n\nCurrent closing price of Chipotle (CMG): $34.24 USD as of 2026-04-09.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-10\n  1-week target date: 2026-04-16\n  1-month target date: 2026-05-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future prices for CMG at $34.24 as of 2026-04-09.\n\nKey considerations:\n- Current price: $34.24 (note: this seems very low for CMG - it was around $50-60 range in early 2026 before any splits, but I'll work with the given price)\n- I'll treat $34.24 as the current market price and work from there\n- Typical daily volatility for CMG is roughly 2-3%\n- Current market environment (April 2026) has elevated uncertainty due to trade tensions/tariff concerns\n- I'll use slightly wider confidence intervals given macro uncertainty\n\nFor a stock at ~$34.24:\n- Daily volatility: ~2.5% \u2192 ~$0.86/day\n- Weekly volatility: ~2.5% \u00d7 \u221a5 \u2248 ~5.6% \u2192 ~$1.92\n- Monthly volatility: ~2.5% \u00d7 \u221a22 \u2248 ~11.7% \u2192 ~$4.01\n\nFor the 90% CI, I need \u00b11.645 standard deviations:\n- 1-day: \u00b11.645 \u00d7 $0.86 \u2248 \u00b1$1.41\n- 1-week: \u00b11.645 \u00d7 $1.92 \u2248 \u00b1$3.16\n- 1-month: \u00b11.645 \u00d7 $4.01 \u2248 \u00b1$6.60\n\nGiven current macro uncertainty (tariffs, market volatility), I'll widen these somewhat and apply a slight negative drift bias given the environment.\n\nPoint estimates: slight downward drift given macro headwinds\n- 1d: $33.90\n- 1w: $33.50\n- 1m: $33.80\n\n{\n  \"1d\": {\n    \"point_estimate\": 33.90,\n    \"90_ci\": [31.80, 36.20]\n  },\n  \"1w\": {\n    \"point_estimate\": 33.50,\n    \"90_ci\": [29.50, 37.80]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.80,\n    \"90_ci\": [26.50, 41.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 33.9,
+      "90_ci": [
+        31.8,
+        36.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 33.5,
+      "90_ci": [
+        29.5,
+        37.8
+      ]
+    },
+    "1m": {
+      "point_estimate": 33.8,
+      "90_ci": [
+        26.5,
+        41.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 33.9,\n    \"90_ci\": [\n      31.8,\n      36.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 33.5,\n    \"90_ci\": [\n      29.5,\n      37.8\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.8,\n    \"90_ci\": [\n      26.5,\n      41.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a view that the asset is likely to trade near its current level across all three horizons, with only modest drift. At the one-day horizon, the estimate of 33.9 essentially anchors to the prevailing price, assuming no major overnight catalysts and that intraday mean-reversion tendencies dominate. At the one-week horizon, I shaded the estimate slightly lower to 33.5, reflecting a mild bearish lean based on short-term momentum or positioning considerations. At the one-month horizon, the estimate nudges back up to 33.8, reflecting a reversion toward what I assessed as a reasonable fair-value anchor, acknowledging that over longer windows, short-term noise tends to wash out and the price gravitates toward fundamental or technical equilibrium levels.\n\nThe confidence interval widths widen progressively across horizons, which is a standard reflection of uncertainty compounding over time. At one day, the 90% interval of roughly 31.8 to 36.2 captures typical daily volatility, assuming no extraordinary event risk. By one week, the interval widens to 29.5 to 37.8, incorporating the possibility of multi-day trending moves, scheduled macro data releases, or sector-specific news. At one month, the interval of 26.5 to 41.5 is substantially wider, acknowledging that over four weeks, earnings announcements, central bank decisions, geopolitical developments, or shifts in market sentiment can drive meaningful directional moves that are essentially unpredictable at the time of forecasting.\n\nThe key sources of uncertainty include macroeconomic data surprises, central bank communication, and any idiosyncratic news specific to the underlying. Liquidity conditions and broader risk-appetite shifts can amplify moves in either direction, particularly at the tails. There are plausible scenarios where outcomes fall outside even my stated 90% intervals. A sharp risk-off episode triggered by an unexpected geopolitical shock or a financial stability event could push the price well below 26.5 at the one-month horizon. Conversely, a strong earnings beat, a surprise policy pivot toward easing, or a short-squeeze dynamic could push the price above 41.5. These tail scenarios are assigned low but non-negligible probability, and they represent the honest limits of any forward-looking price forecast at these time horizons.",
+  "status": "collected",
+  "error": null
+}

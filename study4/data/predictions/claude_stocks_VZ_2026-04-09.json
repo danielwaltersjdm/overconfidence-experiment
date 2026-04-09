@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-09",
+  "timestamp": "2026-04-09T20:49:02.146679Z",
+  "domain": "stocks",
+  "item": "VZ",
+  "item_label": "Verizon",
+  "unit": "USD",
+  "current_value": 47.779998779296875,
+  "context": "Current closing price of Verizon (VZ): $47.78 USD as of 2026-04-09.",
+  "prompt_text": "Today is 2026-04-09.\n\nCurrent closing price of Verizon (VZ): $47.78 USD as of 2026-04-09.\n\nPredict the closing price of Verizon at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-10\n  1-week target date: 2026-04-16\n  1-month target date: 2026-05-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 47.60,\n    \"90_ci\": [45.80, 49.40]\n  },\n  \"1w\": {\n    \"point_estimate\": 47.50,\n    \"90_ci\": [44.50, 50.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 47.00,\n    \"90_ci\": [42.00, 52.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 47.6,
+      "90_ci": [
+        45.8,
+        49.4
+      ]
+    },
+    "1w": {
+      "point_estimate": 47.5,
+      "90_ci": [
+        44.5,
+        50.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 47.0,
+      "90_ci": [
+        42.0,
+        52.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 47.6,\n    \"90_ci\": [\n      45.8,\n      49.4\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 47.5,\n    \"90_ci\": [\n      44.5,\n      50.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 47.0,\n    \"90_ci\": [\n      42.0,\n      52.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest mean-reversion assumption anchored near the current level, with a slight downward drift over longer horizons. At the one-day horizon, the estimate of 47.6 essentially assumes the series stays close to where it is, with very little expected movement in a single trading session or day. The one-week estimate of 47.5 is nearly flat, implying no strong directional signal in the near term. By one month, I nudged the estimate down slightly to 47.0, reflecting a weak prior that many financial or sentiment-based series tend to drift modestly toward longer-run averages when they sit near mid-range levels. None of these moves are large because I had no strong fundamental catalyst or trend signal pushing me to deviate meaningfully from the current reading.\n\nThe confidence interval widths widen progressively across horizons in a pattern consistent with uncertainty accumulating over time, roughly following a square-root-of-time scaling. At one day, the 90% interval spans about 1.8 units on each side, which reflects typical short-run noise. By one week, the interval widens to about 3 units on each side, and by one month it expands to roughly 5\u20135.5 units. These widths were informed by typical realized volatility for series in this range, the absence of strong anchoring forces, and the possibility that the series could begin trending in either direction over a multi-week window.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic announcements, geopolitical shocks, or sharp shifts in market sentiment that could move the underlying series rapidly and persistently. If the series is tied to something like a polling average or a financial index, a single large data release or unexpected event could gap the value well outside the one-month bounds in a matter of days. On the downside, structural breaks or regime changes \u2014 such as a policy shift, an election result, or a liquidity event \u2014 could cause the series to move 10 or more units away from current levels, which would be entirely outside my stated intervals. My intervals implicitly assume no such tail event occurs and that the near-term environment remains relatively stable.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-09",
+  "timestamp": "2026-04-09T20:50:08.061017Z",
+  "domain": "stocks",
+  "item": "GS",
+  "item_label": "Goldman Sachs",
+  "unit": "USD",
+  "current_value": 903.719970703125,
+  "context": "Current closing price of Goldman Sachs (GS): $903.72 USD as of 2026-04-09.",
+  "prompt_text": "Today is 2026-04-09.\n\nCurrent closing price of Goldman Sachs (GS): $903.72 USD as of 2026-04-09.\n\nPredict the closing price of Goldman Sachs at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-10\n  1-week target date: 2026-04-16\n  1-month target date: 2026-05-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll analyze this systematically, considering current market conditions, GS's position, and appropriate uncertainty scaling.\n\n**Current price:** $903.72 (2026-04-09)\n\n**Key considerations:**\n- GS is a high-beta financial stock, typically more volatile than the broader market\n- Daily volatility for GS is roughly 1.5-2% historically\n- April 2026 context: markets have been experiencing volatility (tariff concerns, macro uncertainty)\n- 90% CI requires wide enough bounds to capture ~90% of outcomes\n\n**Volatility scaling:**\n- 1-day: ~1.5-2% daily vol \u2192 90% CI roughly \u00b12.5-3% (~\u00b1$25-27)\n- 1-week: ~5 trading days \u2192 ~3.5-4.5% \u2192 90% CI roughly \u00b16-7% (~\u00b1$55-65)\n- 1-month: ~21 trading days \u2192 ~7-9% \u2192 90% CI roughly \u00b112-15% (~\u00b1$110-135)\n\n**Point estimates:** Given current macro uncertainty and recent market stress, I'll apply a slight downward drift bias but keep point estimates near current price with modest mean reversion.\n\n{\n  \"1d\": {\n    \"point_estimate\": 898.00,\n    \"90_ci\": [876.00, 930.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 892.00,\n    \"90_ci\": [840.00, 950.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 885.00,\n    \"90_ci\": [775.00, 1005.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 898.0,
+      "90_ci": [
+        876.0,
+        930.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 892.0,
+      "90_ci": [
+        840.0,
+        950.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 885.0,
+      "90_ci": [
+        775.0,
+        1005.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 898.0,\n    \"90_ci\": [\n      876.0,\n      930.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 892.0,\n    \"90_ci\": [\n      840.0,\n      950.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 885.0,\n    \"90_ci\": [\n      775.0,\n      1005.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest downward drift from what I assessed as the prevailing price level at the time of the forecast. At the one-day horizon, the estimate of 898 was anchored heavily to recent price action and short-term momentum, with very little expected deviation from the prior close. For the one-week estimate of 892, I incorporated a slight mean-reverting bias, assuming that any near-term volatility would partially offset recent directional moves. At the one-month horizon, the estimate of 885 reflects a continuation of that mild downward drift, though with far less conviction, as longer horizons introduce compounding uncertainty about macroeconomic conditions, earnings, and broader market sentiment.\n\nThe confidence interval widths widen substantially as the horizon extends, which reflects the classic square-root-of-time scaling of uncertainty in financial markets. At one day, the 90% interval of roughly plus or minus 27 points is tight because intraday and overnight price moves tend to be constrained absent major catalysts. By one week, the interval opens to roughly 110 points total, capturing the possibility of unexpected macro data, Federal Reserve communications, or sector-specific news. By one month, the interval spans approximately 230 points, reflecting the full range of plausible scenarios over a period where earnings reports, geopolitical developments, and shifting risk appetite can all materially alter the picture.\n\nThere are several specific risks that could push outcomes well outside my stated intervals in either direction. On the downside, a surprise deterioration in economic data, a credit event, or an escalation in geopolitical tensions could trigger sharp risk-off moves that breach the lower bounds. On the upside, stronger-than-expected earnings, a dovish pivot signal from central banks, or a significant short squeeze could drive prices above the upper bounds. Tail risks of this nature are by definition underweighted in symmetric confidence intervals, and the actual distribution of returns is likely to have fatter tails than my stated ranges imply, meaning extreme outcomes are more probable than the 10% residual probability outside the interval might suggest.",
+  "status": "collected",
+  "error": null
+}
