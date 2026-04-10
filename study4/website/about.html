@@ -33,7 +33,7 @@
 
   <div class="prose">
 
-    <!-- ── Overview ──────────────────────────────────────────────────── -->
+    <!-- ── What we measure ───────────────────────────────────────────── -->
 
     <h2>What we measure</h2>
     <p>
@@ -45,9 +45,72 @@
       accuracy warrants.
     </p>
     <p>
-      We measure that gap across four studies using the calibration framework of
+      We measure that gap across three studies using the calibration framework of
       Soll &amp; Klayman (2004).
     </p>
+
+    <!-- ── Calibration metrics (moved to top) ────────────────────────── -->
+
+    <h2>Calibration metrics</h2>
+
+    <h3>90% CI Hit Rate</h3>
+    <div class="metric-box">
+      <p>
+        The proportion of predictions where the actual outcome fell within the
+        model&rsquo;s stated 90% confidence interval. <strong>Target: 90%.</strong>
+        Below 90% = overconfident. Above 90% = underconfident.
+      </p>
+    </div>
+    <div class="formula">Hit Rate = count(CI<sub>low</sub> &le; actual &le; CI<sub>high</sub>) / N</div>
+
+    <h3>&mu; (mu) &mdash; Meta-knowledge ratio</h3>
+    <div class="metric-box">
+      <p>
+        Based on Soll &amp; Klayman (2004),
+        &ldquo;Overconfidence in Interval Estimates,&rdquo;
+        <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>.
+        Compares how much error the model <em>expected</em> (from its CI width) to
+        how much error actually occurred.
+      </p>
+    </div>
+    <div class="formula">&mu; = MEAD / MAD</div>
+    <p>
+      <strong>MAD</strong> (Mean Absolute Deviation) is the average absolute difference
+      between the model&rsquo;s point estimate and the actual outcome, normalized by price:
+    </p>
+    <div class="formula">MAD = mean( |actual &minus; point_estimate| / current_price )</div>
+    <p>
+      <strong>MEAD</strong> (Mean Expected Absolute Deviation) is the spread the model
+      <em>expected</em>, derived from its confidence interval width. For a 90% CI
+      assuming normality:
+    </p>
+    <div class="formula">&sigma;<sub>implied</sub> = (CI<sub>high</sub> &minus; CI<sub>low</sub>) / (2 &times; 1.645)</div>
+    <div class="formula">MEAD = mean( &sigma;<sub>implied</sub> &times; &radic;(2/&pi;) / current_price )</div>
+    <p><strong>Interpretation:</strong></p>
+    <ul>
+      <li><strong>&mu; = 1.0</strong> &mdash; perfectly calibrated</li>
+      <li><strong>&mu; &lt; 1</strong> &mdash; overconfident (intervals too narrow)</li>
+      <li><strong>&mu; &gt; 1</strong> &mdash; underconfident (intervals too wide)</li>
+    </ul>
+
+    <h3>Accuracy (normalized MAD)</h3>
+    <div class="metric-box">
+      <p>
+        Average prediction error as a percentage of price. Measures raw forecasting
+        skill, independent of calibration. <strong>Lower is better.</strong>
+      </p>
+    </div>
+    <div class="formula">Accuracy = mean( |actual &minus; point_estimate| / current_price ) &times; 100%</div>
+
+    <h3>Error bars</h3>
+    <p>
+      Charts show 95% confidence intervals (&plusmn;1.96 &times; SE):
+    </p>
+    <ul>
+      <li><strong>Hit rate SE:</strong> binomial &radic;(p(1&minus;p)/n)</li>
+      <li><strong>&mu; SE:</strong> delta method, propagating uncertainty in both MAD and MEAD</li>
+      <li><strong>Accuracy SE:</strong> std(normalized deviations) / &radic;n</li>
+    </ul>
 
     <!-- ── Study designs ─────────────────────────────────────────────── -->
 
@@ -65,28 +128,21 @@
       </thead>
       <tbody>
         <tr>
-          <td><strong>Study 1</strong></td>
-          <td>20 equities, 1-day horizon, 5 runs/ticker</td>
-          <td>100</td>
-          <td>Baseline</td>
-          <td>Live</td>
-        </tr>
-        <tr>
-          <td><strong>Study 2</strong></td>
+          <td><strong><a href="./backtest.html">Horizon Backtest</a></strong></td>
           <td>100 equities, 9 horizons (1&ndash;22d), 5 runs/ticker</td>
           <td>4,700&ndash;7,085</td>
           <td>Prediction horizon</td>
           <td>Backtest</td>
         </tr>
         <tr>
-          <td><strong>Study 3</strong></td>
+          <td><strong><a href="./crossdomain.html">Cross-Domain</a></strong></td>
           <td>5 domains, 1-day horizon, 1 run/item</td>
           <td>68 resolved</td>
           <td>Domain</td>
           <td>Live</td>
         </tr>
         <tr>
-          <td><strong>Study 4</strong></td>
+          <td><strong><a href="./index.html">Daily Forecast</a></strong></td>
           <td>200 equities, 3 horizons (1d/1w/1m), daily collection</td>
           <td>Ongoing</td>
           <td>Longitudinal</td>
@@ -100,7 +156,7 @@
     <h2>Models</h2>
     <table class="about-table">
       <thead>
-        <tr><th>Display name</th><th>Provider</th><th>Studies 1&ndash;3</th><th>Study 4</th></tr>
+        <tr><th>Display name</th><th>Provider</th><th>Horizon Backtest &amp; Cross-Domain</th><th>Daily Forecast</th></tr>
       </thead>
       <tbody>
         <tr>
@@ -130,9 +186,9 @@
       All prompts are sent as a single user message with no system prompt.
     </p>
 
-    <h3>Study 2: Multi-Horizon Backtest</h3>
+    <h3>Horizon Backtest</h3>
     <p>
-      Study 2 uses date-blinded prompts (no &ldquo;Today is&hellip;&rdquo;) to
+      Uses date-blinded prompts (no &ldquo;Today is&hellip;&rdquo;) to
       prevent models from recognizing the historical date. Three confidence levels
       (50%, 80%, 90%) are requested.
     </p>
@@ -158,9 +214,9 @@ Respond ONLY in JSON:
       Five independent runs per ticker &times; horizon.
     </p>
 
-    <h3>Study 3: Cross-Domain</h3>
+    <h3>Cross-Domain</h3>
     <p>
-      Study 3 extends to six domains. Each domain module generates a context string
+      Extends to five domains. Each domain module generates a context string
       and question text appropriate for the asset type.
     </p>
     <div class="prompt-box">
@@ -189,9 +245,9 @@ Respond ONLY in valid JSON with no markdown fences:
       tomorrow?&rdquo;), <code>{unit}</code> = USD, &deg;F, etc.
     </p>
 
-    <h3>Study 4: Daily Forecast</h3>
+    <h3>Daily Forecast</h3>
     <p>
-      Study 4 collects predictions daily with a two-call protocol: first the
+      Collects predictions daily with a two-call protocol: first the
       prediction, then a separate justification call. Only 90% CIs are requested
       (not 50%/80%) to reduce token costs. Three horizons are requested in a
       single call.
@@ -250,71 +306,11 @@ Please explain your reasoning in 2&ndash;4 paragraphs. Address:
 Write in plain English. No JSON, no bullet points.</pre>
     </div>
 
-    <!-- ── Scoring ────────────────────────────────────────────────────── -->
-
-    <h2>Calibration metrics</h2>
-
-    <h3>&mu; (mu) &mdash; Meta-knowledge ratio</h3>
-    <div class="metric-box">
-      <p>
-        The primary calibration metric. Based on Soll &amp; Klayman (2004),
-        &ldquo;Overconfidence in Interval Estimates,&rdquo;
-        <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>.
-      </p>
-    </div>
-    <div class="formula">&mu; = MEAD / MAD</div>
-    <p>
-      <strong>MAD</strong> (Mean Absolute Deviation) is the average absolute difference
-      between the model&rsquo;s point estimate and the actual outcome, normalized by price:
-    </p>
-    <div class="formula">MAD = mean( |actual &minus; point_estimate| / current_price )</div>
-    <p>
-      <strong>MEAD</strong> (Mean Expected Absolute Deviation) is the spread the model
-      <em>expected</em>, derived from its confidence interval width. For a 90% CI
-      assuming normality:
-    </p>
-    <div class="formula">&sigma;<sub>implied</sub> = (CI<sub>high</sub> &minus; CI<sub>low</sub>) / (2 &times; 1.645)</div>
-    <div class="formula">MEAD = mean( &sigma;<sub>implied</sub> &times; &radic;(2/&pi;) / current_price )</div>
-    <p><strong>Interpretation:</strong></p>
-    <ul>
-      <li><strong>&mu; = 1.0</strong> &mdash; perfectly calibrated</li>
-      <li><strong>&mu; &lt; 1</strong> &mdash; overconfident (intervals too narrow)</li>
-      <li><strong>&mu; &gt; 1</strong> &mdash; underconfident (intervals too wide)</li>
-    </ul>
-
-    <h3>Accuracy (normalized MAD)</h3>
-    <div class="metric-box">
-      <p>
-        Average prediction error as a percentage of price. Measures raw forecasting
-        skill, independent of calibration. <strong>Lower is better.</strong>
-      </p>
-    </div>
-    <div class="formula">Accuracy = mean( |actual &minus; point_estimate| / current_price ) &times; 100%</div>
-
-    <h3>90% CI Hit Rate</h3>
-    <div class="metric-box">
-      <p>
-        Proportion of predictions where the actual outcome fell within the stated
-        90% confidence interval. <strong>Target: 90%.</strong>
-      </p>
-    </div>
-    <div class="formula">Hit Rate = count(CI<sub>low</sub> &le; actual &le; CI<sub>high</sub>) / N</div>
-
-    <h3>Error bars</h3>
-    <p>
-      Charts show 95% confidence intervals (&plusmn;1.96 &times; SE):
-    </p>
-    <ul>
-      <li><strong>Accuracy SE:</strong> std(normalized deviations) / &radic;n</li>
-      <li><strong>&mu; SE:</strong> delta method, propagating uncertainty in both MAD and MEAD</li>
-      <li><strong>Hit rate SE:</strong> binomial &radic;(p(1&minus;p)/n)</li>
-    </ul>
-
     <!-- ── Prediction horizons ────────────────────────────────────────── -->
 
     <h2>Prediction horizons</h2>
 
-    <h3>Study 2 (Backtest)</h3>
+    <h3>Horizon Backtest</h3>
     <table class="about-table">
       <thead><tr><th>Horizon</th><th>Days ahead</th></tr></thead>
       <tbody>
@@ -334,7 +330,7 @@ Write in plain English. No JSON, no bullet points.</pre>
       to test how calibration changes as the prediction window increases.
     </p>
 
-    <h3>Study 4 (Daily Forecast)</h3>
+    <h3>Daily Forecast</h3>
     <table class="about-table">
       <thead><tr><th>Horizon</th><th>Days ahead</th></tr></thead>
       <tbody>
@@ -352,11 +348,11 @@ Write in plain English. No JSON, no bullet points.</pre>
         <tr><th>Domain</th><th>Items</th><th>Studies</th><th>Source</th></tr>
       </thead>
       <tbody>
-        <tr><td>Stocks</td><td>20&ndash;200 large-cap US equities</td><td>1, 2, 3, 4</td><td>Yahoo Finance</td></tr>
-        <tr><td>Crypto</td><td>10 coins</td><td>3</td><td>CoinGecko</td></tr>
-        <tr><td>Forex</td><td>8 currency pairs</td><td>3</td><td>Yahoo Finance</td></tr>
-        <tr><td>Weather</td><td>30 US cities (mean temp &deg;F)</td><td>3</td><td>Open-Meteo</td></tr>
-        <tr><td>Commodities</td><td>5 futures (gold, oil, etc.)</td><td>3</td><td>Yahoo Finance</td></tr>
+        <tr><td>Stocks</td><td>100&ndash;200 large-cap US equities</td><td>All</td><td>Yahoo Finance</td></tr>
+        <tr><td>Crypto</td><td>10 coins</td><td>Cross-Domain</td><td>CoinGecko</td></tr>
+        <tr><td>Forex</td><td>8 currency pairs</td><td>Cross-Domain</td><td>Yahoo Finance</td></tr>
+        <tr><td>Weather</td><td>30 US cities (mean temp &deg;F)</td><td>Cross-Domain</td><td>Open-Meteo</td></tr>
+        <tr><td>Commodities</td><td>5 futures (gold, oil, etc.)</td><td>Cross-Domain</td><td>Yahoo Finance</td></tr>
       </tbody>
     </table>
 
@@ -365,9 +361,9 @@ Write in plain English. No JSON, no bullet points.</pre>
     <h2>Limitations</h2>
     <ul>
       <li>
-        <strong>Backtest vs. live</strong> &mdash; Study 2 uses date-blinded prompts
-        for historical dates. Models may behave differently in a live setting
-        (Studies 1, 3, 4).
+        <strong>Backtest vs. live</strong> &mdash; the Horizon Backtest uses date-blinded
+        prompts for historical dates. Models may behave differently in a live setting
+        (Cross-Domain, Daily Forecast).
       </li>
       <li>
         <strong>Normality assumption</strong> &mdash; the &mu; calculation assumes
@@ -375,13 +371,13 @@ Write in plain English. No JSON, no bullet points.</pre>
         Fat-tailed domains (crypto, commodities) may violate this.
       </li>
       <li>
-        <strong>Small n in some domains</strong> &mdash; Study 3 commodities (n=5/model)
+        <strong>Small n in some domains</strong> &mdash; Cross-Domain commodities (n=5/model)
         and forex (n=8/model) produce wide confidence intervals on the metrics themselves.
       </li>
       <li>
-        <strong>Model versioning</strong> &mdash; Studies 1&ndash;3 used model snapshots
-        from early 2026. Study 4 uses updated versions. Direct comparison across
-        studies should account for this.
+        <strong>Model versioning</strong> &mdash; the Horizon Backtest and Cross-Domain
+        used model snapshots from early 2026. Daily Forecast uses updated versions.
+        Direct comparison across studies should account for this.
       </li>
     </ul>
 
