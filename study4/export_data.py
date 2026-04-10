@@ -493,6 +493,14 @@ def main():
         console.print("[yellow]scored.csv is empty — nothing to export.[/yellow]")
         return
 
+    # Normalize column names: Study 4 native uses "item", convert_study2 uses "item_id"
+    if "item" in df.columns and "item_id" not in df.columns:
+        df = df.rename(columns={"item": "item_id"})
+    # Study 4 native uses "current_value", convert_study2 already maps to "current_value"
+    console.print(f"[bold]Loaded scored.csv:[/bold] {len(df)} rows, "
+                  f"models={sorted(df['model'].unique())}, "
+                  f"horizons={sorted(df['horizon'].unique())}")
+
     with open(BASE_DIR / "config.yaml") as f:
         config = yaml.safe_load(f)
 
