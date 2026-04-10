@@ -125,6 +125,7 @@ SECTOR_MAP = {
     "DIA": "Index ETFs",
     # Remaining — mapped individually
     "ON": "Technology", "PYPL": "Financials",
+    "NXPI": "Technology", "FICO": "Financials",
     # Study 2 extra tickers not in Study 4 config
     "BA": "Industrials", "LMT": "Industrials", "ETN": "Industrials",
     "ITW": "Industrials", "UPS": "Industrials", "MMM": "Industrials",
