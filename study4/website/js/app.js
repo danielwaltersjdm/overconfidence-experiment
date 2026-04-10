@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Discover models + horizons from data
   modelKeys = Object.keys(rolling.models || {});
   allHorizons = rolling.horizons || discoverHorizons();
-  horizon = allHorizons[0] || "1d";
+  horizon = "all";
 
   populateHorizonSelect();
   populateSectorFilter();
@@ -134,6 +134,12 @@ function populateHorizonSelect() {
   const sel = document.getElementById("horizon-select");
   if (!sel) return;
   sel.innerHTML = "";
+  // "All Horizons" aggregate option
+  const allOpt = document.createElement("option");
+  allOpt.value = "all";
+  allOpt.textContent = "All Horizons";
+  sel.appendChild(allOpt);
+  // Individual horizons
   allHorizons.forEach(h => {
     const opt = document.createElement("option");
     opt.value = h;
@@ -277,11 +283,46 @@ function render() {
 // ── Model cards ──────────────────────────────────────────────────────────────
 
 function getCardData(modelKey) {
+  if (horizon === "all") {
+    // Aggregate across all horizons
+    return aggregateAllHorizons(modelKey);
+  }
   const hData = rolling?.models?.[modelKey]?.horizons?.[horizon];
   if (!hData || hData.status !== "active") return null;
   if (filterStock) return hData.items?.[filterStock] || null;
   if (filterSector !== "all") return hData.sectors?.[filterSector] || null;
   return hData;
+}
+
+function aggregateAllHorizons(modelKey) {
+  const horizons = rolling?.models?.[modelKey]?.horizons;
+  if (!horizons) return null;
+  let totalN = 0, hitSum = 0, nadSum = 0, neadSum = 0, nadCount = 0;
+  for (const h of allHorizons) {
+    let d = horizons[h];
+    if (!d || d.status !== "active") continue;
+    if (filterStock) d = d.items?.[filterStock];
+    else if (filterSector !== "all") d = d.sectors?.[filterSector];
+    if (!d || !d.n) continue;
+    const n = d.n;
+    totalN += n;
+    if (d.hit_rate_90 != null) hitSum += d.hit_rate_90 * n;
+    if (d.accuracy != null) { nadSum += d.accuracy * n; nadCount += n; }
+    if (d.mu != null && d.accuracy != null) neadSum += d.mu * d.accuracy * n;
+  }
+  if (totalN === 0) return null;
+  const hr90 = hitSum / totalN;
+  const acc = nadCount > 0 ? nadSum / nadCount : null;
+  const mu = (acc && acc > 0 && nadCount > 0) ? (neadSum / nadCount) / acc : null;
+  return {
+    n: totalN,
+    hit_rate_90: hr90,
+    accuracy: acc,
+    mu: mu,
+    hit_rate_90_se: Math.sqrt(hr90 * (1 - hr90) / totalN),
+    accuracy_se: null,
+    mu_se: null,
+  };
 }
 
 function renderCards() {
@@ -523,26 +564,49 @@ function renderChart() {
 
 // ── Sector table ─────────────────────────────────────────────────────────────
 
+function getSectorData(modelKey, sector) {
+  if (horizon === "all") {
+    // Aggregate sector data across all horizons
+    const horizons = rolling?.models?.[modelKey]?.horizons;
+    if (!horizons) return null;
+    let totalN = 0, nadSum = 0, neadSum = 0;
+    for (const h of allHorizons) {
+      const d = horizons[h]?.sectors?.[sector];
+      if (!d || !d.n) continue;
+      totalN += d.n;
+      if (d.accuracy != null) nadSum += d.accuracy * d.n;
+      if (d.mu != null && d.accuracy != null) neadSum += d.mu * d.accuracy * d.n;
+    }
+    if (totalN === 0) return null;
+    const acc = nadSum / totalN;
+    return { n: totalN, mu: acc > 0 ? (neadSum / totalN) / acc : null, accuracy: acc };
+  }
+  return rolling?.models?.[modelKey]?.horizons?.[horizon]?.sectors?.[sector] || null;
+}
+
 function renderDomainTable() {
   const container = document.getElementById("domain-table");
   if (!container) return;
 
-  const hasData = modelKeys.some(
-    m => rolling?.models?.[m]?.horizons?.[horizon]?.status === "active"
-  );
+  const hasData = horizon === "all"
+    ? modelKeys.some(m => allHorizons.some(h => rolling?.models?.[m]?.horizons?.[h]?.status === "active"))
+    : modelKeys.some(m => rolling?.models?.[m]?.horizons?.[horizon]?.status === "active");
 
   if (!hasData) {
     container.innerHTML = `
       <div style="padding:2.5rem 1rem;text-align:center;color:var(--muted);font-size:0.9rem">
-        Sector breakdown unavailable for ${horizonLabel(horizon)} horizon.
+        Sector breakdown unavailable for ${horizon === "all" ? "aggregate" : horizonLabel(horizon)} view.
       </div>`;
     return;
   }
 
   const sectorSet = new Set();
   modelKeys.forEach(m => {
-    const secs = rolling?.models?.[m]?.horizons?.[horizon]?.sectors;
-    if (secs) Object.keys(secs).forEach(s => sectorSet.add(s));
+    const hList = horizon === "all" ? allHorizons : [horizon];
+    hList.forEach(h => {
+      const secs = rolling?.models?.[m]?.horizons?.[h]?.sectors;
+      if (secs) Object.keys(secs).forEach(s => sectorSet.add(s));
+    });
   });
   const sectors = Array.from(sectorSet).sort();
 
@@ -553,7 +617,7 @@ function renderDomainTable() {
 
   const rows = sectors.map(sec => {
     const cells = modelKeys.map(m => {
-      const d = rolling?.models?.[m]?.horizons?.[horizon]?.sectors?.[sec];
+      const d = getSectorData(m, sec);
       if (!d || d.n === 0) {
         return `<td><span class="cell-val" style="color:var(--muted)">\u2014</span></td>`;
       }
