@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-10",
+  "timestamp": "2026-04-10T20:48:39.466735Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 34.09000015258789,
+  "context": "Current closing price of Chipotle (CMG): $34.09 USD as of 2026-04-10.",
+  "prompt_text": "Today is 2026-04-10.\n\nCurrent closing price of Chipotle (CMG): $34.09 USD as of 2026-04-10.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-11\n  1-week target date: 2026-04-17\n  1-month target date: 2026-05-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate Chipotle's future closing prices. Let me think through this carefully.\n\n**Current context:**\n- CMG closing price: $34.09 on 2026-04-10\n- Note: This price seems very low for CMG historically. CMG did a 50-for-1 stock split in June 2024, so post-split prices in the $50-60 range were typical in late 2024. A price of $34.09 suggests significant decline from those levels, possibly due to broader market conditions (tariff concerns, market volatility in early 2026).\n\n**Volatility assessment:**\n- CMG's historical daily volatility is roughly 1.5-2.5% post-split\n- Current market environment (April 2026) appears to have elevated volatility given tariff/macro concerns\n- I'll use ~2% daily volatility as baseline, possibly higher given macro uncertainty\n\n**Estimates:**\n\n1-day (April 11):\n- Markets are volatile; slight uncertainty\n- Point estimate: ~$34.20 (slight drift up, but essentially flat)\n- Daily vol ~2%: range \u2248 $34.09 \u00d7 (1 \u00b1 1.645\u00d70.02) \u2248 $34.09 \u00b1 $1.12\n- CI: [$32.97, $35.21] \u2192 I'll widen slightly for fat tails: [$32.50, $35.75]\n\n1-week (April 17):\n- Weekly vol \u2248 2% \u00d7 \u221a5 \u2248 4.5%\n- Range: $34.09 \u00b1 $1.53... wait, 4.5% of $34.09 \u2248 $1.53\n- 90% CI: $34.09 \u00d7 (1 \u00b1 1.645\u00d70.045) \u2248 $34.09 \u00b1 $2.53\n- CI: [$31.56, $36.62] \u2192 widening for macro uncertainty: [$30.50, $37.50]\n- Point estimate: $33.80 (slight bearish lean given macro)\n\n1-month (May 10):\n- Monthly vol \u2248 2% \u00d7 \u221a22 \u2248 9.4%\n- 90% CI: $34.09 \u00b1 1.645\u00d70.094\u00d7$34.09 \u2248 $34.09 \u00b1 $5.27\n- CI: [$28.82, $39.36] \u2192 I'll widen: [$27.00, $41.00]\n- Point estimate: $34.50 (modest recovery over month)\n\n{\n  \"1d\": {\n    \"point_estimate\": 34.20,\n    \"90_ci\": [32.50, 35.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 33.80,\n    \"90_ci\": [30.50, 37.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 34.50,\n    \"90_ci\": [27.00, 41.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 34.2,
+      "90_ci": [
+        32.5,
+        35.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 33.8,
+      "90_ci": [
+        30.5,
+        37.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 34.5,
+      "90_ci": [
+        27.0,
+        41.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 34.2,\n    \"90_ci\": [\n      32.5,\n      35.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 33.8,\n    \"90_ci\": [\n      30.5,\n      37.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 34.5,\n    \"90_ci\": [\n      27.0,\n      41.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "At the one-day horizon, the point estimate of 34.2 reflects a near-term anchoring to whatever the most recent observed price or level was at the time of the forecast, with only modest drift expected over such a short window. One-day forecasts are heavily influenced by momentum and mean-reversion dynamics in the immediate term, and the tight confidence interval of 32.5 to 35.9 reflects the relatively low volatility expected to materialize over a single trading session. Absent a scheduled high-impact event within that window, intraday noise tends to stay bounded, which justified the narrower band.\n\nAt the one-week horizon, the point estimate of 33.8 reflects a slight downward tilt from the one-day estimate, suggesting that at the time of the forecast there was a mild bearish lean built into the medium-term outlook, possibly reflecting some technical resistance or a modest macroeconomic headwind. The wider confidence interval of 30.5 to 37.5 accounts for the increased number of trading sessions over which surprises can accumulate, including scheduled data releases, central bank communications, or geopolitical developments that could shift sentiment materially. A week is long enough for a regime shift in short-term momentum to develop, which adds meaningful uncertainty on both sides.\n\nThe one-month point estimate of 34.5 rises slightly relative to the one-week figure, implying a longer-run mean-reversion tendency pulling the estimate back toward what was perceived as fair value at the time. The very wide confidence interval of 27.0 to 41.5 reflects the compounding of uncertainty across roughly 20 trading days, during which earnings releases, policy decisions, inflation prints, or liquidity events could fundamentally reprice the asset.\n\nSpecific risks that could push outcomes outside these stated intervals include a surprise policy announcement \u2014 such as an unexpected rate decision or regulatory action \u2014 that could gap the price well beyond either tail. A sudden deterioration in market liquidity, a geopolitical shock, or an unexpected earnings miss or beat from a closely related name could similarly produce moves that breach the stated bounds. On the upside, a short-squeeze dynamic or a risk-on sentiment surge could drive prices well above 41.5, while a broad market selloff or credit event could push outcomes meaningfully below 27.0.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-10",
+  "timestamp": "2026-04-10T20:03:15.632926Z",
+  "domain": "stocks",
+  "item": "WFC",
+  "item_label": "Wells Fargo",
+  "unit": "USD",
+  "current_value": 85.41000366210938,
+  "context": "Current closing price of Wells Fargo (WFC): $85.41 USD as of 2026-04-10.",
+  "prompt_text": "Today is 2026-04-10.\n\nCurrent closing price of Wells Fargo (WFC): $85.41 USD as of 2026-04-10.\n\nPredict the closing price of Wells Fargo at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-11\n  1-week target date: 2026-04-17\n  1-month target date: 2026-05-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll analyze this systematically, considering current market conditions, WFC's recent performance, and appropriate uncertainty scaling.\n\n**Key considerations:**\n- Current price: $85.41 (2026-04-10)\n- WFC is a large-cap financial stock with typical daily volatility ~1.5-2%\n- April 2026 context: Markets have been volatile with tariff concerns and macro uncertainty\n- Financial sector faces interest rate sensitivity\n- Slight downward bias given macro uncertainty, but WFC has been relatively stable\n\n**Volatility estimates:**\n- Daily vol: ~1.8% \u2192 ~$1.53/day\n- Weekly vol: ~1.8% \u00d7 \u221a5 \u2248 4% \u2192 ~$3.42\n- Monthly vol: ~1.8% \u00d7 \u221a21 \u2248 8.2% \u2192 ~$7.00\n\n**Point estimates:** Slight modest drift, roughly flat with small uncertainty about direction. Given macro headwinds (tariffs, economic uncertainty), I'll apply a slight negative drift.\n\n**90% CI:** ~\u00b11.645 standard deviations\n\n- 1d: \u00b11.645 \u00d7 $1.53 \u2248 \u00b1$2.52\n- 1w: \u00b11.645 \u00d7 $3.42 \u2248 \u00b1$5.63\n- 1m: \u00b11.645 \u00d7 $7.00 \u2248 \u00b1$11.51\n\n{\n  \"1d\": {\n    \"point_estimate\": 85.10,\n    \"90_ci\": [82.60, 87.60]\n  },\n  \"1w\": {\n    \"point_estimate\": 84.50,\n    \"90_ci\": [79.00, 90.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 84.00,\n    \"90_ci\": [73.50, 94.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 85.1,
+      "90_ci": [
+        82.6,
+        87.6
+      ]
+    },
+    "1w": {
+      "point_estimate": 84.5,
+      "90_ci": [
+        79.0,
+        90.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 84.0,
+      "90_ci": [
+        73.5,
+        94.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 85.1,\n    \"90_ci\": [\n      82.6,\n      87.6\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 84.5,\n    \"90_ci\": [\n      79.0,\n      90.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 84.0,\n    \"90_ci\": [\n      73.5,\n      94.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest downward drift from the current level across all three horizons, suggesting I expected the underlying asset or metric to gradually soften over time. At the one-day horizon, the estimate of 85.1 implies very little movement from the prevailing level, consistent with near-term momentum and the tendency for prices or indicators to exhibit mean-reversion or continuity over short windows. At the one-week horizon, the slight decline to 84.5 reflects a modest bearish lean, perhaps driven by near-term technical resistance, anticipated data releases, or a slight fade in recent positive sentiment. By one month, the further drift to 84.0 suggests a gentle but sustained headwind, possibly reflecting macro factors, seasonal patterns, or valuation concerns that tend to weigh on the asset over a longer horizon without causing an outright reversal.\n\nThe confidence interval widths grow substantially as the horizon extends, which is the expected pattern for any well-calibrated probabilistic forecast. At one day, the 90% interval spans only 5 points, reflecting the relatively constrained range of outcomes possible in a single session given normal volatility conditions. By one week, the interval widens to 11 points, incorporating the compounding uncertainty of multiple trading sessions, potential surprise data releases, and shifting sentiment. At one month, the interval reaches 21 points, acknowledging that over a four-week window, central bank decisions, earnings reports, geopolitical developments, and changes in the broader risk environment could meaningfully shift outcomes in either direction.\n\nSeveral specific risks could push realized values outside even these widened intervals. On the downside, a sharp deterioration in macroeconomic data, a sudden tightening of financial conditions, or a geopolitical shock could produce a significant gap below the lower bound. Liquidity events or forced selling in correlated markets could amplify such moves in a nonlinear way. On the upside, a positive policy surprise, a stronger-than-expected economic print, or a short-squeeze dynamic could propel the value well above the upper bound. Fat-tailed distributions are a known feature of financial and economic variables, meaning the stated 90% intervals, while reasonably wide, still leave meaningful probability mass in the tails for extreme outcomes.",
+  "status": "collected",
+  "error": null
+}

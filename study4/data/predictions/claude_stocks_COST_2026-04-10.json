@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-10",
+  "timestamp": "2026-04-10T19:44:10.917297Z",
+  "domain": "stocks",
+  "item": "COST",
+  "item_label": "Costco",
+  "unit": "USD",
+  "current_value": 996.6400146484375,
+  "context": "Current closing price of Costco (COST): $996.64 USD as of 2026-04-10.",
+  "prompt_text": "Today is 2026-04-10.\n\nCurrent closing price of Costco (COST): $996.64 USD as of 2026-04-10.\n\nPredict the closing price of Costco at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-11\n  1-week target date: 2026-04-17\n  1-month target date: 2026-05-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 1002,\n    \"90_ci\": [965, 1040]\n  },\n  \"1w\": {\n    \"point_estimate\": 1008,\n    \"90_ci\": [940, 1075]\n  },\n  \"1m\": {\n    \"point_estimate\": 1020,\n    \"90_ci\": [890, 1150]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1002,
+      "90_ci": [
+        965,
+        1040
+      ]
+    },
+    "1w": {
+      "point_estimate": 1008,
+      "90_ci": [
+        940,
+        1075
+      ]
+    },
+    "1m": {
+      "point_estimate": 1020,
+      "90_ci": [
+        890,
+        1150
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1002,\n    \"90_ci\": [\n      965,\n      1040\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1008,\n    \"90_ci\": [\n      940,\n      1075\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1020,\n    \"90_ci\": [\n      890,\n      1150\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over time. For the 1-day estimate, I anchored closely to the prevailing level, assuming mean-reverting dynamics dominate over such a short window \u2014 the small premium above the current level reflects a slight positive drift assumption rather than any strong directional signal. Over the 1-week horizon, I allowed for slightly more drift, assuming gradual momentum or structural factors nudging the series upward. By the 1-month mark, the point estimate incorporates a more meaningful cumulative drift, consistent with whatever underlying trend was present at the time of forecasting, while acknowledging that compounding uncertainty makes the exact path less predictable.\n\nThe confidence interval widths reflect how uncertainty scales with time. At the 1-day horizon, the interval is relatively tight because there is limited time for new information or shocks to materialize, so the range of plausible outcomes is constrained. By one week, the interval widens meaningfully as intraday noise compounds and the possibility of regime shifts or external news events grows. At one month, the interval is substantially wider \u2014 spanning roughly 260 units \u2014 because over that timeframe, macroeconomic releases, policy decisions, sentiment shifts, and liquidity conditions can all independently contribute to deviation from the central path. The interval widths were calibrated to reflect roughly 90% coverage, meaning I expected the true outcome to fall outside these bounds approximately once in ten such forecasts.\n\nSpecific risks that could push outcomes outside my stated intervals include sudden liquidity crises or flash crashes that move markets far faster than gradual drift assumptions allow. On the upside, unexpected positive catalysts \u2014 such as a surprise policy announcement, strong macroeconomic data, or a short squeeze \u2014 could propel values well beyond the upper bound, particularly at longer horizons. On the downside, a broader risk-off episode, geopolitical shock, or systemic financial stress could push outcomes sharply below the lower bound. These tail risks are precisely what the 10% outside-interval probability is meant to acknowledge, but truly fat-tailed events \u2014 the kind that occur once or twice per decade \u2014 could still produce outcomes far more extreme than my intervals suggest.",
+  "status": "collected",
+  "error": null
+}

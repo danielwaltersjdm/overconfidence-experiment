@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-10",
+  "timestamp": "2026-04-10T22:06:55.728401Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 45.029998779296875,
+  "context": "Current closing price of Tractor Supply (TSCO): $45.03 USD as of 2026-04-10.",
+  "prompt_text": "Today is 2026-04-10.\n\nCurrent closing price of Tractor Supply (TSCO): $45.03 USD as of 2026-04-10.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-11\n  1-week target date: 2026-04-17\n  1-month target date: 2026-05-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future prices for TSCO (Tractor Supply) from a current price of $45.03.\n\nLet me think through this carefully.\n\n**Context considerations:**\n- Current price: $45.03 (this seems unusually low for TSCO - historically TSCO has traded in the $200-$270 range)\n- This could reflect a significant stock decline, possibly due to broader market conditions (tariff concerns in early April 2026), sector headwinds, or company-specific issues\n- The date is April 10, 2026, which follows a period of market volatility related to tariff announcements\n\n**Volatility estimation:**\n- For a stock at ~$45, typical daily volatility for a mid-large cap retail stock might be around 2-4% in volatile markets\n- Given the apparent significant decline already, there's elevated uncertainty\n\n**Short-term (1-day):**\n- Markets have been volatile; slight mean reversion possible\n- Point estimate: modest bounce ~$46\n- Daily move of \u00b15-8% possible in current environment\n- CI: roughly \u00b110% for 90% interval in volatile conditions\n\n**1-week:**\n- More uncertainty, ongoing tariff/macro news could drive further moves\n- Point estimate: ~$46.50\n- Wider interval needed\n\n**1-month:**\n- Significant uncertainty over a month\n- Could see recovery if macro conditions improve, or further decline\n- Point estimate: ~$48 (some recovery from oversold conditions)\n- Wide CI needed\n\n**Calibrating intervals:**\n- 1-day: ~\u00b18% for 90% CI \u2192 [$41.40, $49.20]\n- 1-week: ~\u00b115% for 90% CI \u2192 [$38.30, $53.30]\n- 1-month: ~\u00b122% for 90% CI \u2192 [$35.10, $56.50]\n\n{\n  \"1d\": {\n    \"point_estimate\": 46.00,\n    \"90_ci\": [41.40, 49.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 46.50,\n    \"90_ci\": [38.00, 53.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 48.00,\n    \"90_ci\": [34.50, 57.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 46.0,
+      "90_ci": [
+        41.4,
+        49.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 46.5,
+      "90_ci": [
+        38.0,
+        53.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 48.0,
+      "90_ci": [
+        34.5,
+        57.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 46.0,\n    \"90_ci\": [\n      41.4,\n      49.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 46.5,\n    \"90_ci\": [\n      38.0,\n      53.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 48.0,\n    \"90_ci\": [\n      34.5,\n      57.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assess as a current baseline around 45\u201346, with the 1-day estimate sitting closest to recent observed levels and the 1-week and 1-month estimates incorporating a slight positive bias. The logic behind this drift is that many time series exhibiting mean-reverting behavior around a central tendency will, when currently sitting near or slightly below a long-run average, tend to drift back toward or slightly above that mean over longer horizons. The incremental increases from 46.0 to 46.5 to 48.0 across the three horizons reflect this modest pull, while acknowledging that over a single month there's meaningful room for the series to move in either direction due to accumulated shocks.\n\nThe confidence interval widths widen substantially as the horizon extends, which is standard for probabilistic forecasting under uncertainty. At the 1-day horizon, the relatively tight band of roughly \u00b14 points reflects that most short-term processes don't move dramatically overnight absent a specific catalyst. By one week, the interval opens to roughly \u00b17\u20138 points on either side, accounting for the compounding of daily volatility and the possibility of a moderate surprise. At one month, the interval spans more than 20 points from lower to upper bound, reflecting that a full month provides ample time for trending behavior, regime shifts, or external shocks to accumulate and push the value meaningfully away from today's level.\n\nSpecific risks that could push outcomes outside these stated intervals include sudden structural breaks or regime changes \u2014 for instance, a policy announcement, a major geopolitical event, or a sharp macroeconomic surprise \u2014 that would invalidate the assumption of relative stability underlying the estimates. On the downside, a rapid deterioration in underlying conditions could push the value toward or below the lower bounds, particularly at longer horizons. On the upside, a strong positive catalyst or momentum acceleration could push values above the upper bounds, especially over the one-month window where there's more time for a trend to compound.\n\nIt's worth noting that my intervals, while wide, are still parametric and assume a relatively well-behaved distribution of outcomes. Fat-tailed events \u2014 low-probability, high-impact occurrences \u2014 are difficult to fully capture in confidence intervals of this form. If the underlying series is subject to jump processes or if we're in a period of elevated macro uncertainty, the true 90% interval could be meaningfully wider than what I've stated, and readers should treat these estimates as informed guesses rather than precise probabilistic commitments.",
+  "status": "collected",
+  "error": null
+}
