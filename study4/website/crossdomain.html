@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cross-Domain &mdash; AI Calibration Index</title>
+  <meta name="description" content="Study 3: calibration of frontier AI confidence intervals across six prediction domains — stocks, crypto, forex, weather, commodities, and NBA." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="./index.html" class="site-title">AI Calibration Index</a>
+    <nav>
+      <a href="./index.html">Daily Forecast</a>
+      <a href="./backtest.html">Horizon Backtest</a>
+      <a href="./crossdomain.html" class="active">Cross-Domain</a>
+      <a href="./about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Do AI Models Know What They Don&rsquo;t Know?</h1>
+    <p class="hero-sub">
+      Three frontier AI models predicted outcomes across six diverse domains:
+      stocks, crypto, forex, weather, commodities, and NBA. We scored 204
+      resolved predictions and found a striking pattern &mdash; models are
+      <strong>overconfident</strong> in equities and commodities, but
+      <strong>underconfident</strong> in crypto and forex.
+    </p>
+    <p class="study-tag">Study 3: Cross-Domain Snapshot</p>
+  </section>
+
+  <!-- Status bar -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span class="status-text" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <!-- Model cards -->
+  <section>
+    <div class="section-head">
+      <h2>Overall Calibration</h2>
+      <span class="section-sub">Aggregate across all domains</span>
+    </div>
+    <div class="cards" id="model-cards"></div>
+  </section>
+
+  <!-- Chart: domains on x-axis -->
+  <section>
+    <div class="section-head">
+      <h2>Across Prediction Domains</h2>
+      <span class="section-sub">5 domains &mdash; with 95% CI error bars</span>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-controls">
+        <div class="metric-tabs" id="metric-tabs">
+          <button class="mtab active" data-metric="mu">&mu; (Meta-knowledge)</button>
+          <button class="mtab" data-metric="accuracy">Accuracy</button>
+          <button class="mtab" data-metric="hit_rate_90">90% CI Hit Rate</button>
+        </div>
+      </div>
+      <div class="chart-area" id="chart-area">
+        <canvas id="main-chart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Domain table: all 3 CI levels -->
+  <section>
+    <div class="section-head">
+      <h2>Calibration by Domain</h2>
+      <span class="section-sub">Hit rates at all three confidence levels (target: 50% / 80% / 90%)</span>
+    </div>
+    <div class="table-wrap" id="domain-table"></div>
+  </section>
+
+  <!-- Explainer -->
+  <section class="explainer">
+    <h3>What is the domain-confidence inversion?</h3>
+    <p>
+      All three models show <strong>overconfidence</strong> in familiar, data-rich
+      domains like equities and commodities &mdash; their 90% intervals contain
+      the true outcome far less than 90% of the time. But in volatile domains
+      like crypto and forex, the pattern flips: intervals are too wide, producing
+      <strong>underconfidence</strong>.
+    </p>
+    <p>
+      This inversion suggests that model uncertainty expressions are not well-adapted
+      to domain-specific volatility. Models may anchor on equity-like uncertainty
+      ranges regardless of the underlying domain.
+    </p>
+    <p>
+      <strong>&mu; &lt; 1</strong> = overconfident (intervals too narrow).
+      <strong>&mu; = 1</strong> = perfectly calibrated.
+      <strong>&mu; &gt; 1</strong> = underconfident (intervals too wide).
+    </p>
+    <p class="explainer-link">
+      <a href="./about.html">Full methodology &rarr;</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>
+      An ongoing empirical research project on LLM calibration.
+      <a href="./about.html">About</a> &middot;
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="./js/domains.js"></script>
+</body>
+</html>
