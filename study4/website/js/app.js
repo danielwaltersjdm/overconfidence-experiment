@@ -1,204 +1,42 @@
 /**
  * app.js — LLM Confidence Index Dashboard
  *
- * Reads rolling_index.json, time_series.json, items_list.json from ./data/.
- * Falls back to inline mock data if files are unavailable.
- * Supports filtering by sector and individual stock (on-demand loading).
+ * Reads rolling_index.json, items_list.json from ./data/.
+ * Chart: all prediction horizons on x-axis with 95% CI error bars.
+ * Cards + sector table: filterable by horizon, sector, stock.
  */
 
 "use strict";
 
-// ── Model config ─────────────────────────────────────────────────────────────
+// ── Model config (static display props; models discovered from data) ────────
 
-const MODELS = {
+const MODEL_DISPLAY = {
   claude: { label: "Claude",  color: "#7c3aed" },
   gpt4o:  { label: "GPT-4o", color: "#059669" },
+  gpt4:   { label: "GPT-4",  color: "#059669" },
   gemini: { label: "Gemini", color: "#d97706" },
 };
-const MODEL_KEYS = Object.keys(MODELS);
 
 const METRIC_CONFIG = {
-  mu:          { label: "\u03bc (MEAD / MAD)", target: 1.0, min: 0, max: 2, fmt: v => v === null || isNaN(v) ? "\u2014" : v.toFixed(2) },
-  accuracy:    { label: "Accuracy (normalized MAD)", target: null, min: 0, max: null, fmt: v => v === null || isNaN(v) ? "\u2014" : (v * 100).toFixed(2) + "%" },
-  hit_rate_90: { label: "90% CI Hit Rate", target: 0.90, min: 0, max: 1, fmt: v => pct(v) },
+  mu:          { label: "\u03bc (MEAD / MAD)", seKey: "mu_se", target: 1.0, fmt: v => v == null || isNaN(v) ? "\u2014" : v.toFixed(2) },
+  accuracy:    { label: "Accuracy (norm. MAD)", seKey: "accuracy_se", target: null, fmt: v => v == null || isNaN(v) ? "\u2014" : (v * 100).toFixed(2) + "%" },
+  hit_rate_90: { label: "90% CI Hit Rate", seKey: "hit_rate_90_se", target: 0.90, fmt: v => v == null || isNaN(v) ? "\u2014" : (v * 100).toFixed(1) + "%" },
 };
-
-const HORIZON_LABELS = { "1d": "1-Day", "1w": "1-Week", "1m": "1-Month" };
 
 // ── State ────────────────────────────────────────────────────────────────────
 
 let rolling = null;
-let series = null;
 let itemsList = [];
-let horizon = "1d";
+let modelKeys = [];     // discovered from data
+let allHorizons = [];   // discovered from data, sorted short-to-long
+let horizon = null;     // selected horizon for cards/table
 let metric = "mu";
 let chart = null;
-let usingMock = false;
 
 // Filter state
 let filterSector = "all";
 let filterStock = null;
 let stockSeriesCache = {};
-
-// ── Mock data ────────────────────────────────────────────────────────────────
-
-function generateMockData() {
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setDate(startDate.getDate() - 20);
-  const startStr = startDate.toISOString().split("T")[0];
-  const todayStr = today.toISOString().split("T")[0];
-
-  const dates = [];
-  const d = new Date(startDate);
-  d.setDate(d.getDate() + 1);
-  while (dates.length < 15) {
-    if (d.getDay() !== 0 && d.getDay() !== 6) {
-      dates.push(d.toISOString().split("T")[0]);
-    }
-    d.setDate(d.getDate() + 1);
-  }
-
-  function noisySeries(base, len, spread) {
-    const arr = [];
-    let v = base;
-    for (let i = 0; i < len; i++) {
-      v += (Math.random() - 0.5) * spread;
-      v = Math.max(0.1, Math.min(2.0, v));
-      arr.push(Math.round(v * 1000) / 1000);
-    }
-    return arr;
-  }
-
-  const sectors = ["Technology", "Financials", "Healthcare", "Consumer Discretionary",
-                   "Consumer Staples", "Industrials", "Energy", "Utilities"];
-
-  const mockItems = [
-    {id:"AAPL",label:"Apple",sector:"Technology"},{id:"MSFT",label:"Microsoft",sector:"Technology"},
-    {id:"NVDA",label:"NVIDIA",sector:"Technology"},{id:"GOOGL",label:"Alphabet A",sector:"Technology"},
-    {id:"JPM",label:"JPMorgan Chase",sector:"Financials"},{id:"BAC",label:"Bank of America",sector:"Financials"},
-    {id:"UNH",label:"UnitedHealth",sector:"Healthcare"},{id:"LLY",label:"Eli Lilly",sector:"Healthcare"},
-    {id:"AMZN",label:"Amazon",sector:"Consumer Discretionary"},{id:"TSLA",label:"Tesla",sector:"Consumer Discretionary"},
-    {id:"PG",label:"Procter & Gamble",sector:"Consumer Staples"},{id:"KO",label:"Coca-Cola",sector:"Consumer Staples"},
-    {id:"CAT",label:"Caterpillar",sector:"Industrials"},{id:"HON",label:"Honeywell",sector:"Industrials"},
-    {id:"XOM",label:"Exxon Mobil",sector:"Energy"},{id:"CVX",label:"Chevron",sector:"Energy"},
-    {id:"NEE",label:"NextEra Energy",sector:"Utilities"},{id:"SO",label:"Southern Company",sector:"Utilities"},
-  ];
-
-  const baseMu  = { claude: 0.92, gpt4o: 0.65, gemini: 0.80 };
-  const baseAcc = { claude: 0.025, gpt4o: 0.038, gemini: 0.030 };
-  const baseHR  = { claude: 0.85, gpt4o: 0.55, gemini: 0.72 };
-
-  const rollingIndex = {
-    generated_at: new Date().toISOString(),
-    window_days: 30,
-    study_start_date: startStr,
-    data_through: todayStr,
-    _mock: true,
-    models: {}
-  };
-
-  MODEL_KEYS.forEach(m => {
-    const sectorData = {};
-    sectors.forEach(sec => {
-      const offset = (Math.random() - 0.5) * 0.15;
-      sectorData[sec] = {
-        n: 15 + Math.round(Math.random() * 30),
-        mu: Math.round(Math.max(0.3, Math.min(1.8, baseMu[m] + offset)) * 1000) / 1000,
-        accuracy: Math.round(Math.max(0.005, baseAcc[m] + (Math.random() - 0.5) * 0.015) * 10000) / 10000,
-        hit_rate_90: Math.round(Math.max(0.3, Math.min(1.0, baseHR[m] + offset * 0.5)) * 1000) / 1000,
-      };
-    });
-
-    const itemData = {};
-    mockItems.forEach(it => {
-      const offset = (Math.random() - 0.5) * 0.2;
-      itemData[it.id] = {
-        n: 10 + Math.round(Math.random() * 5),
-        mu: Math.round(Math.max(0.2, Math.min(2.0, baseMu[m] + offset)) * 1000) / 1000,
-        accuracy: Math.round(Math.max(0.003, baseAcc[m] + (Math.random() - 0.5) * 0.02) * 10000) / 10000,
-        hit_rate_90: Math.round(Math.max(0.2, Math.min(1.0, baseHR[m] + offset * 0.4)) * 1000) / 1000,
-      };
-    });
-
-    rollingIndex.models[m] = {
-      model_id: m === "claude" ? "claude-sonnet-4-6" : m === "gpt4o" ? "gpt-4o-2024-11-20" : "gemini-2.5-flash",
-      horizons: {
-        "1d": {
-          status: "active", days_until_first: 0,
-          n: dates.length * 100,
-          mu: Math.round(baseMu[m] * 1000) / 1000,
-          accuracy: Math.round(baseAcc[m] * 10000) / 10000,
-          hit_rate_90: Math.round(baseHR[m] * 1000) / 1000,
-          ece_90: Math.round(Math.abs(0.90 - baseHR[m]) * 1000) / 1000,
-          mean_ece: Math.round(Math.abs(0.90 - baseHR[m]) * 0.7 * 1000) / 1000,
-          mean_brier: Math.round((0.001 + Math.random() * 0.003) * 10000) / 10000,
-          sectors: sectorData,
-          items: itemData,
-        },
-        "1w": { status: "insufficient_data", days_until_first: 4 },
-        "1m": { status: "insufficient_data", days_until_first: 27 }
-      }
-    };
-  });
-
-  const timeSeries = {
-    generated_at: new Date().toISOString(),
-    window_days: 30,
-    _mock: true,
-    horizons: {
-      "1d": {
-        status: "active",
-        dates: dates,
-        models: {
-          claude: { hit_rate_90: noisySeries(0.85, dates.length, 0.06), mu: noisySeries(0.92, dates.length, 0.08), accuracy: noisySeries(0.025, dates.length, 0.008), n: dates.map((_, i) => 40 * (i + 1)) },
-          gpt4o:  { hit_rate_90: noisySeries(0.55, dates.length, 0.08), mu: noisySeries(0.65, dates.length, 0.10), accuracy: noisySeries(0.038, dates.length, 0.010), n: dates.map((_, i) => 40 * (i + 1)) },
-          gemini: { hit_rate_90: noisySeries(0.72, dates.length, 0.07), mu: noisySeries(0.80, dates.length, 0.09), accuracy: noisySeries(0.030, dates.length, 0.009), n: dates.map((_, i) => 40 * (i + 1)) },
-        },
-        sectors: {}
-      },
-      "1w": { status: "insufficient_data" },
-      "1m": { status: "insufficient_data" }
-    }
-  };
-
-  // Mock per-sector time series
-  sectors.forEach(sec => {
-    timeSeries.horizons["1d"].sectors[sec] = {
-      models: {
-        claude: { hit_rate_90: noisySeries(0.85, dates.length, 0.10), mu: noisySeries(0.92, dates.length, 0.12), accuracy: noisySeries(0.025, dates.length, 0.010), n: dates.map(() => 5 + Math.round(Math.random() * 5)) },
-        gpt4o:  { hit_rate_90: noisySeries(0.55, dates.length, 0.12), mu: noisySeries(0.65, dates.length, 0.14), accuracy: noisySeries(0.038, dates.length, 0.012), n: dates.map(() => 5 + Math.round(Math.random() * 5)) },
-        gemini: { hit_rate_90: noisySeries(0.72, dates.length, 0.11), mu: noisySeries(0.80, dates.length, 0.13), accuracy: noisySeries(0.030, dates.length, 0.011), n: dates.map(() => 5 + Math.round(Math.random() * 5)) },
-      }
-    };
-  });
-
-  return { rollingIndex, timeSeries, itemsList: mockItems };
-}
-
-function generateMockItemSeries(ticker) {
-  const today = new Date();
-  const dates = [];
-  const d = new Date(today);
-  d.setDate(d.getDate() - 20);
-  while (dates.length < 12) {
-    d.setDate(d.getDate() + 1);
-    if (d.getDay() !== 0 && d.getDay() !== 6) dates.push(d.toISOString().split("T")[0]);
-  }
-  function ns(b,l,s){const a=[];let v=b;for(let i=0;i<l;i++){v+=(Math.random()-0.5)*s;v=Math.max(0.1,Math.min(2,v));a.push(Math.round(v*1000)/1000);}return a;}
-  return {
-    ticker, label: ticker, sector: "Unknown",
-    horizons: {
-      "1d": { status:"active", dates, models: {
-        claude:{hit_rate_90:ns(0.85,dates.length,0.15),mu:ns(0.9,dates.length,0.2),accuracy:ns(0.025,dates.length,0.015),n:dates.map(()=>1)},
-        gpt4o:{hit_rate_90:ns(0.55,dates.length,0.18),mu:ns(0.65,dates.length,0.22),accuracy:ns(0.038,dates.length,0.018),n:dates.map(()=>1)},
-        gemini:{hit_rate_90:ns(0.72,dates.length,0.16),mu:ns(0.80,dates.length,0.21),accuracy:ns(0.030,dates.length,0.016),n:dates.map(()=>1)},
-      }},
-      "1w": { status: "insufficient_data" },
-      "1m": { status: "insufficient_data" }
-    }
-  };
-}
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 
@@ -206,53 +44,73 @@ document.addEventListener("DOMContentLoaded", async () => {
   setStatus("amber", "Loading data\u2026");
 
   try {
-    const [ri, ts, il] = await Promise.all([
+    const [ri, il] = await Promise.all([
       fetchJSON("./data/rolling_index.json"),
-      fetchJSON("./data/time_series.json"),
       fetchJSON("./data/items_list.json"),
     ]);
     rolling = ri;
-    series = ts;
     itemsList = il;
-    usingMock = false;
-  } catch {
-    const mock = generateMockData();
-    rolling = mock.rollingIndex;
-    series = mock.timeSeries;
-    itemsList = mock.itemsList;
-    usingMock = true;
+  } catch (err) {
+    console.error("Failed to load data:", err);
+    setStatus("red", "Failed to load data");
+    return;
   }
 
+  // Discover models + horizons from data
+  modelKeys = Object.keys(rolling.models || {});
+  allHorizons = rolling.horizons || discoverHorizons();
+  horizon = allHorizons[0] || "1d";
+
+  populateHorizonSelect();
   populateSectorFilter();
   initStockSearch();
   updateStatus();
   render();
-  bindTabs();
+  bindHorizonSelect();
   bindMetricTabs();
   bindFilters();
 });
 
+function discoverHorizons() {
+  const hSet = new Set();
+  for (const m of Object.values(rolling.models || {})) {
+    for (const h of Object.keys(m.horizons || {})) {
+      if (m.horizons[h].status === "active") hSet.add(h);
+    }
+  }
+  return sortHorizons([...hSet]);
+}
+
+function sortHorizons(arr) {
+  return arr.sort((a, b) => horizonDays(a) - horizonDays(b));
+}
+
+function horizonDays(h) {
+  h = h.toLowerCase();
+  if (h.endsWith("d")) return parseInt(h);
+  if (h.endsWith("w")) return parseInt(h) * 7;
+  if (h.endsWith("m")) return parseInt(h) * 30;
+  return 9999;
+}
+
+function horizonLabel(h) {
+  const d = horizonDays(h);
+  if (d === 1) return "1-Day";
+  if (d < 7) return d + "-Day";
+  if (d === 7) return "1-Week";
+  if (d < 30) return d + "-Day";
+  if (d === 30) return "1-Month";
+  return h;
+}
+
 // ── Data loading ─────────────────────────────────────────────────────────────
 
 async function fetchJSON(url) {
-  const r = await fetch(url);
+  const r = await fetch(url, { cache: "no-store" });
   if (!r.ok) throw new Error("HTTP " + r.status);
   const data = await r.json();
   if (!data || typeof data !== "object") throw new Error("Empty");
   return data;
-}
-
-async function fetchItemSeries(ticker) {
-  if (stockSeriesCache[ticker]) return stockSeriesCache[ticker];
-  try {
-    const data = await fetchJSON("./data/items/" + ticker + ".json");
-    stockSeriesCache[ticker] = data;
-    return data;
-  } catch {
-    const mock = generateMockItemSeries(ticker);
-    stockSeriesCache[ticker] = mock;
-    return mock;
-  }
 }
 
 // ── Status bar ───────────────────────────────────────────────────────────────
@@ -265,16 +123,25 @@ function setStatus(color, text) {
 }
 
 function updateStatus() {
-  if (usingMock) { setStatus("amber", "Showing sample data \u2014 live data not yet available"); return; }
-  const gen = rolling?.generated_at;
-  if (!gen) { setStatus("red", "Data unavailable"); return; }
-  const hours = (Date.now() - new Date(gen).getTime()) / (1000 * 60 * 60);
-  if (hours < 26)      setStatus("green", "Updated " + fmtDate(gen));
-  else if (hours < 72) setStatus("amber", "Updated " + fmtDate(gen));
-  else                 setStatus("red", "Last update: " + fmtDate(gen));
+  const dt = rolling?.data_through;
+  if (!dt) { setStatus("red", "Data unavailable"); return; }
+  setStatus("green", "Data through " + dt);
 }
 
 // ── Filters ──────────────────────────────────────────────────────────────────
+
+function populateHorizonSelect() {
+  const sel = document.getElementById("horizon-select");
+  if (!sel) return;
+  sel.innerHTML = "";
+  allHorizons.forEach(h => {
+    const opt = document.createElement("option");
+    opt.value = h;
+    opt.textContent = horizonLabel(h);
+    sel.appendChild(opt);
+  });
+  sel.value = horizon;
+}
 
 function populateSectorFilter() {
   const sel = document.getElementById("sector-select");
@@ -334,6 +201,28 @@ function selectStock(ticker) {
   onFilterChange();
 }
 
+function bindHorizonSelect() {
+  const sel = document.getElementById("horizon-select");
+  if (!sel) return;
+  sel.addEventListener("change", () => {
+    horizon = sel.value;
+    renderCards();
+    renderDomainTable();
+  });
+}
+
+function bindMetricTabs() {
+  document.querySelectorAll("#metric-tabs .mtab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      metric = btn.dataset.metric;
+      document.querySelectorAll("#metric-tabs .mtab").forEach(b => {
+        b.classList.toggle("active", b.dataset.metric === metric);
+      });
+      renderChart();
+    });
+  });
+}
+
 function bindFilters() {
   const secSel = document.getElementById("sector-select");
   const clearBtn = document.getElementById("filter-clear");
@@ -361,11 +250,11 @@ function bindFilters() {
   }
 }
 
-async function onFilterChange() {
+function onFilterChange() {
   updateFilterLabel();
   renderCards();
   renderDomainTable();
-  await renderChart();
+  renderChart();
 }
 
 function updateFilterLabel() {
@@ -380,66 +269,9 @@ function updateFilterLabel() {
 
 function render() {
   renderCards();
-  renderTabs();
   renderChart();
   renderDomainTable();
   updateFilterLabel();
-}
-
-function renderForHorizon() {
-  renderCards();
-  renderChart();
-  renderDomainTable();
-  document.getElementById("cards-horizon-label").textContent =
-    (HORIZON_LABELS[horizon] || horizon).toLowerCase() + " horizon";
-}
-
-// ── Tabs ─────────────────────────────────────────────────────────────────────
-
-function bindTabs() {
-  document.querySelectorAll("#horizon-tabs .tab").forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (btn.disabled) return;
-      horizon = btn.dataset.hz;
-      document.querySelectorAll("#horizon-tabs .tab").forEach(b => {
-        b.classList.toggle("active", b.dataset.hz === horizon);
-        b.setAttribute("aria-selected", b.dataset.hz === horizon);
-      });
-      renderForHorizon();
-    });
-  });
-}
-
-function bindMetricTabs() {
-  document.querySelectorAll("#metric-tabs .mtab").forEach(btn => {
-    btn.addEventListener("click", () => {
-      metric = btn.dataset.metric;
-      document.querySelectorAll("#metric-tabs .mtab").forEach(b => {
-        b.classList.toggle("active", b.dataset.metric === metric);
-      });
-      renderChart();
-    });
-  });
-}
-
-function renderTabs() {
-  document.querySelectorAll("#horizon-tabs .tab").forEach(btn => {
-    const h = btn.dataset.hz;
-    const hData = series?.horizons?.[h];
-    const disabled = !hData || hData.status === "insufficient_data";
-    btn.disabled = disabled;
-    const old = btn.querySelector(".tab-tooltip");
-    if (old) old.remove();
-    if (disabled) {
-      const days = rolling?.models?.claude?.horizons?.[h]?.days_until_first;
-      const tip = document.createElement("span");
-      tip.className = "tab-tooltip";
-      tip.textContent = days > 0
-        ? HORIZON_LABELS[h] + " data in ~" + days + " day" + (days === 1 ? "" : "s")
-        : "Insufficient data";
-      btn.appendChild(tip);
-    }
-  });
 }
 
 // ── Model cards ──────────────────────────────────────────────────────────────
@@ -456,8 +288,8 @@ function renderCards() {
   const container = document.getElementById("model-cards");
   if (!container) return;
 
-  container.innerHTML = MODEL_KEYS.map(m => {
-    const cfg = MODELS[m];
+  container.innerHTML = modelKeys.map(m => {
+    const cfg = MODEL_DISPLAY[m] || { label: m, color: "#64748b" };
     const d = getCardData(m);
     const mu = d?.mu ?? null;
     const acc = d?.accuracy ?? null;
@@ -483,70 +315,130 @@ function renderCards() {
   }).join("");
 }
 
-// ── Time-series chart ────────────────────────────────────────────────────────
+// ── Chart: all horizons on x-axis with error bars ───────────────────────────
 
-async function renderChart() {
+// Custom Chart.js plugin for vertical error bars
+const errorBarPlugin = {
+  id: "errorBars",
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((ds, dsIdx) => {
+      if (!ds._errorBars) return;
+      const meta = chart.getDatasetMeta(dsIdx);
+      ds._errorBars.forEach((eb, i) => {
+        if (!eb || eb.lo == null || eb.hi == null) return;
+        const pt = meta.data[i];
+        if (!pt) return;
+        const x = pt.x;
+        const yScale = chart.scales.y;
+        const yLo = yScale.getPixelForValue(eb.lo);
+        const yHi = yScale.getPixelForValue(eb.hi);
+        const capW = 4;
+        ctx.save();
+        ctx.strokeStyle = ds.borderColor || "#666";
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.6;
+        // Vertical line
+        ctx.beginPath();
+        ctx.moveTo(x, yLo);
+        ctx.lineTo(x, yHi);
+        ctx.stroke();
+        // Bottom cap
+        ctx.beginPath();
+        ctx.moveTo(x - capW, yLo);
+        ctx.lineTo(x + capW, yLo);
+        ctx.stroke();
+        // Top cap
+        ctx.beginPath();
+        ctx.moveTo(x - capW, yHi);
+        ctx.lineTo(x + capW, yHi);
+        ctx.stroke();
+        ctx.restore();
+      });
+    });
+  }
+};
+Chart.register(errorBarPlugin);
+
+function getHorizonData(modelKey, h) {
+  const hData = rolling?.models?.[modelKey]?.horizons?.[h];
+  if (!hData || hData.status !== "active") return null;
+  if (filterStock) return hData.items?.[filterStock] || null;
+  if (filterSector !== "all") return hData.sectors?.[filterSector] || null;
+  return hData;
+}
+
+function renderChart() {
   const canvas = document.getElementById("main-chart");
   const rampup = document.getElementById("chart-rampup");
-  if (!canvas || !rampup) return;
+  if (!canvas) return;
 
-  let chartData = null;
+  const mcfg = METRIC_CONFIG[metric];
+  const labels = allHorizons.map(h => horizonLabel(h));
 
-  if (filterStock) {
-    const itemSeries = await fetchItemSeries(filterStock);
-    chartData = itemSeries?.horizons?.[horizon];
-  } else if (filterSector !== "all") {
-    const secData = series?.horizons?.[horizon]?.sectors?.[filterSector];
-    if (secData) chartData = { ...secData, dates: series.horizons[horizon].dates };
-  } else {
-    chartData = series?.horizons?.[horizon];
+  // Check if any data at all
+  let anyData = false;
+  for (const m of modelKeys) {
+    for (const h of allHorizons) {
+      if (getHorizonData(m, h)) { anyData = true; break; }
+    }
+    if (anyData) break;
   }
 
-  if (!chartData || chartData.status === "insufficient_data" || !chartData.dates?.length) {
+  if (!anyData) {
     canvas.style.display = "none";
-    rampup.style.display = "flex";
-    const days = rolling?.models?.claude?.horizons?.[horizon]?.days_until_first;
-    const hLabel = HORIZON_LABELS[horizon] || horizon;
-    const startDate = rolling?.study_start_date;
-    let dateStr = "";
-    if (startDate && days > 0) {
-      const resolveDate = new Date(startDate);
-      resolveDate.setDate(resolveDate.getDate() + (horizon === "1w" ? 7 : 30) + 1);
-      dateStr = " (" + resolveDate.toLocaleDateString(undefined, { month: "long", day: "numeric" }) + ")";
+    if (rampup) {
+      rampup.style.display = "flex";
+      rampup.innerHTML = '<div class="rampup-icon">\u23F3</div><div class="rampup-title">No data available</div>';
     }
-    rampup.innerHTML = `
-      <div class="rampup-icon">\u23F3</div>
-      <div class="rampup-title">${hLabel} data building</div>
-      <div class="rampup-body">
-        ${days > 0
-          ? hLabel + " predictions resolve in approximately <strong>" + days + " day" + (days === 1 ? "" : "s") + "</strong>" + dateStr + ". Check back then."
-          : "Building " + hLabel.toLowerCase() + " data \u2014 check back soon."}
-      </div>`;
     return;
   }
 
   canvas.style.display = "";
-  rampup.style.display = "none";
+  if (rampup) rampup.style.display = "none";
 
-  const mcfg = METRIC_CONFIG[metric];
-  const labels = chartData.dates || [];
-  const datasets = MODEL_KEYS.map(m => ({
-    label:           MODELS[m].label,
-    data:            (chartData.models?.[m]?.[metric] || []).map(v => v !== null && v !== undefined ? v : NaN),
-    borderColor:     MODELS[m].color,
-    backgroundColor: MODELS[m].color + "18",
-    borderWidth:     2.5,
-    pointRadius:     labels.length > 25 ? 0 : 3,
-    pointHoverRadius: 5,
-    tension:         0.3,
-    spanGaps:        true,
-    fill:            false,
-  }));
+  const datasets = modelKeys.map(m => {
+    const cfg = MODEL_DISPLAY[m] || { label: m, color: "#64748b" };
+    const values = [];
+    const errorBars = [];
+    const nValues = [];
 
+    allHorizons.forEach(h => {
+      const d = getHorizonData(m, h);
+      const val = d?.[metric] ?? null;
+      values.push(val);
+
+      // 95% CI error bars (1.96 * SE)
+      const se = d?.[mcfg.seKey] ?? null;
+      if (val != null && se != null) {
+        errorBars.push({ lo: val - 1.96 * se, hi: val + 1.96 * se });
+      } else {
+        errorBars.push(null);
+      }
+      nValues.push(d?.n ?? null);
+    });
+
+    return {
+      label:           cfg.label,
+      data:            values.map(v => v != null ? v : NaN),
+      borderColor:     cfg.color,
+      backgroundColor: cfg.color + "30",
+      borderWidth:     2.5,
+      pointRadius:     5,
+      pointHoverRadius: 7,
+      tension:         0.3,
+      spanGaps:        false,
+      fill:            false,
+      _errorBars:      errorBars,
+      _nValues:        nValues,
+    };
+  });
+
+  // Add target line
   if (mcfg.target !== null) {
     datasets.push({
-      label:       "Target (" + (metric === "mu" ? "1.0" : "90%") + ")",
-      data:        labels.map(() => mcfg.target),
+      label:       "Target (" + mcfg.fmt(mcfg.target) + ")",
+      data:        allHorizons.map(() => mcfg.target),
       borderColor: "#dc2626",
       borderDash:  [6, 4],
       borderWidth: 1.5,
@@ -568,43 +460,61 @@ async function renderChart() {
       plugins: {
         legend: {
           position: "top",
-          labels: { usePointStyle: true, pointStyle: "line", padding: 16, font: { size: 12 } },
+          labels: { usePointStyle: true, pointStyle: "circle", padding: 16, font: { size: 12 } },
         },
         tooltip: {
           backgroundColor: "rgba(15, 23, 42, 0.92)",
-          titleFont: { size: 12 },
+          titleFont: { size: 13 },
           bodyFont: { size: 12 },
-          padding: 10,
+          padding: 12,
           cornerRadius: 6,
           callbacks: {
+            title: ctx => ctx[0]?.label || "",
             label: ctx => {
+              const ds = ctx.dataset;
               const v = ctx.parsed.y;
-              return " " + ctx.dataset.label + ": " + (isNaN(v) ? "\u2014" : mcfg.fmt(v));
+              const fmtV = isNaN(v) ? "\u2014" : mcfg.fmt(v);
+              let line = " " + ds.label + ": " + fmtV;
+              // Add n= and CI bounds
+              const nArr = ds._nValues;
+              const ebArr = ds._errorBars;
+              if (nArr) {
+                const n = nArr[ctx.dataIndex];
+                if (n != null) line += "  (n=" + n.toLocaleString() + ")";
+              }
+              if (ebArr) {
+                const eb = ebArr[ctx.dataIndex];
+                if (eb) line += "\n   95% CI: [" + mcfg.fmt(eb.lo) + ", " + mcfg.fmt(eb.hi) + "]";
+              }
+              return line;
             }
           }
         }
       },
       scales: {
         x: {
-          ticks: { maxTicksLimit: 10, font: { size: 11 }, color: "#94a3b8" },
+          title: {
+            display: true,
+            text: "Prediction Horizon",
+            font: { size: 12, weight: "600" },
+            color: "#64748b",
+          },
+          ticks: { font: { size: 11 }, color: "#94a3b8" },
           grid: { display: false },
         },
         y: {
-          min: mcfg.min,
-          max: mcfg.max,
-          ticks: {
-            callback: v => mcfg.fmt(v),
-            font: { size: 11 },
-            color: "#94a3b8",
-            stepSize: metric === "mu" ? 0.2 : metric === "accuracy" ? undefined : 0.1,
-          },
-          grid: { color: "#f1f5f9" },
           title: {
             display: true,
             text: mcfg.label,
             font: { size: 12, weight: "600" },
             color: "#64748b",
           },
+          ticks: {
+            callback: v => mcfg.fmt(v),
+            font: { size: 11 },
+            color: "#94a3b8",
+          },
+          grid: { color: "#f1f5f9" },
         },
       },
     },
@@ -617,38 +527,39 @@ function renderDomainTable() {
   const container = document.getElementById("domain-table");
   if (!container) return;
 
-  const hasData = MODEL_KEYS.some(
+  const hasData = modelKeys.some(
     m => rolling?.models?.[m]?.horizons?.[horizon]?.status === "active"
   );
 
   if (!hasData) {
     container.innerHTML = `
       <div style="padding:2.5rem 1rem;text-align:center;color:var(--muted);font-size:0.9rem">
-        Sector breakdown unavailable &mdash; building data for ${HORIZON_LABELS[horizon] || horizon} horizon.
+        Sector breakdown unavailable for ${horizonLabel(horizon)} horizon.
       </div>`;
     return;
   }
 
   const sectorSet = new Set();
-  MODEL_KEYS.forEach(m => {
+  modelKeys.forEach(m => {
     const secs = rolling?.models?.[m]?.horizons?.[horizon]?.sectors;
     if (secs) Object.keys(secs).forEach(s => sectorSet.add(s));
   });
   const sectors = Array.from(sectorSet).sort();
 
-  const headerCells = MODEL_KEYS.map(m =>
-    `<th style="color:${MODELS[m].color}">${MODELS[m].label}</th>`
-  ).join("");
+  const headerCells = modelKeys.map(m => {
+    const cfg = MODEL_DISPLAY[m] || { label: m, color: "#64748b" };
+    return `<th style="color:${cfg.color}">${cfg.label}</th>`;
+  }).join("");
 
   const rows = sectors.map(sec => {
-    const cells = MODEL_KEYS.map(m => {
+    const cells = modelKeys.map(m => {
       const d = rolling?.models?.[m]?.horizons?.[horizon]?.sectors?.[sec];
       if (!d || d.n === 0) {
         return `<td><span class="cell-val" style="color:var(--muted)">\u2014</span></td>`;
       }
       const mu = d.mu;
       return `<td>
-        <span class="cell-val" style="color:${muColor(mu)}">${mu !== null && mu !== undefined ? mu.toFixed(2) : "\u2014"}</span>
+        <span class="cell-val" style="color:${muColor(mu)}">${mu != null ? mu.toFixed(2) : "\u2014"}</span>
         <span class="cell-n">n=${d.n}</span>
       </td>`;
     }).join("");
@@ -665,19 +576,19 @@ function renderDomainTable() {
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function pct(v) {
-  if (v === null || v === undefined || isNaN(v)) return "\u2014";
+  if (v == null || isNaN(v)) return "\u2014";
   return (v * 100).toFixed(1) + "%";
 }
 
 function muColor(mu) {
-  if (mu === null || mu === undefined || isNaN(mu)) return "var(--muted)";
+  if (mu == null || isNaN(mu)) return "var(--muted)";
   if (mu >= 0.85 && mu <= 1.15) return "var(--good)";
   if ((mu >= 0.70 && mu < 0.85) || (mu > 1.15 && mu <= 1.30)) return "var(--warn)";
   return "var(--bad)";
 }
 
 function getMuBadge(mu) {
-  if (mu === null || mu === undefined || isNaN(mu)) return { cls: "badge-none", text: "Building data" };
+  if (mu == null || isNaN(mu)) return { cls: "badge-none", text: "No data" };
   if (mu >= 0.85 && mu <= 1.15) return { cls: "badge-good", text: "Well calibrated" };
   if (mu >= 0.70 && mu < 0.85) return { cls: "badge-warn", text: "Slightly overconfident" };
   if (mu < 0.70) return { cls: "badge-bad", text: "Overconfident" };
@@ -693,13 +604,3 @@ function fmtDate(iso) {
     });
   } catch { return iso; }
 }
-
-// ── Mobile nav toggle ───────────────────────────────────────────────────────
-
-document.addEventListener("DOMContentLoaded", () => {
-  const toggle = document.querySelector(".nav-toggle");
-  const nav = document.querySelector("header nav");
-  if (toggle && nav) {
-    toggle.addEventListener("click", () => { nav.classList.toggle("open"); });
-  }
-});

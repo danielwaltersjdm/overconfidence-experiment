@@ -125,6 +125,13 @@ SECTOR_MAP = {
     "DIA": "Index ETFs",
     # Remaining — mapped individually
     "ON": "Technology", "PYPL": "Financials",
+    # Study 2 extra tickers not in Study 4 config
+    "BA": "Industrials", "LMT": "Industrials", "ETN": "Industrials",
+    "ITW": "Industrials", "UPS": "Industrials", "MMM": "Industrials",
+    "AMT": "Real Estate", "ANET": "Technology", "CRWD": "Technology",
+    "DIS": "Communication Services", "MCO": "Financials", "MDT": "Healthcare",
+    "NKE": "Consumer Discretionary", "PLTR": "Technology", "TFC": "Financials",
+    "UBER": "Consumer Discretionary", "CTSH": "Technology",
 }
 
 
@@ -165,8 +172,44 @@ def _aggregate(grp: pd.DataFrame) -> dict | None:
     valid_nead = grp["norm_expected_abs_dev"].dropna() if "norm_expected_abs_dev" in grp.columns else pd.Series(dtype=float)
     mad  = valid_nad.mean()  if len(valid_nad)  > 0 else float("nan")
     mead = valid_nead.mean() if len(valid_nead) > 0 else float("nan")
+    mu   = mead / mad if (not np.isnan(mad) and not np.isnan(mead) and mad > 0) else float("nan")
     result["accuracy"] = _nan_to_none(mad)
-    result["mu"]       = _nan_to_none(mead / mad if (not np.isnan(mad) and not np.isnan(mead) and mad > 0) else float("nan"))
+    result["mu"]       = _nan_to_none(mu)
+
+    # Standard errors for error bars
+    # Accuracy SE: std(norm_abs_dev) / sqrt(n)
+    if len(valid_nad) > 1:
+        result["accuracy_se"] = _nan_to_none(valid_nad.std() / np.sqrt(len(valid_nad)))
+    else:
+        result["accuracy_se"] = None
+
+    # Mu SE via delta method: mu * sqrt((sd_nad/mad)^2 + (sd_nead/mead)^2 - 2*cov/(mad*mead)) / sqrt(n)
+    if len(valid_nad) > 1 and len(valid_nead) > 1 and not np.isnan(mu) and mad > 0 and mead > 0:
+        sd_nad  = valid_nad.std()
+        sd_nead = valid_nead.std()
+        # Use paired observations for covariance
+        paired = grp[["norm_abs_dev", "norm_expected_abs_dev"]].dropna()
+        if len(paired) > 1:
+            cov = paired["norm_abs_dev"].cov(paired["norm_expected_abs_dev"])
+        else:
+            cov = 0.0
+        var_ratio = (sd_nad / mad) ** 2 + (sd_nead / mead) ** 2 - 2 * cov / (mad * mead)
+        if var_ratio > 0:
+            result["mu_se"] = _nan_to_none(mu * np.sqrt(var_ratio / n))
+        else:
+            result["mu_se"] = None
+    else:
+        result["mu_se"] = None
+
+    # Hit rate SE: binomial SE = sqrt(p(1-p)/n)
+    for level in LEVELS:
+        col = f"hit_{level}"
+        if col in grp.columns:
+            hits = grp[col].dropna()
+            if len(hits) > 0:
+                p = hits.mean()
+                result[f"hit_rate_{level}_se"] = _nan_to_none(np.sqrt(p * (1 - p) / len(hits)))
+
     return result
 
 
@@ -191,16 +234,38 @@ def _compute_series_point(m_df: pd.DataFrame) -> dict:
     }
 
 
+def _sort_horizons(horizons: list[str]) -> list[str]:
+    """Sort horizon labels by their numeric day value."""
+    def _h_days(h: str) -> int:
+        h = h.lower().strip()
+        if h.endswith("d"):
+            return int(h[:-1])
+        elif h.endswith("w"):
+            return int(h[:-1]) * 7
+        elif h.endswith("m"):
+            return int(h[:-1]) * 30
+        return 9999
+    return sorted(horizons, key=_h_days)
+
+
 def build_rolling_index(df: pd.DataFrame, config: dict) -> dict:
     """Rolling 30-day stats per model / horizon, with sector + item breakdowns."""
     window  = config.get("rolling_window_days", 30)
-    today   = datetime.utcnow().date()
+
+    # Use max date from actual data, not system clock
+    max_date = df["pred_date"].dropna().max()
+    today = datetime.fromisoformat(max_date).date() if max_date else datetime.utcnow().date()
     cutoff  = today - timedelta(days=window)
     recent  = df[df["pred_date"] >= cutoff.isoformat()].copy()
 
+    # Discover models from data (not just config)
     model_ids   = {m["name"]: m["model_id"] for m in config["models"]}
-    model_names = [m["name"] for m in config["models"]]
+    data_models = sorted(df["model"].dropna().unique())
+    model_names = list(dict.fromkeys(data_models))  # deduplicated, data order
     study_start = config.get("study", {}).get("start_date")
+
+    # Discover horizons from data
+    data_horizons = _sort_horizons(list(df["horizon"].dropna().unique()))
 
     # Add sector column
     recent["sector"] = recent["item_id"].map(SECTOR_MAP).fillna("Other")
@@ -210,20 +275,14 @@ def build_rolling_index(df: pd.DataFrame, config: dict) -> dict:
         "window_days":      window,
         "study_start_date": study_start,
         "data_through":     today.isoformat(),
+        "horizons":         data_horizons,
         "models":           {},
     }
 
     for model in model_names:
         model_data = {"model_id": model_ids.get(model), "horizons": {}}
 
-        for h_id in HORIZONS:
-            h_days = HORIZON_DAYS[h_id]
-            if study_start:
-                first_possible = datetime.fromisoformat(study_start).date() + timedelta(days=h_days)
-                days_until_first = max(0, (first_possible - today).days)
-            else:
-                days_until_first = None
-
+        for h_id in data_horizons:
             grp = recent[
                 (recent["model"] == model) &
                 (recent["horizon"] == h_id) &
@@ -233,13 +292,11 @@ def build_rolling_index(df: pd.DataFrame, config: dict) -> dict:
             if grp.empty:
                 model_data["horizons"][h_id] = {
                     "status": "insufficient_data",
-                    "days_until_first": days_until_first,
                 }
                 continue
 
             stats = _aggregate(grp)
             stats["status"] = "active"
-            stats["days_until_first"] = 0
 
             # Per-sector breakdown
             sector_breakdown = {}
@@ -265,11 +322,15 @@ def build_rolling_index(df: pd.DataFrame, config: dict) -> dict:
 def build_time_series(df: pd.DataFrame, config: dict) -> dict:
     """Daily rolling 30-day metrics per model per horizon, aggregate + per-sector."""
     window      = config.get("rolling_window_days", 30)
-    model_names = [m["name"] for m in config["models"]]
+    # Discover models from data
+    model_names = sorted(df["model"].dropna().unique())
     all_dates   = sorted(df["pred_date"].dropna().unique())
 
     df["sector"] = df["item_id"].map(SECTOR_MAP).fillna("Other")
     all_sectors  = sorted(df["sector"].unique())
+
+    # Discover horizons from data
+    data_horizons = _sort_horizons(list(df["horizon"].dropna().unique()))
 
     out = {
         "generated_at": datetime.utcnow().isoformat() + "Z",
@@ -277,7 +338,7 @@ def build_time_series(df: pd.DataFrame, config: dict) -> dict:
         "horizons":     {},
     }
 
-    for h_id in HORIZONS:
+    for h_id in data_horizons:
         h_df = df[(df["horizon"] == h_id) & (df["status"] == "resolved")]
         if h_df.empty:
             out["horizons"][h_id] = {"status": "insufficient_data"}
@@ -331,7 +392,11 @@ def build_time_series(df: pd.DataFrame, config: dict) -> dict:
 def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict]):
     """Write per-ticker time series JSON files to website/data/items/."""
     window      = config.get("rolling_window_days", 30)
-    model_names = [m["name"] for m in config["models"]]
+    # Discover models from data
+    model_names = sorted(df["model"].dropna().unique())
+    # Discover horizons from data
+    data_horizons = _sort_horizons(list(df["horizon"].dropna().unique()))
+
     items_dir   = WEBSITE_DATA / "items"
     items_dir.mkdir(parents=True, exist_ok=True)
 
@@ -350,7 +415,7 @@ def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict]):
 
         i_df = df[df["item_id"] == item_id]
 
-        for h_id in HORIZONS:
+        for h_id in data_horizons:
             h_df = i_df[(i_df["horizon"] == h_id) & (i_df["status"] == "resolved")]
             if h_df.empty:
                 item_out["horizons"][h_id] = {"status": "insufficient_data"}
@@ -390,17 +455,31 @@ def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict]):
     console.print(f"[bold]Written → {items_dir}/[/bold] ({written} item files)")
 
 
-def build_items_list(config: dict) -> list[dict]:
-    """Build items_list.json from config, adding sector info."""
+def build_items_list(config: dict, df: pd.DataFrame = None) -> list[dict]:
+    """Build items_list.json from config + scored data, adding sector info."""
+    seen = set()
     items = []
+    # First add items from config (has labels)
     for domain_name, domain_cfg in config.get("domains", {}).items():
         for item in domain_cfg.get("items", []):
             item_id = item["id"]
-            items.append({
-                "id":     item_id,
-                "label":  item.get("label", item_id),
-                "sector": SECTOR_MAP.get(item_id, "Other"),
-            })
+            if item_id not in seen:
+                seen.add(item_id)
+                items.append({
+                    "id":     item_id,
+                    "label":  item.get("label", item_id),
+                    "sector": SECTOR_MAP.get(item_id, "Other"),
+                })
+    # Then add any items from scored data not in config
+    if df is not None:
+        for item_id in sorted(df["item_id"].dropna().unique()):
+            if item_id not in seen:
+                seen.add(item_id)
+                items.append({
+                    "id":     item_id,
+                    "label":  item_id,
+                    "sector": SECTOR_MAP.get(item_id, "Other"),
+                })
     return items
 
 
@@ -420,7 +499,7 @@ def main():
     WEBSITE_DATA.mkdir(parents=True, exist_ok=True)
 
     # items_list.json + sectors.json
-    items_meta = build_items_list(config)
+    items_meta = build_items_list(config, df)
     items_path = WEBSITE_DATA / "items_list.json"
     items_path.write_text(json.dumps(items_meta, indent=1))
     console.print(f"[bold]Written → {items_path}[/bold] ({len(items_meta)} items)")
