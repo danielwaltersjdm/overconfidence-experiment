@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-09",
+  "timestamp": "2026-04-09T21:03:50.186508Z",
+  "domain": "stocks",
+  "item": "SYK",
+  "item_label": "Stryker",
+  "unit": "USD",
+  "current_value": 339.1400146484375,
+  "context": "Current closing price of Stryker (SYK): $339.14 USD as of 2026-04-09.",
+  "prompt_text": "Today is 2026-04-09.\n\nCurrent closing price of Stryker (SYK): $339.14 USD as of 2026-04-09.\n\nPredict the closing price of Stryker at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-10\n  1-week target date: 2026-04-16\n  1-month target date: 2026-05-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 341,\n    \"90_ci\": [326, 356]\n  },\n  \"1w\": {\n    \"point_estimate\": 344,\n    \"90_ci\": [318, 370]\n  },\n  \"1m\": {\n    \"point_estimate\": 350,\n    \"90_ci\": [300, 400]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 341,
+      "90_ci": [
+        326,
+        356
+      ]
+    },
+    "1w": {
+      "point_estimate": 344,
+      "90_ci": [
+        318,
+        370
+      ]
+    },
+    "1m": {
+      "point_estimate": 350,
+      "90_ci": [
+        300,
+        400
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 341,\n    \"90_ci\": [\n      326,\n      356\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 344,\n    \"90_ci\": [\n      318,\n      370\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 350,\n    \"90_ci\": [\n      300,\n      400\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift from what I interpreted as a recent baseline around 340, with the 1-day estimate of 341 essentially anchoring near the current level given the short horizon. At one week I nudged the estimate slightly higher to 344, reflecting a modest continuation of whatever trend was present in the underlying data. At one month I moved to 350, incorporating a small but sustained directional bias while acknowledging that mean-reverting forces and changing conditions make a straight-line extrapolation increasingly unreliable. In all three cases the point estimates are close together, which signals that I did not expect dramatic near-term movement and was treating the series as relatively stable with a gentle upward lean.\n\nThe confidence interval widths widen substantially as the horizon extends, which reflects the standard accumulation of uncertainty over time. At one day, the interval spans roughly 30 units because most of the short-run noise is bounded by intraday or overnight volatility. By one week, that span grows to about 52 units as weekend gaps, news events, and momentum shifts compound. By one month, the interval reaches 100 units, reflecting a much broader range of macroeconomic, sentiment, and structural factors that could materialize over four to five weeks. The asymmetry between short and long horizons is the dominant driver of interval width here.\n\nThere are several specific risks that could push outcomes well outside these stated ranges. On the downside, a surprise policy announcement, a sharp deterioration in macro data, or a liquidity event in correlated markets could produce a swift drop well below 300. On the upside, a strong sentiment shift, short-squeeze dynamics, or unexpectedly positive fundamental news could push the series comfortably above 400 within a month. These tail events are by definition underweighted in a 90% confidence interval, meaning roughly one in ten outcomes should fall outside, and in practice the tails of financial or economic series tend to be fatter than a normal distribution would suggest, making exceedances more common than the stated interval implies.",
+  "status": "collected",
+  "error": null
+}

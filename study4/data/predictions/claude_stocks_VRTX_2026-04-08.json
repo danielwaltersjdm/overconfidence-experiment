@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-08",
+  "timestamp": "2026-04-08T15:58:52.361120Z",
+  "domain": "stocks",
+  "item": "VRTX",
+  "item_label": "Vertex Pharma",
+  "unit": "USD",
+  "current_value": 441.70001220703125,
+  "context": "Current closing price of Vertex Pharma (VRTX): $441.70 USD as of 2026-04-08.",
+  "prompt_text": "Today is 2026-04-08.\n\nCurrent closing price of Vertex Pharma (VRTX): $441.70 USD as of 2026-04-08.\n\nPredict the closing price of Vertex Pharma at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-09\n  1-week target date: 2026-04-15\n  1-month target date: 2026-05-08\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll analyze this systematically considering:\n\n1. **Current price**: $441.70 (2026-04-08)\n2. **Market context**: Early April 2026, recent market volatility from tariff concerns\n3. **VRTX characteristics**: Biotech stock, typically higher volatility than broad market, beta ~0.4-0.6 (relatively defensive for biotech)\n4. **Historical volatility**: VRTX has annualized volatility roughly 25-35%; using ~30% annualized \u2192 ~1.9% daily, ~4.3% weekly, ~8.7% monthly\n\n**Assumptions for point estimates:**\n- Near-term market uncertainty (tariff environment) creates slight downward bias\n- VRTX is relatively defensive (less macro-sensitive) but not immune\n- No specific known catalysts in immediate term to strongly bias direction\n\n**Calculations:**\n- Daily \u03c3 \u2248 1.9% \u2192 ~$8.39\n- Weekly \u03c3 \u2248 4.3% \u2192 ~$19.00\n- Monthly \u03c3 \u2248 8.7% \u2192 ~$38.40\n\nFor 90% CI: \u00b11.645\u03c3\n- 1d: \u00b1$13.80\n- 1w: \u00b1$31.25\n- 1m: \u00b1$63.20\n\nSlight downward drift assumption given macro headwinds:\n\n{\n  \"1d\": {\n    \"point_estimate\": 440.0,\n    \"90_ci\": [420.0, 460.0]\n  },\n  \"1w\": {\n    \"point_estimate\": 438.0,\n    \"90_ci\": [405.0, 472.0]\n  },\n  \"1m\": {\n    \"point_estimate\": 442.0,\n    \"90_ci\": [375.0, 510.0]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 440.0,
+      "90_ci": [
+        420.0,
+        460.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 438.0,
+      "90_ci": [
+        405.0,
+        472.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 442.0,
+      "90_ci": [
+        375.0,
+        510.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 440.0,\n    \"90_ci\": [\n      420.0,\n      460.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 438.0,\n    \"90_ci\": [\n      405.0,\n      472.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 442.0,\n    \"90_ci\": [\n      375.0,\n      510.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates across all three horizons cluster tightly around 438\u2013442, reflecting a view that the underlying asset is likely to remain range-bound in the near term. For the 1-day estimate of 440, I anchored on the most recent observed price level and assumed mean-reverting behavior with minimal directional catalyst expected overnight. The 1-week estimate of 438 nudges slightly lower to account for a mild drift bias and the slight tendency for markets to consolidate after recent moves. The 1-month estimate of 442 edges back up, reflecting a modest longer-run upward drift assumption that slightly outweighs near-term consolidation pressure \u2014 essentially a gentle reversion toward a perceived fair value range.\n\nThe confidence interval widths widen considerably as the horizon extends, which is a straightforward reflection of compounding uncertainty over time. At 1 day, the 40-point range (420\u2013460) reflects normal intraday and overnight volatility but assumes no major scheduled macro event. By 1 week, the range expands to 67 points (405\u2013472) to absorb the possibility of mid-week data releases, central bank communications, or unexpected geopolitical developments. The 1-month range of 135 points (375\u2013510) is deliberately wide because a full calendar month introduces earnings seasons, multiple economic reports, and the potential for significant sentiment shifts that are nearly impossible to predict directionally.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, an unexpected deterioration in macroeconomic data \u2014 particularly around inflation or labor markets \u2014 could trigger a sharp risk-off move that breaks below 375 at the monthly horizon. A sudden liquidity event or credit stress in a systemically important institution could accelerate that move. On the upside, a surprisingly dovish policy signal from a major central bank or a significant positive surprise in corporate earnings could push prices comfortably above 510 within the month.\n\nIt is also worth acknowledging that my intervals are conditioned on the current volatility regime persisting. If realized volatility spikes \u2014 as it can during geopolitical shocks or flash crashes \u2014 even the 1-day interval could be breached. Conversely, if markets enter an unusually calm, low-volume period, the actual outcome may stay far tighter than my intervals suggest, meaning my stated uncertainty could overstate the true risk in benign conditions.",
+  "status": "collected",
+  "error": null
+}

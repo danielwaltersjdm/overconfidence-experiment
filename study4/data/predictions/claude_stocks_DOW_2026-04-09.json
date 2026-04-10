@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-09",
+  "timestamp": "2026-04-09T22:49:05.706955Z",
+  "domain": "stocks",
+  "item": "DOW",
+  "item_label": "Dow Inc",
+  "unit": "USD",
+  "current_value": 38.040000915527344,
+  "context": "Current closing price of Dow Inc (DOW): $38.04 USD as of 2026-04-09.",
+  "prompt_text": "Today is 2026-04-09.\n\nCurrent closing price of Dow Inc (DOW): $38.04 USD as of 2026-04-09.\n\nPredict the closing price of Dow Inc at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-10\n  1-week target date: 2026-04-16\n  1-month target date: 2026-05-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 38.20,\n    \"90_ci\": [36.50, 39.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 38.50,\n    \"90_ci\": [34.50, 42.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 39.00,\n    \"90_ci\": [31.00, 46.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 38.2,
+      "90_ci": [
+        36.5,
+        39.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 38.5,
+      "90_ci": [
+        34.5,
+        42.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 39.0,
+      "90_ci": [
+        31.0,
+        46.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 38.2,\n    \"90_ci\": [\n      36.5,\n      39.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 38.5,\n    \"90_ci\": [\n      34.5,\n      42.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 39.0,\n    \"90_ci\": [\n      31.0,\n      46.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near 38.2 and rising gradually to 39.0 at the one-month mark. This pattern is consistent with mean-reversion dynamics around a slightly positive drift assumption \u2014 essentially, I assumed the current level is close to fair value but with a small positive bias built in, perhaps reflecting momentum or a mild fundamental tailwind. The short-term estimate is anchored heavily by recent price action and the assumption that no major catalyst is imminent, while the weekly and monthly estimates incorporate a small premium for the tendency of the underlying to trend modestly higher over time.\n\nThe confidence interval widths expand significantly as the horizon lengthens, which reflects the standard statistical reality that uncertainty compounds over time. At one day, the 90% interval spans roughly 3.4 units, reflecting tight short-term constraints like intraday liquidity, bid-ask dynamics, and the low probability of a major overnight shock. By one week, the interval widens to 8 units, capturing the possibility of mid-week data releases, sentiment shifts, or positioning changes. At one month, the interval expands to 15 units, reflecting the full range of macro developments, earnings surprises, or sector rotations that could materially move the price.\n\nKey risks that could push outcomes outside my stated intervals include sudden macroeconomic shocks such as unexpected central bank policy changes, geopolitical events, or a significant deterioration in credit or liquidity conditions. On the upside, a strong catalyst \u2014 a better-than-expected earnings report, a positive policy announcement, or a short squeeze \u2014 could drive the price well above 46 at the monthly horizon. On the downside, a broader risk-off episode or sector-specific bad news could push well below 31.\n\nIt's also worth acknowledging model risk: my intervals assume roughly log-normal return distributions, but real markets exhibit fat tails and occasional discontinuous jumps. This means the true probability of extreme outcomes is likely higher than my stated 10% combined tail probability implies, and users should treat the outer bounds as soft rather than hard limits.",
+  "status": "collected",
+  "error": null
+}

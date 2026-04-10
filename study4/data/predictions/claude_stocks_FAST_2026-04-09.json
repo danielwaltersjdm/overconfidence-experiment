@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-09",
+  "timestamp": "2026-04-09T22:19:22.643769Z",
+  "domain": "stocks",
+  "item": "FAST",
+  "item_label": "Fastenal",
+  "unit": "USD",
+  "current_value": 49.099998474121094,
+  "context": "Current closing price of Fastenal (FAST): $49.10 USD as of 2026-04-09.",
+  "prompt_text": "Today is 2026-04-09.\n\nCurrent closing price of Fastenal (FAST): $49.10 USD as of 2026-04-09.\n\nPredict the closing price of Fastenal at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-10\n  1-week target date: 2026-04-16\n  1-month target date: 2026-05-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 49.50,\n    \"90_ci\": [47.20, 51.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 50.20,\n    \"90_ci\": [45.50, 54.90]\n  },\n  \"1m\": {\n    \"point_estimate\": 51.00,\n    \"90_ci\": [42.00, 60.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 49.5,
+      "90_ci": [
+        47.2,
+        51.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 50.2,
+      "90_ci": [
+        45.5,
+        54.9
+      ]
+    },
+    "1m": {
+      "point_estimate": 51.0,
+      "90_ci": [
+        42.0,
+        60.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 49.5,\n    \"90_ci\": [\n      47.2,\n      51.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 50.2,\n    \"90_ci\": [\n      45.5,\n      54.9\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 51.0,\n    \"90_ci\": [\n      42.0,\n      60.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a view that the asset or metric in question is trading or sitting close to a neutral, mean-reverting level near 50. At the one-day horizon, I anchored heavily on the current observed value and assumed minimal drift overnight, landing at 49.5 \u2014 essentially a slight downward nudge from wherever the current reading sits, reflecting modest short-term selling pressure or reversion dynamics. At one week, I nudged the estimate slightly higher to 50.2, reflecting a mild positive drift assumption over a longer window, consistent with a slight upward trend bias that I weighted against near-term noise. At one month, I projected 51.0, continuing that gradual drift higher while acknowledging that over longer horizons the base case tends to converge toward a modestly constructive outlook in the absence of major known catalysts.\n\nThe confidence interval widths grow progressively wider across horizons for the standard reason that uncertainty compounds over time. At one day, the 90% interval spans roughly 4.6 units, reflecting that intraday or overnight moves are relatively constrained by liquidity and the short time window. At one week, the interval widens to about 9.4 units, capturing the possibility of moderate trend development, news events, or shifts in sentiment within a trading week. At one month, the interval spans 18 units, acknowledging that a full month contains enough time for macro data releases, policy decisions, earnings, or sentiment shifts to materially move outcomes in either direction. The widths were calibrated to feel appropriately humble rather than falsely precise.\n\nThere are several tail risks that could push outcomes outside these stated intervals entirely. On the downside, a sudden risk-off event \u2014 such as a surprise policy announcement, geopolitical escalation, or a major liquidity shock \u2014 could push values well below the lower bounds, particularly at the weekly and monthly horizons. On the upside, an unexpected positive catalyst, such as a stronger-than-expected data release or a major policy easing signal, could push values above the upper bounds. Additionally, if there is a structural break or regime change in the underlying dynamics \u2014 something my model implicitly assumes does not occur \u2014 all three intervals could be rendered essentially useless. Black swan events by definition fall outside calibrated intervals, so these bounds should be read as reflections of the modal distribution of outcomes rather than hard limits.",
+  "status": "collected",
+  "error": null
+}

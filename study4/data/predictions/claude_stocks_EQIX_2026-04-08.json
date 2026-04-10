@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-08",
+  "timestamp": "2026-04-08T16:11:59.475906Z",
+  "domain": "stocks",
+  "item": "EQIX",
+  "item_label": "Equinix",
+  "unit": "USD",
+  "current_value": 1019.340087890625,
+  "context": "Current closing price of Equinix (EQIX): $1019.34 USD as of 2026-04-08.",
+  "prompt_text": "Today is 2026-04-08.\n\nCurrent closing price of Equinix (EQIX): $1019.34 USD as of 2026-04-08.\n\nPredict the closing price of Equinix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-09\n  1-week target date: 2026-04-15\n  1-month target date: 2026-05-08\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 1022,\n    \"90_ci\": [970, 1075]\n  },\n  \"1w\": {\n    \"point_estimate\": 1030,\n    \"90_ci\": [940, 1120]\n  },\n  \"1m\": {\n    \"point_estimate\": 1045,\n    \"90_ci\": [880, 1210]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1022,
+      "90_ci": [
+        970,
+        1075
+      ]
+    },
+    "1w": {
+      "point_estimate": 1030,
+      "90_ci": [
+        940,
+        1120
+      ]
+    },
+    "1m": {
+      "point_estimate": 1045,
+      "90_ci": [
+        880,
+        1210
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1022,\n    \"90_ci\": [\n      970,\n      1075\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1030,\n    \"90_ci\": [\n      940,\n      1120\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1045,\n    \"90_ci\": [\n      880,\n      1210\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "The point estimates reflect a modest upward drift from what I assumed was a current price near 1020, with each successive horizon incorporating a small positive drift assumption consistent with long-run equity risk premium expectations. At the one-day horizon, the estimate of 1022 is essentially anchored to the current level with minimal expected movement, as daily returns are dominated by noise rather than trend. The one-week estimate of 1030 and one-month estimate of 1045 build in a slight upward bias reflecting that equities, in the absence of specific negative catalysts, tend to drift higher over time. The incremental increases are intentionally small because over short horizons, drift contributes very little compared to volatility.\n\nThe confidence interval widths were calibrated primarily using historical volatility assumptions. For a broad equity index, daily volatility of roughly 1\u20131.5% implies a 90% interval spanning about 50 points at the one-day horizon, which is what the 970\u20131075 range reflects. As the horizon extends to one week and one month, volatility scales approximately with the square root of time, which is why the intervals widen from roughly 105 points wide at one day to 180 points at one week and 330 points at one month. I also added modest additional uncertainty at longer horizons to account for the possibility of regime changes in volatility itself, since realized volatility can cluster and shift meaningfully over weeks and months.\n\nThere are several specific risks that could push outcomes outside the stated intervals. On the downside, a sudden geopolitical shock, an unexpected central bank policy announcement, or a significant deterioration in corporate earnings guidance could easily produce a move of 5\u201310% or more, which would breach the lower bound of even the one-month interval. A liquidity crisis or credit event in a major financial institution would represent a tail risk capable of producing 15\u201320% drawdowns. On the upside, a surprisingly strong economic data release, a dovish pivot by a major central bank, or a resolution of a significant geopolitical uncertainty could produce sharp rallies that push through the upper bounds.\n\nFinally, it is worth acknowledging that my intervals are based on statistical regularities from historical data and do not fully account for structural breaks or truly unprecedented events. The distribution of equity returns has fat tails relative to a normal distribution, meaning extreme outcomes occur more frequently than a Gaussian model would suggest. My stated 90% confidence intervals are therefore best understood as reasonable central ranges rather than hard probabilistic guarantees, and any specific event-driven catalyst could render them obsolete quickly.",
+  "status": "collected",
+  "error": null
+}

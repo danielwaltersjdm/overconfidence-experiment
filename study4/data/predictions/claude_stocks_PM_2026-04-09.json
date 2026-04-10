@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-09",
+  "timestamp": "2026-04-09T20:41:58.334225Z",
+  "domain": "stocks",
+  "item": "PM",
+  "item_label": "Philip Morris",
+  "unit": "USD",
+  "current_value": 161.25,
+  "context": "Current closing price of Philip Morris (PM): $161.25 USD as of 2026-04-09.",
+  "prompt_text": "Today is 2026-04-09.\n\nCurrent closing price of Philip Morris (PM): $161.25 USD as of 2026-04-09.\n\nPredict the closing price of Philip Morris at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-10\n  1-week target date: 2026-04-16\n  1-month target date: 2026-05-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll analyze Philip Morris stock for predictions. PM is a defensive tobacco stock with relatively low volatility (historical daily volatility ~1-1.5%). It has been trading well, supported by strong dividend yield and ZYN/smoke-free product growth. The current market environment (April 2026) has some uncertainty, but PM tends to be defensive.\n\nKey considerations:\n- PM's historical daily volatility: ~1.2-1.5%\n- PM is a defensive, dividend-paying stock with lower beta (~0.7)\n- Current price: $161.25\n- No major known catalysts in immediate term\n- Slight upward bias given defensive characteristics in uncertain markets\n\n**1-day:** Typical daily move ~\u00b11.5%, so ~\u00b1$2.40. Point estimate slightly up.\n\n**1-week:** ~5 trading days, volatility scales by \u221a5 \u2248 2.24x daily vol. So ~\u00b1$5.40 at 90% CI (roughly \u00b11.645\u03c3).\n\n**1-month:** ~21 trading days, volatility scales by \u221a21 \u2248 4.58x daily vol. So ~\u00b1$11 at 90% CI.\n\nUsing daily vol of ~1.3% ($2.10/day):\n- 1d 90% CI: \u00b11.645 \u00d7 $2.10 \u2248 \u00b1$3.45\n- 1w 90% CI: \u00b11.645 \u00d7 $2.10 \u00d7 \u221a5 \u2248 \u00b1$7.73\n- 1m 90% CI: \u00b11.645 \u00d7 $2.10 \u00d7 \u221a21 \u2248 \u00b1$15.83\n\n{\n  \"1d\": {\n    \"point_estimate\": 161.50,\n    \"90_ci\": [158.00, 165.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 162.00,\n    \"90_ci\": [154.50, 169.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 163.00,\n    \"90_ci\": [146.00, 180.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 161.5,
+      "90_ci": [
+        158.0,
+        165.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 162.0,
+      "90_ci": [
+        154.5,
+        169.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 163.0,
+      "90_ci": [
+        146.0,
+        180.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 161.5,\n    \"90_ci\": [\n      158.0,\n      165.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 162.0,\n    \"90_ci\": [\n      154.5,\n      169.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 163.0,\n    \"90_ci\": [\n      146.0,\n      180.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable, mildly upward-drifting baseline. For the 1-day horizon, I anchored near the most recent observed price level, assuming minimal overnight or intraday drift and that no major catalysts were imminent. The 1-week estimate nudges slightly higher, reflecting a modest positive drift assumption consistent with recent short-term momentum, while acknowledging mean-reversion tendencies. The 1-month estimate drifts a bit further upward, incorporating a longer-run trend component, though the incremental step is small because I don't have strong conviction about directional momentum persisting over that timeframe without fresh catalysts.\n\nConfidence interval widths grow with horizon in a manner broadly consistent with a random-walk or diffusion-like process, where uncertainty scales with the square root of time. At 1 day, the interval is tight because there simply isn't much time for price to move far from its current level absent a shock. By 1 week, intraday volatility compounds and I must account for scheduled news, earnings whispers, or macro data releases that could materially shift the price. By 1 month, the range widens considerably to capture the possibility of meaningful trend changes, sector rotations, or macroeconomic surprises that are hard to anticipate weeks in advance.\n\nSpecific risks that could push outcomes outside my stated intervals include a surprise earnings announcement or guidance revision, an unexpected central bank policy shift, or a broader equity market dislocation driven by geopolitical events. On the upside, a stronger-than-expected economic print or a positive sector-specific catalyst could push prices well above the upper bound of my 1-month range. On the downside, a risk-off episode, liquidity shock, or company-specific bad news could breach the lower bound. Low-probability but high-impact tail events \u2014 such as a sudden regulatory action or a credit market disruption \u2014 are the primary reasons my stated intervals may still understate true tail risk, since these are structurally difficult to price into a symmetric confidence interval.",
+  "status": "collected",
+  "error": null
+}
