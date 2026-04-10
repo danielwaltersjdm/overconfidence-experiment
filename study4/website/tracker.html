@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Tracker &mdash; AI Calibration Index</title>
+  <meta name="description" content="Live daily calibration tracking for frontier AI models across 200 stocks and three prediction horizons." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="./index.html" class="site-title">AI Calibration Index</a>
+    <nav>
+      <a href="./index.html">Study 2</a>
+      <a href="./tracker.html" class="active">Daily Tracker</a>
+      <a href="./about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Daily Calibration Tracker</h1>
+    <p class="hero-sub">
+      Study 4: three frontier AI models produce daily stock price predictions
+      with 90% confidence intervals across 200 large-cap US equities. We track
+      calibration longitudinally using a 30-day rolling window and the
+      Soll &amp; Klayman (2004) framework.
+    </p>
+  </section>
+
+  <!-- Status bar -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span class="status-text" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <!-- Tracking stats -->
+  <section>
+    <div class="spec-grid" id="tracking-stats">
+      <div class="spec-card">
+        <div class="spec-value" id="stat-days">&mdash;</div>
+        <div class="spec-label">Days tracked</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value" id="stat-models">3</div>
+        <div class="spec-label">AI models</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value" id="stat-stocks">200</div>
+        <div class="spec-label">Stocks</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-value" id="stat-predictions">&mdash;</div>
+        <div class="spec-label">Total predictions</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section>
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label" for="horizon-select">Horizon</label>
+        <select id="horizon-select" class="filter-select" style="min-width:140px">
+          <option value="1d">1-Day</option>
+          <option value="1w">1-Week</option>
+          <option value="1m">1-Month</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label" for="sector-select">Sector</label>
+        <select id="sector-select" class="filter-select">
+          <option value="all">All Sectors</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label" for="stock-search">Stock</label>
+        <div class="stock-search-wrap">
+          <input type="text" id="stock-search" class="filter-input" placeholder="Search ticker or name&hellip;" autocomplete="off" />
+          <div class="stock-dropdown" id="stock-dropdown"></div>
+        </div>
+      </div>
+      <button class="filter-clear" id="filter-clear" style="display:none">Clear filters</button>
+    </div>
+  </section>
+
+  <!-- Model cards (rolling 30-day) -->
+  <section>
+    <div class="section-head">
+      <h2>Current Calibration</h2>
+      <span class="section-sub">30-day rolling window &mdash; <span id="cards-filter-label">all stocks</span></span>
+    </div>
+    <div class="cards" id="model-cards"></div>
+  </section>
+
+  <!-- Time series chart -->
+  <section>
+    <div class="section-head">
+      <h2>Calibration Over Time</h2>
+      <span class="section-sub">30-day rolling &mdash; <span id="chart-horizon-label">1-Day</span> horizon</span>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-controls">
+        <div class="metric-tabs" id="metric-tabs">
+          <button class="mtab active" data-metric="mu">&mu; (Meta-knowledge)</button>
+          <button class="mtab" data-metric="accuracy">Accuracy</button>
+          <button class="mtab" data-metric="hit_rate_90">90% CI Hit Rate</button>
+        </div>
+      </div>
+      <div class="chart-area" id="chart-area">
+        <canvas id="main-chart"></canvas>
+      </div>
+      <div class="rampup-overlay" id="chart-rampup" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- Sector breakdown -->
+  <section>
+    <div class="section-head">
+      <h2>By Sector</h2>
+      <span class="section-sub">&mu; (MEAD/MAD) &mdash; 30-day rolling</span>
+    </div>
+    <div class="table-wrap" id="domain-table"></div>
+  </section>
+
+  <!-- Explainer -->
+  <section class="explainer">
+    <h3>How this tracker works</h3>
+    <p>
+      Every trading day, three AI models (Claude, GPT-4o, Gemini) are prompted to
+      predict closing prices for 200 US equities at three horizons: 1 day, 1 week,
+      and 1 month. Each prediction includes a point estimate and a 90% confidence
+      interval. When outcomes are realized, predictions are scored using the
+      Soll &amp; Klayman (2004) calibration framework.
+    </p>
+    <p>
+      The charts above show a <strong>30-day rolling window</strong>: at each date,
+      we compute metrics over the most recent 30 calendar days of scored predictions.
+      This reveals how calibration evolves as models accumulate more prediction history.
+    </p>
+    <p>
+      <strong>&mu; &lt; 1</strong> = overconfident (intervals too narrow).
+      <strong>&mu; = 1</strong> = perfectly calibrated.
+      <strong>&mu; &gt; 1</strong> = underconfident (intervals too wide).
+    </p>
+    <p class="explainer-link">
+      <a href="./about.html">Full methodology &rarr;</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>
+      Study 4 of an ongoing empirical research project on LLM calibration.
+      <a href="./about.html">About</a> &middot;
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="./js/tracker.js"></script>
+</body>
+</html>

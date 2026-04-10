@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LLM Confidence Index</title>
-  <meta name="description" content="A live public index tracking whether frontier AI models know what they don't know — measured by calibration metrics across 200 stocks." />
+  <title>AI Calibration Index</title>
+  <meta name="description" content="Interactive results from Study 2: calibration of confidence intervals produced by frontier AI models across 100 stocks and 9 prediction horizons." />
   <link rel="stylesheet" href="./css/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
@@ -12,9 +12,10 @@
 
 <header>
   <div class="header-inner">
-    <a href="./index.html" class="site-title">LLM Confidence Index</a>
+    <a href="./index.html" class="site-title">AI Calibration Index</a>
     <nav>
-      <a href="./index.html" class="active">Dashboard</a>
+      <a href="./index.html" class="active">Study 2</a>
+      <a href="./tracker.html">Daily Tracker</a>
       <a href="./about.html">About</a>
     </nav>
   </div>
@@ -24,11 +25,12 @@
 
   <!-- Hero -->
   <section class="hero">
-    <h1>Do AI Models Know What They Don't Know?</h1>
+    <h1>Are AI Models Overconfident?</h1>
     <p class="hero-sub">
-      Every weekday, three frontier AI models predict closing prices for 200 stocks
-      across three time horizons. We score their accuracy and calibration against
-      what actually happens and publish the results here &mdash; live.
+      Three frontier AI models predicted closing prices for 100 stocks
+      across nine time horizons (1&ndash;22 days), with five runs per ticker.
+      We scored 18,832 predictions against actual outcomes using the
+      Soll &amp; Klayman (2004) calibration framework. Here are the results.
     </p>
   </section>
 
@@ -61,21 +63,23 @@
   <!-- Model cards -->
   <section>
     <div class="section-head">
-      <h2>Current Index</h2>
-      <span class="section-sub">Rolling 30-day &middot; <span id="cards-horizon-label">1-day horizon</span> &middot; <span id="cards-filter-label">all stocks</span></span>
+      <h2>Calibration Summary</h2>
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <div class="filter-group">
+          <label class="filter-label" for="horizon-select">Horizon</label>
+          <select id="horizon-select" class="filter-select" style="min-width:120px"></select>
+        </div>
+        <span class="section-sub"><span id="cards-filter-label">all stocks</span></span>
+      </div>
     </div>
     <div class="cards" id="model-cards"></div>
   </section>
 
-  <!-- Horizon tabs + metric toggle + chart -->
+  <!-- Metric toggle + chart (all horizons on x-axis) -->
   <section>
     <div class="section-head">
-      <h2>Index Over Time</h2>
-      <div class="tabs" id="horizon-tabs" role="tablist">
-        <button class="tab active" data-hz="1d" role="tab" aria-selected="true">1-Day</button>
-        <button class="tab" data-hz="1w" role="tab" aria-selected="false">1-Week</button>
-        <button class="tab" data-hz="1m" role="tab" aria-selected="false">1-Month</button>
-      </div>
+      <h2>Across Prediction Horizons</h2>
+      <span class="section-sub">1-day to 22-day &mdash; with 95% CI error bars</span>
     </div>
     <div class="chart-panel">
       <div class="chart-controls">
@@ -96,7 +100,7 @@
   <section>
     <div class="section-head">
       <h2>By Sector</h2>
-      <span class="section-sub">&mu; (MEAD/MAD) &middot; 30-day rolling</span>
+      <span class="section-sub">&mu; (MEAD/MAD) at selected horizon</span>
     </div>
     <div class="table-wrap" id="domain-table"></div>
   </section>
@@ -147,9 +151,8 @@
 
 <footer>
   <div class="footer-inner">
-    <p>Data updated automatically each weekday after US market close.</p>
     <p>
-      Part of an ongoing empirical research project on LLM calibration.
+      Study 2 of an ongoing empirical research project on LLM calibration.
       <a href="./about.html">About this study</a> &middot;
       <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
     </p>
