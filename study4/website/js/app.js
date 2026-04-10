@@ -45,8 +45,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     const [ri, il] = await Promise.all([
-      fetchJSON("./data/rolling_index.json"),
-      fetchJSON("./data/items_list.json"),
+      fetchJSON("./data/study2/rolling_index.json"),
+      fetchJSON("./data/study2/items_list.json"),
     ]);
     rolling = ri;
     itemsList = il;

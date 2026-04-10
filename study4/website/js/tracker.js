@@ -330,6 +330,46 @@ function renderCards() {
   }).join("");
 }
 
+// ── Error bar plugin ─────────────────────────────────────────────────────────
+
+const errorBarPlugin = {
+  id: "errorBars",
+  afterDatasetsDraw(chart) {
+    const ctx = chart.ctx;
+    chart.data.datasets.forEach((ds, dsIdx) => {
+      if (!ds._errorBars) return;
+      const meta = chart.getDatasetMeta(dsIdx);
+      ds._errorBars.forEach((eb, i) => {
+        if (!eb || eb.lo == null || eb.hi == null) return;
+        const pt = meta.data[i];
+        if (!pt) return;
+        const x = pt.x;
+        const yScale = chart.scales.y;
+        const yLo = yScale.getPixelForValue(eb.lo);
+        const yHi = yScale.getPixelForValue(eb.hi);
+        const capW = 4;
+        ctx.save();
+        ctx.strokeStyle = ds.borderColor || "#666";
+        ctx.lineWidth = 1.5;
+        ctx.globalAlpha = 0.6;
+        ctx.beginPath(); ctx.moveTo(x, yLo); ctx.lineTo(x, yHi); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x - capW, yLo); ctx.lineTo(x + capW, yLo); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x - capW, yHi); ctx.lineTo(x + capW, yHi); ctx.stroke();
+        ctx.restore();
+      });
+    });
+  }
+};
+Chart.register(errorBarPlugin);
+
+// ── SE key mapping ──────────────────────────────────────────────────────────
+
+const SE_KEYS = {
+  mu: "mu_se",
+  accuracy: "accuracy_se",
+  hit_rate_90: "hit_rate_90_se",
+};
+
 // ── Time series chart (dates on x-axis) ──────────────────────────────────────
 
 function getTimeSeriesData() {
@@ -411,14 +451,22 @@ async function renderChart() {
     if (!mData) continue;
 
     const metricArr = mData[metric] || [];
+    const seArr = mData[SE_KEYS[metric]] || [];
     const nArr = mData.n || [];
 
-    // Build {x, y} points, skipping nulls
+    // Build {x, y} points and error bars, skipping nulls
     const points = [];
+    const errorBars = [];
     for (let i = 0; i < dates.length; i++) {
       const v = metricArr[i];
       if (v != null && !isNaN(v)) {
         points.push({ x: dates[i], y: v });
+        const se = seArr[i];
+        if (se != null && !isNaN(se)) {
+          errorBars.push({ lo: v - 1.96 * se, hi: v + 1.96 * se });
+        } else {
+          errorBars.push(null);
+        }
       }
     }
 
@@ -434,6 +482,7 @@ async function renderChart() {
       pointHoverRadius: 5,
       tension: 0.3,
       fill: false,
+      _errorBars: errorBars,
       _nValues: nArr,
       _dates: dates,
     });

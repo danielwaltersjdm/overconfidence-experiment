@@ -24,6 +24,7 @@ let data = null;
 let modelKeys = [];
 let domainsOrdered = [];
 let metric = "mu";
+let filterDomain = "all";
 let chart = null;
 
 // ── Init ─────────────────────────────────────────────────────────────────────
@@ -45,10 +46,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   domainsOrdered = data.domains_ordered || [];
 
   setStatus("green", data.resolved_predictions + " resolved predictions across " + domainsOrdered.length + " domains");
+  populateDomainSelect();
   renderCards();
   renderChart();
   renderDomainTable();
   bindMetricTabs();
+  bindFilters();
 });
 
 // ── Status bar ───────────────────────────────────────────────────────────────
@@ -60,6 +63,60 @@ function setStatus(color, text) {
   if (txt) txt.textContent = text;
 }
 
+// ── Filters ─────────────────────────────────────────────────────────────────
+
+function populateDomainSelect() {
+  const sel = document.getElementById("domain-select");
+  if (!sel) return;
+  domainsOrdered.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d;
+    opt.textContent = (data.domain_labels || {})[d] || d;
+    sel.appendChild(opt);
+  });
+}
+
+function bindFilters() {
+  const sel = document.getElementById("domain-select");
+  const clearBtn = document.getElementById("filter-clear");
+
+  if (sel) {
+    sel.addEventListener("change", () => {
+      filterDomain = sel.value;
+      if (clearBtn) clearBtn.style.display = filterDomain !== "all" ? "" : "none";
+      updateFilterLabel();
+      renderCards();
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      filterDomain = "all";
+      if (sel) sel.value = "all";
+      clearBtn.style.display = "none";
+      updateFilterLabel();
+      renderCards();
+    });
+  }
+}
+
+function updateFilterLabel() {
+  const el = document.getElementById("cards-filter-label");
+  if (!el) return;
+  if (filterDomain !== "all") {
+    el.textContent = (data.domain_labels || {})[filterDomain] || filterDomain;
+  } else {
+    el.textContent = "All domains";
+  }
+}
+
+function getCardData(modelKey) {
+  if (filterDomain !== "all") {
+    return data.models[modelKey]?.domains?.[filterDomain] || null;
+  }
+  return data.models[modelKey]?.aggregate || null;
+}
+
 // ── Model cards ──────────────────────────────────────────────────────────────
 
 function renderCards() {
@@ -68,7 +125,7 @@ function renderCards() {
 
   container.innerHTML = modelKeys.map(m => {
     const cfg = MODEL_DISPLAY[m] || { label: m, color: "#64748b" };
-    const d = data.models[m]?.aggregate;
+    const d = getCardData(m);
     const mu = d?.mu ?? null;
     const acc = d?.accuracy ?? null;
     const hr90 = d?.hit_rate_90 ?? null;

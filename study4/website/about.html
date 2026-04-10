@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About &mdash; AI Calibration Index</title>
-  <meta name="description" content="Study design, methodology, and scoring formulas for Study 2 of the LLM overconfidence project." />
+  <title>Methodology &mdash; AI Calibration Index</title>
+  <meta name="description" content="Study design, methodology, prediction elicitation prompts, and scoring formulas for the LLM overconfidence project." />
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
@@ -16,7 +16,7 @@
       <a href="./index.html">Daily Forecast</a>
       <a href="./backtest.html">Horizon Backtest</a>
       <a href="./crossdomain.html">Cross-Domain</a>
-      <a href="./about.html" class="active">About</a>
+      <a href="./about.html" class="active">Methodology</a>
     </nav>
   </div>
 </header>
@@ -24,66 +24,299 @@
 <main>
 
   <section class="hero">
-    <h1>About This Study</h1>
+    <h1>Methodology</h1>
     <p class="hero-sub">
-      Study 2 of an ongoing empirical research project on overconfidence in
-      confidence interval estimates produced by frontier large language models.
+      How we elicit, score, and visualize confidence interval calibration
+      from frontier large language models.
     </p>
   </section>
 
   <div class="prose">
 
+    <!-- ── Overview ──────────────────────────────────────────────────── -->
+
     <h2>What we measure</h2>
     <p>
       Frontier AI models routinely produce <strong>confidence intervals</strong>
       alongside their predictions. A well-calibrated 90% confidence interval should
-      contain the true outcome 90% of the time. If a model's stated 90% intervals only
+      contain the true outcome 90% of the time. If a model&rsquo;s stated 90% intervals only
       capture the actual value 60% of the time, the model is
       <strong>overconfident</strong> &mdash; it expresses more certainty than its
       accuracy warrants.
     </p>
     <p>
-      This study measures that gap using the calibration framework of
-      Soll &amp; Klayman (2004), across 100 stocks and nine prediction horizons.
+      We measure that gap across four studies using the calibration framework of
+      Soll &amp; Klayman (2004).
     </p>
 
-    <h2>Study design</h2>
-    <div class="spec-grid">
-      <div class="spec-card">
-        <div class="spec-value">3</div>
-        <div class="spec-label">AI models</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-value">100</div>
-        <div class="spec-label">Stocks</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-value">9</div>
-        <div class="spec-label">Horizons</div>
-      </div>
-      <div class="spec-card">
-        <div class="spec-value">18,832</div>
-        <div class="spec-label">Scored predictions</div>
-      </div>
-    </div>
-    <p>
-      Each model was queried with date-blinded prompts for each of 100 stocks,
-      with <strong>five independent runs per ticker</strong>. Predictions were
-      collected across nine prediction horizons ranging from 1 to 22 days.
-      Each prediction consists of a point estimate and three confidence intervals
-      (50%, 80%, 90%).
-    </p>
-    <p>
-      This is a <strong>backtest study</strong>: predictions were elicited for
-      historical dates without providing the model access to future price data.
-      The prediction period spans February 18 to March 23, 2026.
-    </p>
+    <!-- ── Study designs ─────────────────────────────────────────────── -->
 
-    <h2>Prediction horizons</h2>
+    <h2>Study designs</h2>
+
     <table class="about-table">
       <thead>
-        <tr><th>Horizon</th><th>Days ahead</th></tr>
+        <tr>
+          <th>Study</th>
+          <th>Design</th>
+          <th>N (per model)</th>
+          <th>Key variable</th>
+          <th>Mode</th>
+        </tr>
       </thead>
+      <tbody>
+        <tr>
+          <td><strong>Study 1</strong></td>
+          <td>20 equities, 1-day horizon, 5 runs/ticker</td>
+          <td>100</td>
+          <td>Baseline</td>
+          <td>Live</td>
+        </tr>
+        <tr>
+          <td><strong>Study 2</strong></td>
+          <td>100 equities, 9 horizons (1&ndash;22d), 5 runs/ticker</td>
+          <td>4,700&ndash;7,085</td>
+          <td>Prediction horizon</td>
+          <td>Backtest</td>
+        </tr>
+        <tr>
+          <td><strong>Study 3</strong></td>
+          <td>6 domains, 1-day horizon, 1 run/item</td>
+          <td>68 resolved</td>
+          <td>Domain</td>
+          <td>Live</td>
+        </tr>
+        <tr>
+          <td><strong>Study 4</strong></td>
+          <td>200 equities, 3 horizons (1d/1w/1m), daily collection</td>
+          <td>Ongoing</td>
+          <td>Longitudinal</td>
+          <td>Live</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Models ─────────────────────────────────────────────────────── -->
+
+    <h2>Models</h2>
+    <table class="about-table">
+      <thead>
+        <tr><th>Display name</th><th>Provider</th><th>Studies 1&ndash;3</th><th>Study 4</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Claude</strong></td><td>Anthropic</td>
+          <td><code>claude-sonnet-4-20250514</code></td>
+          <td><code>claude-sonnet-4-6</code></td>
+        </tr>
+        <tr>
+          <td><strong>GPT-4o</strong></td><td>OpenAI</td>
+          <td><code>gpt-4o</code></td>
+          <td><code>gpt-4o-2024-11-20</code></td>
+        </tr>
+        <tr>
+          <td><strong>Gemini</strong></td><td>Google</td>
+          <td><code>gemini-2.5-flash</code></td>
+          <td><code>gemini-2.5-flash</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Elicitation ────────────────────────────────────────────────── -->
+
+    <h2>Prediction elicitation</h2>
+    <p>
+      Each model receives a structured prompt requesting a point estimate and
+      confidence intervals. The exact prompt wording is shown below for each study.
+      All prompts are sent as a single user message with no system prompt.
+    </p>
+
+    <h3>Study 2: Multi-Horizon Backtest</h3>
+    <p>
+      Study 2 uses date-blinded prompts (no &ldquo;Today is&hellip;&rdquo;) to
+      prevent models from recognizing the historical date. Three confidence levels
+      (50%, 80%, 90%) are requested.
+    </p>
+    <div class="prompt-box">
+<pre>The current price of {ticker} is ${price}.
+Please predict the price in {window} days.
+Give me three confidence intervals:
+- 50% confidence interval: [low, high]
+- 80% confidence interval: [low, high]
+- 90% confidence interval: [low, high]
+Respond ONLY in JSON:
+{
+  "point_estimate": float,
+  "50_ci": [float, float],
+  "80_ci": [float, float],
+  "90_ci": [float, float],
+  "reasoning": string
+}</pre>
+    </div>
+    <p>
+      Variables: <code>{ticker}</code> = stock symbol, <code>{price}</code> = current
+      closing price, <code>{window}</code> = days ahead (1, 2, 3, 6, 7, 18, 20, 21, 22).
+      Five independent runs per ticker &times; horizon.
+    </p>
+
+    <h3>Study 3: Cross-Domain</h3>
+    <p>
+      Study 3 extends to six domains. Each domain module generates a context string
+      and question text appropriate for the asset type.
+    </p>
+    <div class="prompt-box">
+<pre>Today is {date}.
+
+{context}
+
+Question: {question_text}
+
+Provide a point estimate and three confidence intervals.
+Express all values in {unit}.
+
+Respond ONLY in valid JSON with no markdown fences:
+{
+  "point_estimate": &lt;number&gt;,
+  "50_ci": [&lt;low&gt;, &lt;high&gt;],
+  "80_ci": [&lt;low&gt;, &lt;high&gt;],
+  "90_ci": [&lt;low&gt;, &lt;high&gt;],
+  "reasoning": "&lt;brief reasoning&gt;"
+}</pre>
+    </div>
+    <p>
+      Variables: <code>{context}</code> provides current reference values (e.g.,
+      &ldquo;Current BTC price: $94,250.00 USD&rdquo;), <code>{question_text}</code>
+      is domain-specific (e.g., &ldquo;What will the closing price of AAPL be
+      tomorrow?&rdquo;), <code>{unit}</code> = USD, &deg;F, etc.
+    </p>
+
+    <h3>Study 4: Daily Forecast</h3>
+    <p>
+      Study 4 collects predictions daily with a two-call protocol: first the
+      prediction, then a separate justification call. Only 90% CIs are requested
+      (not 50%/80%) to reduce token costs. Three horizons are requested in a
+      single call.
+    </p>
+    <div class="prompt-box">
+<pre>Today is {date}.
+
+{context}
+
+Predict the closing price of {item_label} at three future
+horizons. For each horizon, provide a point estimate and a 90%
+confidence interval. A 90% confidence interval means you are
+providing a low value and a high value such that you believe
+there is a 90% chance the true closing price will fall between
+them. If we asked you to make this kind of estimate 100 times,
+the true value should fall inside your interval on about 90 of
+those occasions. Choose your bounds accordingly.
+
+Horizons:
+  1-day  target date: {date_1d}
+  1-week target date: {date_1w}
+  1-month target date: {date_1m}
+
+Respond ONLY with valid JSON and no markdown fences:
+{
+  "1d": {
+    "point_estimate": &lt;number&gt;,
+    "90_ci": [&lt;low&gt;, &lt;high&gt;]
+  },
+  "1w": {
+    "point_estimate": &lt;number&gt;,
+    "90_ci": [&lt;low&gt;, &lt;high&gt;]
+  },
+  "1m": {
+    "point_estimate": &lt;number&gt;,
+    "90_ci": [&lt;low&gt;, &lt;high&gt;]
+  }
+}</pre>
+    </div>
+    <p>
+      After the prediction is received, a second API call requests a free-text
+      justification:
+    </p>
+    <div class="prompt-box">
+<pre>You previously made the following probabilistic forecast:
+
+{prediction_json}
+
+Please explain your reasoning in 2&ndash;4 paragraphs. Address:
+1. What drove your point estimates at each horizon?
+2. What sources of uncertainty influenced your confidence
+   interval widths?
+3. Are there specific risks or events that could push outcomes
+   outside your stated intervals?
+
+Write in plain English. No JSON, no bullet points.</pre>
+    </div>
+
+    <!-- ── Scoring ────────────────────────────────────────────────────── -->
+
+    <h2>Calibration metrics</h2>
+
+    <h3>&mu; (mu) &mdash; Meta-knowledge ratio</h3>
+    <div class="metric-box">
+      <p>
+        The primary calibration metric. Based on Soll &amp; Klayman (2004),
+        &ldquo;Overconfidence in Interval Estimates,&rdquo;
+        <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>.
+      </p>
+    </div>
+    <div class="formula">&mu; = MEAD / MAD</div>
+    <p>
+      <strong>MAD</strong> (Mean Absolute Deviation) is the average absolute difference
+      between the model&rsquo;s point estimate and the actual outcome, normalized by price:
+    </p>
+    <div class="formula">MAD = mean( |actual &minus; point_estimate| / current_price )</div>
+    <p>
+      <strong>MEAD</strong> (Mean Expected Absolute Deviation) is the spread the model
+      <em>expected</em>, derived from its confidence interval width. For a 90% CI
+      assuming normality:
+    </p>
+    <div class="formula">&sigma;<sub>implied</sub> = (CI<sub>high</sub> &minus; CI<sub>low</sub>) / (2 &times; 1.645)</div>
+    <div class="formula">MEAD = mean( &sigma;<sub>implied</sub> &times; &radic;(2/&pi;) / current_price )</div>
+    <p><strong>Interpretation:</strong></p>
+    <ul>
+      <li><strong>&mu; = 1.0</strong> &mdash; perfectly calibrated</li>
+      <li><strong>&mu; &lt; 1</strong> &mdash; overconfident (intervals too narrow)</li>
+      <li><strong>&mu; &gt; 1</strong> &mdash; underconfident (intervals too wide)</li>
+    </ul>
+
+    <h3>Accuracy (normalized MAD)</h3>
+    <div class="metric-box">
+      <p>
+        Average prediction error as a percentage of price. Measures raw forecasting
+        skill, independent of calibration. <strong>Lower is better.</strong>
+      </p>
+    </div>
+    <div class="formula">Accuracy = mean( |actual &minus; point_estimate| / current_price ) &times; 100%</div>
+
+    <h3>90% CI Hit Rate</h3>
+    <div class="metric-box">
+      <p>
+        Proportion of predictions where the actual outcome fell within the stated
+        90% confidence interval. <strong>Target: 90%.</strong>
+      </p>
+    </div>
+    <div class="formula">Hit Rate = count(CI<sub>low</sub> &le; actual &le; CI<sub>high</sub>) / N</div>
+
+    <h3>Error bars</h3>
+    <p>
+      Charts show 95% confidence intervals (&plusmn;1.96 &times; SE):
+    </p>
+    <ul>
+      <li><strong>Accuracy SE:</strong> std(normalized deviations) / &radic;n</li>
+      <li><strong>&mu; SE:</strong> delta method, propagating uncertainty in both MAD and MEAD</li>
+      <li><strong>Hit rate SE:</strong> binomial &radic;(p(1&minus;p)/n)</li>
+    </ul>
+
+    <!-- ── Prediction horizons ────────────────────────────────────────── -->
+
+    <h2>Prediction horizons</h2>
+
+    <h3>Study 2 (Backtest)</h3>
+    <table class="about-table">
+      <thead><tr><th>Horizon</th><th>Days ahead</th></tr></thead>
       <tbody>
         <tr><td>1d</td><td>1</td></tr>
         <tr><td>2d</td><td>2</td></tr>
@@ -97,126 +330,63 @@
       </tbody>
     </table>
     <p>
-      Horizons were sampled from four buckets (1&ndash;5, 6&ndash;12, 13&ndash;20,
-      21&ndash;30 days) to test how calibration changes as the prediction window
-      increases. If a target date fell on a non-trading day, the next available
-      trading day close was used.
+      Sampled from four buckets (1&ndash;5, 6&ndash;12, 13&ndash;20, 21&ndash;30 days)
+      to test how calibration changes as the prediction window increases.
     </p>
 
-    <h2>Calibration metrics</h2>
-
-    <h3>&mu; (mu) &mdash; Meta-knowledge ratio</h3>
-    <div class="metric-box">
-      <p>
-        The primary metric on the dashboard. Based on Soll &amp; Klayman (2004),
-        &ldquo;Overconfidence in Interval Estimates,&rdquo;
-        <em>Journal of Experimental Psychology: Learning, Memory, and Cognition</em>.
-      </p>
-    </div>
-    <div class="formula">&mu; = MEAD / MAD</div>
-    <p>
-      <strong>MAD</strong> (Mean Absolute Deviation) is the average absolute difference
-      between the model's point estimate and the actual outcome, normalized by price:
-    </p>
-    <div class="formula">MAD = mean( |actual &minus; point_estimate| / current_price )</div>
-    <p>
-      <strong>MEAD</strong> (Mean Expected Absolute Deviation) is the spread the model
-      <em>expected</em>, derived from its confidence interval width. For a 90% CI
-      assuming normality:
-    </p>
-    <div class="formula">&sigma;<sub>implied</sub> = (CI<sub>high</sub> &minus; CI<sub>low</sub>) / (2 &times; 1.645)</div>
-    <div class="formula">MEAD = mean( &sigma;<sub>implied</sub> &times; &radic;(2/&pi;) / current_price )</div>
-    <p>
-      <strong>Interpretation:</strong>
-    </p>
-    <ul>
-      <li><strong>&mu; = 1.0</strong> &mdash; perfectly calibrated. The model's stated
-        uncertainty matches the actual spread of outcomes.</li>
-      <li><strong>&mu; &lt; 1</strong> &mdash; overconfident. Confidence intervals are
-        too narrow relative to actual prediction error.</li>
-      <li><strong>&mu; &gt; 1</strong> &mdash; underconfident. Confidence intervals are
-        wider than necessary.</li>
-    </ul>
-
-    <h3>Accuracy (normalized MAD)</h3>
-    <div class="metric-box">
-      <p>
-        The average prediction error as a percentage of the current price.
-        This measures raw forecasting skill, independent of calibration.
-        <strong>Lower is better.</strong>
-      </p>
-    </div>
-    <div class="formula">Accuracy = mean( |actual &minus; point_estimate| / current_price ) &times; 100%</div>
-    <p>
-      This is mathematically identical to the MAD in the &mu; formula, just displayed
-      as a standalone percentage. A model can have good accuracy (low error) but poor
-      calibration (intervals that don't match the error), or vice versa.
-    </p>
-
-    <h3>90% CI Hit Rate</h3>
-    <div class="metric-box">
-      <p>
-        The proportion of predictions where the actual outcome fell within the
-        model's stated 90% confidence interval.
-        <strong>Target: 90%.</strong> Below 90% = overconfident. Above 90% = underconfident.
-      </p>
-    </div>
-    <div class="formula">Hit Rate = count(CI<sub>low</sub> &le; actual &le; CI<sub>high</sub>) / N</div>
-
-    <h3>Error bars</h3>
-    <p>
-      The chart shows 95% confidence intervals around each metric estimate,
-      computed as &plusmn;1.96 &times; SE. Standard errors are:
-    </p>
-    <ul>
-      <li><strong>Accuracy SE:</strong> std(normalized absolute deviations) / &radic;n</li>
-      <li><strong>&mu; SE:</strong> delta method, propagating uncertainty in both MAD and MEAD</li>
-      <li><strong>Hit rate SE:</strong> binomial standard error &radic;(p(1&minus;p)/n)</li>
-    </ul>
-
-    <h2>Models</h2>
+    <h3>Study 4 (Daily Forecast)</h3>
     <table class="about-table">
-      <thead>
-        <tr><th>Display name</th><th>Provider</th><th>Model ID</th></tr>
-      </thead>
+      <thead><tr><th>Horizon</th><th>Days ahead</th></tr></thead>
       <tbody>
-        <tr><td><strong>Claude</strong></td><td>Anthropic</td><td><code>claude-sonnet-4-20250514</code></td></tr>
-        <tr><td><strong>GPT-4o</strong></td><td>OpenAI</td><td><code>gpt-4o</code></td></tr>
-        <tr><td><strong>Gemini</strong></td><td>Google</td><td><code>gemini-2.5-flash</code></td></tr>
+        <tr><td>1-Day</td><td>1</td></tr>
+        <tr><td>1-Week</td><td>7</td></tr>
+        <tr><td>1-Month</td><td>30</td></tr>
       </tbody>
     </table>
 
-    <h2>Stocks (100)</h2>
-    <p>
-      100 large-cap US equities plus the SPY index ETF, spanning mega-cap tech,
-      financials, healthcare, consumer, energy, industrials, telecom, utilities,
-      and real estate. Grouped by GICS sector for aggregate analysis. All actual
-      closing prices from Yahoo Finance (USD).
-    </p>
+    <!-- ── Domains ────────────────────────────────────────────────────── -->
+
+    <h2>Prediction domains</h2>
+    <table class="about-table">
+      <thead>
+        <tr><th>Domain</th><th>Items</th><th>Studies</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Stocks</td><td>20&ndash;200 large-cap US equities</td><td>1, 2, 3, 4</td><td>Yahoo Finance</td></tr>
+        <tr><td>Crypto</td><td>10 coins</td><td>3</td><td>CoinGecko</td></tr>
+        <tr><td>Forex</td><td>8 currency pairs</td><td>3</td><td>Yahoo Finance</td></tr>
+        <tr><td>Weather</td><td>30 US cities (mean temp &deg;F)</td><td>3</td><td>Open-Meteo</td></tr>
+        <tr><td>Commodities</td><td>5 futures (gold, oil, etc.)</td><td>3</td><td>Yahoo Finance</td></tr>
+        <tr><td>NBA</td><td>Game outcomes</td><td>3</td><td>ESPN API</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Limitations ────────────────────────────────────────────────── -->
 
     <h2>Limitations</h2>
     <ul>
       <li>
-        <strong>Backtest design</strong> &mdash; predictions were elicited for
-        historical dates using date-blinded prompts. Models may behave differently
-        in a live forecasting setting.
-      </li>
-      <li>
-        <strong>Single asset class</strong> &mdash; this study tracks US equities
-        only. Cross-domain generalization (crypto, forex, weather) was explored
-        in Study 3.
+        <strong>Backtest vs. live</strong> &mdash; Study 2 uses date-blinded prompts
+        for historical dates. Models may behave differently in a live setting
+        (Studies 1, 3, 4).
       </li>
       <li>
         <strong>Normality assumption</strong> &mdash; the &mu; calculation assumes
-        returns are normally distributed when converting CI width to implied standard
-        deviation. Fat-tailed distributions would affect the MEAD estimate.
+        normally distributed errors when converting CI width to implied &sigma;.
+        Fat-tailed domains (crypto, commodities) may violate this.
       </li>
       <li>
-        <strong>Non-uniform horizon spacing</strong> &mdash; the nine horizons are
-        not evenly spaced; gaps between 7d and 18d, and 3d and 6d, make interpolation
-        in the chart approximate.
+        <strong>Small n in some domains</strong> &mdash; Study 3 commodities (n=5/model)
+        and forex (n=8/model) produce wide confidence intervals on the metrics themselves.
+      </li>
+      <li>
+        <strong>Model versioning</strong> &mdash; Studies 1&ndash;3 used model snapshots
+        from early 2026. Study 4 uses updated versions. Direct comparison across
+        studies should account for this.
       </li>
     </ul>
+
+    <!-- ── References ─────────────────────────────────────────────────── -->
 
     <h2>References</h2>
     <ul>
@@ -230,15 +400,8 @@
     <h2>Data and code</h2>
     <p>
       All prediction files, actuals, scored results, and pipeline code are
-      available in the project's
+      available in the project&rsquo;s
       <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub repository</a>.
-    </p>
-    <p>
-      This is <strong>Study 2</strong> of an ongoing project. Study 1
-      investigated overconfidence in 1-day equity predictions (20 tickers),
-      Study 3 extended to a multi-domain cross-section (stocks, crypto, forex,
-      weather, commodities, NBA), and Study 4 (forthcoming) will track
-      calibration longitudinally with a live daily pipeline.
     </p>
 
   </div>
@@ -248,7 +411,7 @@
 <footer>
   <div class="footer-inner">
     <p>
-      Study 2 of an ongoing empirical research project on LLM calibration.
+      An ongoing empirical research project on LLM calibration.
       <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
     </p>
   </div>

@@ -226,11 +226,26 @@ def _compute_series_point(m_df: pd.DataFrame) -> dict:
     mead = valid_nead.mean() if len(valid_nead) > 0 else float("nan")
     mu   = mead / mad if (not np.isnan(mad) and not np.isnan(mead) and mad > 0) else float("nan")
 
+    # Standard errors
+    hr_se = _nan_to_none(np.sqrt(hr * (1 - hr) / len(hits))) if (hr is not None and len(hits) > 0) else None
+    acc_se = _nan_to_none(valid_nad.std() / np.sqrt(len(valid_nad))) if len(valid_nad) > 1 else None
+    mu_se = None
+    if len(valid_nad) > 1 and len(valid_nead) > 1 and not np.isnan(mu) and mad > 0 and mead > 0:
+        paired = m_df[["norm_abs_dev", "norm_expected_abs_dev"]].dropna()
+        if len(paired) > 1:
+            cov = paired["norm_abs_dev"].cov(paired["norm_expected_abs_dev"])
+            var_ratio = (valid_nad.std() / mad) ** 2 + (valid_nead.std() / mead) ** 2 - 2 * cov / (mad * mead)
+            if var_ratio > 0:
+                mu_se = _nan_to_none(mu * np.sqrt(var_ratio / len(m_df)))
+
     return {
         "hit_rate_90": hr,
         "mu":          _nan_to_none(mu),
         "accuracy":    _nan_to_none(mad),
         "n":           int(len(m_df)),
+        "hit_rate_90_se": hr_se,
+        "mu_se":       mu_se,
+        "accuracy_se": acc_se,
     }
 
 
@@ -345,7 +360,8 @@ def build_time_series(df: pd.DataFrame, config: dict) -> dict:
             continue
 
         series_dates = []
-        model_series = {m: {"hit_rate_90": [], "mu": [], "accuracy": [], "n": []} for m in model_names}
+        model_series = {m: {"hit_rate_90": [], "mu": [], "accuracy": [], "n": [],
+                            "hit_rate_90_se": [], "mu_se": [], "accuracy_se": []} for m in model_names}
         # Per-sector series
         sector_series = {}
         for sec in all_sectors:
@@ -367,8 +383,8 @@ def build_time_series(df: pd.DataFrame, config: dict) -> dict:
             for m in model_names:
                 m_df = window_df[window_df["model"] == m]
                 pt = _compute_series_point(m_df)
-                for k in ("hit_rate_90", "mu", "accuracy"):
-                    model_series[m][k].append(pt[k])
+                for k in ("hit_rate_90", "mu", "accuracy", "hit_rate_90_se", "mu_se", "accuracy_se"):
+                    model_series[m][k].append(pt.get(k))
                 model_series[m]["n"].append(pt["n"])
 
                 # Per-sector
@@ -422,7 +438,8 @@ def build_item_series(df: pd.DataFrame, config: dict, items_meta: list[dict]):
                 continue
 
             series_dates = []
-            model_series = {m: {"hit_rate_90": [], "mu": [], "accuracy": [], "n": []} for m in model_names}
+            model_series = {m: {"hit_rate_90": [], "mu": [], "accuracy": [], "n": [],
+                            "hit_rate_90_se": [], "mu_se": [], "accuracy_se": []} for m in model_names}
 
             for d in all_dates:
                 cutoff = (datetime.fromisoformat(d).date() - timedelta(days=window)).isoformat()
