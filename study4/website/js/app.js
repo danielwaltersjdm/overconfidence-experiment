@@ -295,20 +295,20 @@ function renderCards() {
     const acc = d?.accuracy ?? null;
     const hr90 = d?.hit_rate_90 ?? null;
     const n = d?.n ?? null;
-    const badge = getMuBadge(mu);
+    const badge = getHitRateBadge(hr90);
 
     const detailHtml = d ? `
       <div class="card-detail">
+        <span>\u03bc: <strong>${mu !== null ? mu.toFixed(2) : "\u2014"}</strong></span>
         <span>Accuracy: <strong>${acc !== null ? (acc * 100).toFixed(2) + "%" : "\u2014"}</strong></span>
-        <span>90% CI: <strong>${pct(hr90)}</strong></span>
         <span>n = <strong>${n !== null ? n.toLocaleString() : "\u2014"}</strong></span>
       </div>` : "";
 
     return `
       <div class="card ${m}">
         <div class="card-name">${cfg.label}</div>
-        <div class="card-value" style="color:${muColor(mu)}">${mu !== null ? mu.toFixed(2) : "\u2014"}</div>
-        <div class="card-label">\u03bc (meta-knowledge)</div>
+        <div class="card-value" style="color:${hitRateColor(hr90)}">${pct(hr90)}</div>
+        <div class="card-label">90% CI hit rate</div>
         <span class="badge ${badge.cls}">${badge.text}</span>
         ${detailHtml}
       </div>`;
@@ -593,6 +593,22 @@ function getMuBadge(mu) {
   if (mu >= 0.70 && mu < 0.85) return { cls: "badge-warn", text: "Slightly overconfident" };
   if (mu < 0.70) return { cls: "badge-bad", text: "Overconfident" };
   if (mu > 1.15 && mu <= 1.30) return { cls: "badge-warn", text: "Slightly underconfident" };
+  return { cls: "badge-bad", text: "Underconfident" };
+}
+
+function hitRateColor(hr) {
+  if (hr == null || isNaN(hr)) return "var(--muted)";
+  if (hr >= 0.85 && hr <= 0.95) return "var(--good)";
+  if ((hr >= 0.75 && hr < 0.85) || (hr > 0.95 && hr <= 1.0)) return "var(--warn)";
+  return "var(--bad)";
+}
+
+function getHitRateBadge(hr) {
+  if (hr == null || isNaN(hr)) return { cls: "badge-none", text: "No data" };
+  if (hr >= 0.85 && hr <= 0.95) return { cls: "badge-good", text: "Well calibrated" };
+  if (hr >= 0.75 && hr < 0.85) return { cls: "badge-warn", text: "Slightly overconfident" };
+  if (hr < 0.75) return { cls: "badge-bad", text: "Overconfident" };
+  if (hr > 0.95) return { cls: "badge-warn", text: "Slightly underconfident" };
   return { cls: "badge-bad", text: "Underconfident" };
 }
 

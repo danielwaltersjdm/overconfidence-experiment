@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horizon Backtest &mdash; AI Calibration Index</title>
+  <meta name="description" content="Interactive results from Study 2: calibration of confidence intervals produced by frontier AI models across 100 stocks and 9 prediction horizons." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="./index.html" class="site-title">AI Calibration Index</a>
+    <nav>
+      <a href="./index.html">Daily Forecast</a>
+      <a href="./backtest.html" class="active">Horizon Backtest</a>
+      <a href="./about.html">About</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Are AI Models Overconfident?</h1>
+    <p class="hero-sub">
+      Three frontier AI models predicted closing prices for 100 stocks
+      across nine time horizons (1&ndash;22 days), with five runs per ticker.
+      We scored 18,832 predictions against actual outcomes using the
+      Soll &amp; Klayman (2004) calibration framework. Here are the results.
+    </p>
+    <p class="study-tag">Study 2: Multi-Horizon Backtest</p>
+  </section>
+
+  <!-- Status bar -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span class="status-text" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <!-- Filters -->
+  <section>
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label" for="sector-select">Sector</label>
+        <select id="sector-select" class="filter-select">
+          <option value="all">All Sectors</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label" for="stock-search">Stock</label>
+        <div class="stock-search-wrap">
+          <input type="text" id="stock-search" class="filter-input" placeholder="Search ticker or name&hellip;" autocomplete="off" />
+          <div class="stock-dropdown" id="stock-dropdown"></div>
+        </div>
+      </div>
+      <button class="filter-clear" id="filter-clear" style="display:none">Clear filters</button>
+    </div>
+  </section>
+
+  <!-- Model cards -->
+  <section>
+    <div class="section-head">
+      <h2>Calibration Summary</h2>
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+        <div class="filter-group">
+          <label class="filter-label" for="horizon-select">Horizon</label>
+          <select id="horizon-select" class="filter-select" style="min-width:120px"></select>
+        </div>
+        <span class="section-sub"><span id="cards-filter-label">all stocks</span></span>
+      </div>
+    </div>
+    <div class="cards" id="model-cards"></div>
+  </section>
+
+  <!-- Metric toggle + chart (all horizons on x-axis) -->
+  <section>
+    <div class="section-head">
+      <h2>Across Prediction Horizons</h2>
+      <span class="section-sub">1-day to 22-day &mdash; with 95% CI error bars</span>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-controls">
+        <div class="metric-tabs" id="metric-tabs">
+          <button class="mtab active" data-metric="mu">&mu; (Meta-knowledge)</button>
+          <button class="mtab" data-metric="accuracy">Accuracy</button>
+          <button class="mtab" data-metric="hit_rate_90">90% CI Hit Rate</button>
+        </div>
+      </div>
+      <div class="chart-area" id="chart-area">
+        <canvas id="main-chart"></canvas>
+      </div>
+      <div class="rampup-overlay" id="chart-rampup" style="display:none"></div>
+    </div>
+  </section>
+
+  <!-- Sector breakdown -->
+  <section>
+    <div class="section-head">
+      <h2>By Sector</h2>
+      <span class="section-sub">&mu; (MEAD/MAD) at selected horizon</span>
+    </div>
+    <div class="table-wrap" id="domain-table"></div>
+  </section>
+
+  <!-- Explainer -->
+  <section class="explainer">
+    <h3>What do these metrics mean?</h3>
+    <p>
+      <strong>&mu; (mu, meta-knowledge ratio)</strong> measures whether a model's
+      confidence intervals match the actual spread of outcomes. A &mu; of 1.0 means
+      the model's stated uncertainty matches reality perfectly. Below 1.0 means
+      <strong>overconfident</strong> (intervals too narrow); above 1.0 means
+      <strong>underconfident</strong> (intervals too wide).
+      Based on <a href="./about.html">Soll &amp; Klayman (2004)</a>.
+    </p>
+    <p>
+      <strong>Accuracy</strong> (normalized MAD) is the average prediction error as
+      a percentage of price. Lower is better.
+    </p>
+    <p>
+      <strong>90% CI hit rate</strong> measures how often the true outcome falls
+      inside the model's stated 90% confidence interval. Perfect calibration = 90%.
+    </p>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#dc2626"></span>
+        <span><strong>&mu; target = 1.0</strong> &mdash; perfect calibration</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#16a34a"></span>
+        <span><strong>&mu; 0.85&ndash;1.15</strong> &mdash; well calibrated</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#d97706"></span>
+        <span><strong>&mu; 0.70&ndash;0.85</strong> &mdash; slightly overconfident</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-dot" style="background:#dc2626"></span>
+        <span><strong>&mu; &lt; 0.70</strong> &mdash; substantially overconfident</span>
+      </div>
+    </div>
+    <p class="explainer-link">
+      <a href="./about.html">Read more about the methodology &rarr;</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>
+      Study 2 of an ongoing empirical research project on LLM calibration.
+      <a href="./about.html">About this study</a> &middot;
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="./js/app.js?v=2"></script>
+</body>
+</html>

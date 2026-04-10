@@ -190,14 +190,19 @@ def parse_json_response(text: str) -> dict:
     raise ValueError(f"No valid JSON found in response: {text[:200]}")
 
 
-def call_with_retry(fn, retries: int = 3, base_delay: float = 2.0):
+def call_with_retry(fn, retries: int = 5, base_delay: float = 5.0):
     for attempt in range(retries):
         try:
             return fn()
         except Exception as e:
             if attempt == retries - 1:
                 raise
-            delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+            err_str = str(e).lower()
+            # 503/rate-limit errors get longer backoff
+            if "503" in err_str or "unavailable" in err_str or "rate" in err_str:
+                delay = 30.0 * (2 ** attempt) + random.uniform(0, 5)
+            else:
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
             console.print(f"  [yellow]Retry {attempt+1}/{retries}: {e}. Waiting {delay:.1f}s[/yellow]")
             time.sleep(delay)
 
@@ -420,9 +425,15 @@ def main():
                     / f"{model_cfg['name']}_{domain}_{sid}_{run_date.isoformat()}.json"
                 )
                 if filename.exists():
-                    console.print(f"  [dim]SKIP[/dim] {model_cfg['name']}_{domain}_{sid} (exists)")
-                    skipped += 1
-                    continue
+                    try:
+                        existing = json.loads(filename.read_text())
+                        if existing.get("status") == "collected":
+                            console.print(f"  [dim]SKIP[/dim] {model_cfg['name']}_{domain}_{sid} (exists)")
+                            skipped += 1
+                            continue
+                        console.print(f"  [yellow]RETRY[/yellow] {model_cfg['name']}_{domain}_{sid} (previous attempt failed)")
+                    except (json.JSONDecodeError, OSError):
+                        pass  # corrupt file, re-attempt
 
                 total += 1
                 record = collect_item(
