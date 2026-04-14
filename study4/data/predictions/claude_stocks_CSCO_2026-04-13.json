@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-13",
+  "timestamp": "2026-04-13T22:37:32.502670Z",
+  "domain": "stocks",
+  "item": "CSCO",
+  "item_label": "Cisco",
+  "unit": "USD",
+  "current_value": 82.3499984741211,
+  "context": "Current closing price of Cisco (CSCO): $82.35 USD as of 2026-04-13.",
+  "prompt_text": "Today is 2026-04-13.\n\nCurrent closing price of Cisco (CSCO): $82.35 USD as of 2026-04-13.\n\nPredict the closing price of Cisco at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-14\n  1-week target date: 2026-04-20\n  1-month target date: 2026-05-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 82.80,\n    \"90_ci\": [79.50, 86.10]\n  },\n  \"1w\": {\n    \"point_estimate\": 83.50,\n    \"90_ci\": [76.00, 91.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 84.00,\n    \"90_ci\": [71.00, 97.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 82.8,
+      "90_ci": [
+        79.5,
+        86.1
+      ]
+    },
+    "1w": {
+      "point_estimate": 83.5,
+      "90_ci": [
+        76.0,
+        91.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 84.0,
+      "90_ci": [
+        71.0,
+        97.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 82.8,\n    \"90_ci\": [\n      79.5,\n      86.1\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 83.5,\n    \"90_ci\": [\n      76.0,\n      91.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 84.0,\n    \"90_ci\": [\n      71.0,\n      97.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-drifting baseline from what I assumed was a current price or index level near 82\u201383. At the one-day horizon, the estimate of 82.8 is essentially anchored to the current level with only a small drift applied, reflecting the typical mean-reversion tendency of most financial or economic series over very short windows. At the one-week horizon, I nudged the estimate slightly higher to 83.5, incorporating a mild positive trend assumption while acknowledging that a week is long enough for meaningful price discovery to occur. At the one-month horizon, the 84.0 estimate continues that gentle upward drift, though the practical difference between the weekly and monthly point estimates is small, suggesting I expected the series to be relatively stable in level terms even if uncertainty around that level grows considerably.\n\nThe confidence interval widths reflect standard scaling of uncertainty with the square root of time, a common assumption when volatility is roughly constant and returns are approximately independent across periods. The one-day interval of roughly plus or minus 3.3 units is tight because short-horizon realized volatility tends to be constrained. The one-week interval widens to plus or minus 7.5 units, and the one-month interval expands further to plus or minus 13 units. These widths implicitly assume an annualized volatility in a moderate range, consistent with a relatively stable but not risk-free asset or index. I also likely incorporated some fat-tail adjustment, meaning the intervals are slightly wider than a pure normal distribution would suggest, to account for the possibility of abrupt discontinuous moves.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic data surprises, such as an unexpected inflation print, employment report, or central bank policy shift, any of which could cause sharp repricing within a single day and easily breach the one-day bounds. Geopolitical shocks, liquidity crises, or unexpected corporate or sovereign credit events could similarly compress or expand the range dramatically at any horizon. At the one-month horizon, a regime change in monetary policy expectations or a broader risk-off episode could push the outcome well below the 71.0 lower bound, while a strong risk rally or positive fundamental catalyst could push it above 97.0.\n\nIt is also worth noting that my intervals, while calibrated to feel reasonable given historical volatility patterns, carry model risk. If the underlying series exhibits clustering of volatility, meaning periods of calm followed by bursts of turbulence, then my intervals may be too narrow during those turbulent episodes and too wide during calm ones. Structural breaks, such as a change in the fundamental drivers of the series, would similarly invalidate the stationarity assumption embedded in the widths. Taken together, these factors mean the stated ",
+  "status": "collected",
+  "error": null
+}

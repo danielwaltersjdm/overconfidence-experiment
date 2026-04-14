@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-13",
+  "timestamp": "2026-04-13T21:54:56.978372Z",
+  "domain": "stocks",
+  "item": "MA",
+  "item_label": "Mastercard",
+  "unit": "USD",
+  "current_value": 508.5799865722656,
+  "context": "Current closing price of Mastercard (MA): $508.58 USD as of 2026-04-13.",
+  "prompt_text": "Today is 2026-04-13.\n\nCurrent closing price of Mastercard (MA): $508.58 USD as of 2026-04-13.\n\nPredict the closing price of Mastercard at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-14\n  1-week target date: 2026-04-20\n  1-month target date: 2026-05-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 511,\n    \"90_ci\": [492, 530]\n  },\n  \"1w\": {\n    \"point_estimate\": 515,\n    \"90_ci\": [478, 552]\n  },\n  \"1m\": {\n    \"point_estimate\": 520,\n    \"90_ci\": [450, 590]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 511,
+      "90_ci": [
+        492,
+        530
+      ]
+    },
+    "1w": {
+      "point_estimate": 515,
+      "90_ci": [
+        478,
+        552
+      ]
+    },
+    "1m": {
+      "point_estimate": 520,
+      "90_ci": [
+        450,
+        590
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 511,\n    \"90_ci\": [\n      492,\n      530\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 515,\n    \"90_ci\": [\n      478,\n      552\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 520,\n    \"90_ci\": [\n      450,\n      590\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable baseline with modest drift upward across the three horizons. The 1-day estimate of 511 was anchored primarily to recent observed values and short-term momentum, assuming no major structural breaks overnight. The 1-week estimate of 515 incorporates a slight continuation of that trend, reflecting the assumption that near-term conditions remain broadly similar but allowing for some mean-reversion or continued drift. The 1-month estimate of 520 extends that logic further, embedding a small positive bias consistent with longer-run tendencies, while acknowledging that the further out you go, the less the near-term signal dominates relative to baseline drift assumptions.\n\nThe confidence interval widths were calibrated to historical volatility at each respective horizon. For the 1-day window, the interval is relatively tight at roughly plus or minus 19 points, consistent with typical day-to-day variation under normal conditions. The 1-week interval widens to about plus or minus 37 points, reflecting the compounding of daily uncertainty over multiple sessions. The 1-month interval widens further to plus or minus 70 points, capturing not just volatility accumulation but also the increased probability of regime-level shifts \u2014 changes in sentiment, macro conditions, or data surprises \u2014 that become more likely over longer periods.\n\nThere are several specific risks that could push outcomes outside these stated intervals. On the upside, a significant positive surprise \u2014 such as a major policy announcement, a strong economic data release, or a sudden shift in market sentiment \u2014 could push values well above the upper bounds, particularly at the 1-month horizon. On the downside, an abrupt shock such as a geopolitical escalation, financial contagion, or a large negative data release could easily breach the lower bounds. These tail risks are real but assigned low probability by construction, since the intervals represent 90% coverage.\n\nIt's also worth noting that the stated intervals assume roughly continuous conditions and do not fully account for discontinuous jumps or liquidity-driven dislocations, which by their nature are hard to model explicitly. If correlations break down or volatility clustering accelerates, realized outcomes could fall meaningfully outside these ranges more often than the 10% residual probability would suggest. The 1-month interval in particular should be treated with appropriate humility, as compounding uncertainty over that timeframe means the distribution of outcomes has heavier tails than a simple normal approximation implies.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-13",
+  "timestamp": "2026-04-13T22:39:48.887614Z",
+  "domain": "stocks",
+  "item": "WFC",
+  "item_label": "Wells Fargo",
+  "unit": "USD",
+  "current_value": 86.63999938964844,
+  "context": "Current closing price of Wells Fargo (WFC): $86.64 USD as of 2026-04-13.",
+  "prompt_text": "Today is 2026-04-13.\n\nCurrent closing price of Wells Fargo (WFC): $86.64 USD as of 2026-04-13.\n\nPredict the closing price of Wells Fargo at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-14\n  1-week target date: 2026-04-20\n  1-month target date: 2026-05-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll analyze this systematically considering:\n\n1. **Current price**: $86.64 (2026-04-13)\n2. **Market context**: Early April 2026, need to consider typical volatility for WFC\n3. **WFC historical volatility**: ~25-30% annualized, translating to daily vol ~1.5-1.8%\n\n**Volatility calculations:**\n- Daily vol: ~1.6% \u2192 ~$1.39/day\n- 1-day \u03c3: ~$1.39\n- 1-week \u03c3 (5 days): ~$1.39 \u00d7 \u221a5 \u2248 ~$3.11\n- 1-month \u03c3 (21 days): ~$1.39 \u00d7 \u221a21 \u2248 ~$6.37\n\n**90% CI multiplier**: \u00b11.645\u03c3\n\n**1-day (2026-04-14):**\n- Point estimate: slight drift near flat, ~$86.80\n- 90% CI: 86.64 \u00b1 1.645 \u00d7 1.39 \u2192 \u00b12.29 \u2192 [84.35, 88.93]\n\n**1-week (2026-04-20):**\n- Point estimate: modest positive drift, ~$87.20\n- 90% CI: 86.64 \u00b1 1.645 \u00d7 3.11 \u2192 \u00b15.12 \u2192 [81.52, 92.28] (rounded slightly)\n\n**1-month (2026-05-13):**\n- Point estimate: slight positive drift, ~$88.00\n- 90% CI: 86.64 \u00b1 1.645 \u00d7 6.37 \u2192 \u00b110.48 \u2192 [76.16, 97.12]\n\n{\n  \"1d\": {\n    \"point_estimate\": 86.80,\n    \"90_ci\": [84.35, 88.93]\n  },\n  \"1w\": {\n    \"point_estimate\": 87.20,\n    \"90_ci\": [81.52, 92.28]\n  },\n  \"1m\": {\n    \"point_estimate\": 88.00,\n    \"90_ci\": [76.16, 97.12]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 86.8,
+      "90_ci": [
+        84.35,
+        88.93
+      ]
+    },
+    "1w": {
+      "point_estimate": 87.2,
+      "90_ci": [
+        81.52,
+        92.28
+      ]
+    },
+    "1m": {
+      "point_estimate": 88.0,
+      "90_ci": [
+        76.16,
+        97.12
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 86.8,\n    \"90_ci\": [\n      84.35,\n      88.93\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 87.2,\n    \"90_ci\": [\n      81.52,\n      92.28\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 88.0,\n    \"90_ci\": [\n      76.16,\n      97.12\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three horizons, starting near current market levels and gradually trending higher. At the one-day horizon, the estimate of 86.8 is anchored closely to the prevailing price, assuming mean-reverting intraday behavior with minimal directional catalyst. The slight upward bias in the one-week estimate of 87.2 reflects a mild positive drift assumption consistent with recent momentum, while the one-month estimate of 88.0 incorporates a longer-run tendency for risk assets to trend higher in the absence of major shocks. In all three cases, the point estimates are conservative and close together, reflecting my expectation that this asset is trading in a range with no dominant near-term directional force.\n\nThe confidence interval widths expand meaningfully as the horizon extends, which is a natural consequence of volatility compounding over time. At one day, the 90% interval spans roughly 4.5 points, reflecting typical daily price fluctuation. By one week, that range widens to nearly 11 points, and by one month it spans over 20 points. These widths were calibrated using historical realized volatility and scaled appropriately to each time horizon. The one-month interval in particular reflects genuine uncertainty about macroeconomic conditions, policy decisions, and sentiment shifts that could materialize over a four-week window.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden deterioration in risk appetite \u2014 triggered by an unexpected central bank action, geopolitical escalation, or a sharp negative data release \u2014 could push prices well below the lower bounds. Liquidity gaps or correlated selling across asset classes could amplify such moves quickly. On the upside, a positive surprise such as a dovish policy pivot, stronger-than-expected economic data, or short-squeeze dynamics could drive prices above the upper bounds, particularly at the one-week and one-month horizons where tail risks are harder to anticipate.\n\nIt is also worth noting that my intervals assume a relatively stable volatility regime. If realized volatility were to spike \u2014 as it can during earnings seasons, geopolitical crises, or macro turning points \u2014 the true distribution of outcomes would be significantly fatter-tailed than my stated intervals imply. In that sense, my confidence intervals should be treated as a baseline rather than a hard bound, and users should mentally widen them further if they believe the current environment is prone to volatility regime shifts.",
+  "status": "collected",
+  "error": null
+}
