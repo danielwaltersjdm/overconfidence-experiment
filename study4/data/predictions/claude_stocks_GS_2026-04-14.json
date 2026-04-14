@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-14",
+  "timestamp": "2026-04-14T21:11:33.398998Z",
+  "domain": "stocks",
+  "item": "GS",
+  "item_label": "Goldman Sachs",
+  "unit": "USD",
+  "current_value": 909.6300048828125,
+  "context": "Current closing price of Goldman Sachs (GS): $909.63 USD as of 2026-04-14.",
+  "prompt_text": "Today is 2026-04-14.\n\nCurrent closing price of Goldman Sachs (GS): $909.63 USD as of 2026-04-14.\n\nPredict the closing price of Goldman Sachs at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-15\n  1-week target date: 2026-04-21\n  1-month target date: 2026-05-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 916,\n    \"90_ci\": [878, 954]\n  },\n  \"1w\": {\n    \"point_estimate\": 922,\n    \"90_ci\": [850, 995]\n  },\n  \"1m\": {\n    \"point_estimate\": 935,\n    \"90_ci\": [790, 1080]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 916,
+      "90_ci": [
+        878,
+        954
+      ]
+    },
+    "1w": {
+      "point_estimate": 922,
+      "90_ci": [
+        850,
+        995
+      ]
+    },
+    "1m": {
+      "point_estimate": 935,
+      "90_ci": [
+        790,
+        1080
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 916,\n    \"90_ci\": [\n      878,\n      954\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 922,\n    \"90_ci\": [\n      850,\n      995\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 935,\n    \"90_ci\": [\n      790,\n      1080\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term trajectory with modest upward drift over longer horizons. For the 1-day estimate of 916, I was essentially anchoring close to a recent observed level, expecting mean-reverting behavior and limited new information to materially shift the value overnight. The 1-week estimate of 922 incorporates a small positive drift assumption, reflecting that whatever underlying process drives this series tends to trend slightly upward over short periods, but not dramatically so. The 1-month estimate of 935 extends that same drift logic further, compounding the gradual upward bias while acknowledging that the further out we look, the less confident we can be that the current regime persists.\n\nThe confidence interval widths were calibrated to reflect how uncertainty compounds with time. At 1 day, the 90% interval of roughly plus or minus 38 points reflects typical short-run volatility \u2014 day-to-day noise is bounded because there are structural forces that prevent wild swings in a single session. By 1 week, the interval widens to roughly plus or minus 72 points, reflecting that several independent shocks can accumulate over multiple days. At 1 month, the interval of plus or minus 145 points reflects both the compounding of daily volatility and the greater likelihood that some shift in the underlying regime or trend could occur over that longer window. I was also factoring in that historical volatility in this kind of series is meaningfully asymmetric \u2014 downside moves can be sharper and faster than upside recoveries.\n\nThere are several specific risks that could push outcomes outside my stated intervals. On the upside, a sudden positive catalyst \u2014 such as a strong macro data release, a policy announcement, or a broader sentiment shift \u2014 could push the value well above 954 within a single day, let alone a month. On the downside, a risk-off event, liquidity shock, or negative structural news could break below 878 even intraday if conditions deteriorated rapidly. Over the 1-month horizon, the tails are particularly fat: a sustained trend reversal or an exogenous shock like a geopolitical event could easily push outcomes outside the 790\u20131080 range I specified. My intervals assume no major regime-breaking events, which is itself a meaningful assumption that carries non-trivial probability of being wrong.",
+  "status": "collected",
+  "error": null
+}

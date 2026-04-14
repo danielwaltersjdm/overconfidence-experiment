@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-14",
+  "timestamp": "2026-04-14T23:03:21.057014Z",
+  "domain": "stocks",
+  "item": "DD",
+  "item_label": "DuPont",
+  "unit": "USD",
+  "current_value": 46.68000030517578,
+  "context": "Current closing price of DuPont (DD): $46.68 USD as of 2026-04-14.",
+  "prompt_text": "Today is 2026-04-14.\n\nCurrent closing price of DuPont (DD): $46.68 USD as of 2026-04-14.\n\nPredict the closing price of DuPont at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-15\n  1-week target date: 2026-04-21\n  1-month target date: 2026-05-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll analyze DuPont's current situation to make these predictions.\n\nKey considerations:\n- Current price: $46.68 (as of 2026-04-14)\n- DuPont has been navigating a complex macro environment with tariff concerns in 2026\n- The stock appears to be at a relatively low level, suggesting it may have already experienced significant drawdown\n- Typical daily volatility for DD is around 1.5-2.5%\n- Weekly volatility roughly 3-5%\n- Monthly volatility roughly 7-12%\n- Current market environment in April 2026 has significant uncertainty around trade policy\n\nGiven the tariff-related market turbulence in early-to-mid April 2026, DD has likely seen elevated volatility. The stock being at $46.68 suggests it may be near a support level or already reflecting significant negative news.\n\nFor a 90% CI, I need to be generous with the bounds to ensure ~90% coverage:\n\n**1-day**: Small moves expected, but volatile market. Point estimate near flat/slight recovery.\n**1-week**: Moderate uncertainty, tariff news could swing things significantly.\n**1-month**: Wider range reflecting macro uncertainty, potential for both recovery and further decline.\n\n{\n  \"1d\": {\n    \"point_estimate\": 47.20,\n    \"90_ci\": [44.50, 50.10]\n  },\n  \"1w\": {\n    \"point_estimate\": 47.80,\n    \"90_ci\": [41.50, 54.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 49.50,\n    \"90_ci\": [38.00, 61.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 47.2,
+      "90_ci": [
+        44.5,
+        50.1
+      ]
+    },
+    "1w": {
+      "point_estimate": 47.8,
+      "90_ci": [
+        41.5,
+        54.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 49.5,
+      "90_ci": [
+        38.0,
+        61.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 47.2,\n    \"90_ci\": [\n      44.5,\n      50.1\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 47.8,\n    \"90_ci\": [\n      41.5,\n      54.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 49.5,\n    \"90_ci\": [\n      38.0,\n      61.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd infer is a current level near 47, with the 1-day estimate of 47.2 staying very close to the present value, the 1-week estimate of 47.8 incorporating a small mean-reversion or trend component, and the 1-month estimate of 49.5 reflecting a slightly more optimistic directional view over a longer horizon. The gradual upward slope across horizons suggests I was implicitly modeling either a mild positive trend or a slow drift toward some fundamental anchor value above current levels. Without knowing the precise asset or indicator in question, the drift assumption is relatively conservative \u2014 small enough that it doesn't dominate the forecast but persistent enough to compound meaningfully over a month.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which is the expected behavior under most time-series models. The 1-day interval of roughly \u00b12.8 points reflects the typical short-run volatility of whatever process is being measured, where most of the noise cancels out quickly. By one week, the interval widens to about \u00b16.5 points, capturing compounding uncertainty and the possibility of regime shifts or external shocks that might not materialize within a single day. The 1-month interval of roughly \u00b111.5 points reflects the full accumulation of weekly uncertainties, as well as the increased probability that structural changes \u2014 policy decisions, macroeconomic releases, or sentiment shifts \u2014 alter the trajectory materially.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden discontinuous events: a major geopolitical shock, an unexpected central bank action, or a liquidity crisis could easily move the variable by more than 10\u201315 points within a month, which would breach the upper or lower bounds of even the 1-month confidence interval. On the upside, a strong positive catalyst \u2014 a surprise earnings beat if this is an equity-linked measure, a favorable data print, or a technical breakout attracting momentum \u2014 could push the outcome well above 61. On the downside, a risk-off episode or disappointing fundamental data could drive the measure below 38 within the same period.\n\nIt is also worth acknowledging model uncertainty as a meta-level source of error. My confidence intervals assume a relatively stable volatility environment and a continuation of recent correlations. If realized volatility spikes \u2014 as it tends to do during stress periods \u2014 the true distribution of outcomes is fat-tailed compared to what these intervals imply. The stated 90% confidence intervals should therefore be understood as conditional on a roughly normal macro environment; under tail scenarios, the actual coverage probability of these bands is likely somewhat lower than 90%.",
+  "status": "collected",
+  "error": null
+}

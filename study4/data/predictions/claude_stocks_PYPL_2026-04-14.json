@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-14",
+  "timestamp": "2026-04-14T22:02:43.121136Z",
+  "domain": "stocks",
+  "item": "PYPL",
+  "item_label": "PayPal",
+  "unit": "USD",
+  "current_value": 47.970001220703125,
+  "context": "Current closing price of PayPal (PYPL): $47.97 USD as of 2026-04-14.",
+  "prompt_text": "Today is 2026-04-14.\n\nCurrent closing price of PayPal (PYPL): $47.97 USD as of 2026-04-14.\n\nPredict the closing price of PayPal at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-15\n  1-week target date: 2026-04-21\n  1-month target date: 2026-05-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 48.50,\n    \"90_ci\": [45.50, 51.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 49.00,\n    \"90_ci\": [43.00, 55.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 50.00,\n    \"90_ci\": [38.00, 62.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 48.5,
+      "90_ci": [
+        45.5,
+        51.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 49.0,
+      "90_ci": [
+        43.0,
+        55.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 50.0,
+      "90_ci": [
+        38.0,
+        62.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 48.5,\n    \"90_ci\": [\n      45.5,\n      51.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 49.0,\n    \"90_ci\": [\n      43.0,\n      55.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 50.0,\n    \"90_ci\": [\n      38.0,\n      62.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest drift toward 50 from what I infer was a starting price near 48\u201349, with the 1-day estimate staying close to the current level given the short time horizon, the 1-week estimate nudging slightly higher as mean-reversion tendencies and modest momentum carry the price, and the 1-month estimate centering near 50 as a natural psychological and statistical anchor. The progression of point estimates across horizons reflects the well-known property that over longer horizons, forecasts for many financial or probability-type series tend to revert toward a central tendency, in this case 50, as short-term signals decay in relevance and the distribution of possible outcomes widens symmetrically.\n\nThe confidence interval widths were driven primarily by time-horizon scaling. Over one day, the range of plausible outcomes is narrow because there is simply less time for new information or volatility to accumulate, so I assigned a relatively tight \u00b13 point band. Over one week, more macro news, sentiment shifts, or structural changes could materialize, justifying a wider \u00b16 point range. Over one month, the uncertainty compounds further, reflecting the realistic possibility of significant regime changes, liquidity shifts, or event-driven moves that could push outcomes substantially away from the central estimate, resulting in a \u00b112 point band. The widths also implicitly assume roughly symmetric tail risks around the point estimate, which may not always hold in practice.\n\nSeveral specific risks could push outcomes outside the stated intervals. On the upside, a sudden surge in demand, a positive policy surprise, or a short-squeeze dynamic could push the value well above 62 over the monthly horizon. On the downside, a liquidity crisis, a sharp reversal in sentiment, or a structural breakdown in whatever underlying process governs this variable could push it well below 38. Events with low prior probability but high impact \u2014 sometimes called tail or black swan events \u2014 are precisely the kind that 90% confidence intervals are designed to exclude by construction, meaning there is still a 10% chance outcomes fall outside the stated ranges even under my best assumptions.\n\nFinally, model uncertainty itself is a source of risk I want to flag explicitly. My estimates are based on general statistical reasoning and assumed mean-reversion without access to the specific asset, market, or data-generating process in question. If the underlying series has strong trend persistence, fat tails, or is subject to discrete jumps, my intervals could be systematically too narrow even at short horizons. Real-world forecasting errors often stem less from randomness within an assumed model and more from the model itself being misspecified, so readers should treat these intervals as informed starting points rather than precise probabilistic commitments.",
+  "status": "collected",
+  "error": null
+}

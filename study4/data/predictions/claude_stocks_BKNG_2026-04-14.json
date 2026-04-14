@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-14",
+  "timestamp": "2026-04-14T21:13:28.923572Z",
+  "domain": "stocks",
+  "item": "BKNG",
+  "item_label": "Booking Holdings",
+  "unit": "USD",
+  "current_value": 181.1199951171875,
+  "context": "Current closing price of Booking Holdings (BKNG): $181.12 USD as of 2026-04-14.",
+  "prompt_text": "Today is 2026-04-14.\n\nCurrent closing price of Booking Holdings (BKNG): $181.12 USD as of 2026-04-14.\n\nPredict the closing price of Booking Holdings at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-15\n  1-week target date: 2026-04-21\n  1-month target date: 2026-05-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future prices for Booking Holdings (BKNG) from a current price of $181.12.\n\nLet me think through this carefully.\n\n**Current context:**\n- Current price: $181.12 (as of 2026-04-14)\n- This seems unusually low for BKNG - historically BKNG traded around $3,000-$5,000 range in 2024-2025. A price of $181.12 could imply a stock split has occurred, or this reflects some major event.\n\n**Assumptions for volatility:**\n- BKNG typically has annualized volatility around 25-35%\n- If a stock split occurred, the volatility characteristics remain similar on a percentage basis\n- Daily volatility: ~1.5-2% (roughly 30% annualized / sqrt(252))\n- Weekly volatility: ~1.5-2% * sqrt(5) \u2248 3.5-4.5%\n- Monthly volatility: ~1.5-2% * sqrt(21) \u2248 7-9%\n\n**Point estimates:**\n- I'll use a slight upward drift assumption (small positive expected return) but essentially flat for short horizons\n- 1-day: ~$181.50 (minimal drift)\n- 1-week: ~$182.50\n- 1-month: ~$184.00\n\n**90% CI calculations:**\n- 1-day: \u00b11.645 * 1.75% * 181.12 \u2248 \u00b1$5.20 \u2192 [~176, ~187]\n- 1-week: \u00b11.645 * 4% * 181.12 \u2248 \u00b1$11.90 \u2192 [~170, ~194]\n- 1-month: \u00b11.645 * 8% * 181.12 \u2248 \u00b1$23.80 \u2192 [~158, ~207]\n\nGiven current macro uncertainty (tariff concerns, travel demand questions), I'll widen intervals slightly and keep point estimates roughly flat.\n\n{\n  \"1d\": {\n    \"point_estimate\": 181.50,\n    \"90_ci\": [172.0, 191.0]\n  },\n  \"1w\": {\n    \"point_estimate\": 182.00,\n    \"90_ci\": [165.0, 199.0]\n  },\n  \"1m\": {\n    \"point_estimate\": 183.50,\n    \"90_ci\": [152.0, 215.0]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 181.5,
+      "90_ci": [
+        172.0,
+        191.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 182.0,
+      "90_ci": [
+        165.0,
+        199.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 183.5,
+      "90_ci": [
+        152.0,
+        215.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 181.5,\n    \"90_ci\": [\n      172.0,\n      191.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 182.0,\n    \"90_ci\": [\n      165.0,\n      199.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 183.5,\n    \"90_ci\": [\n      152.0,\n      215.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over time. At the one-day horizon, the estimate of 181.5 is anchored closely to recent observed price levels, assuming mean-reversion tendencies and no major overnight catalysts. At one week, the slight uptick to 182.0 reflects a mild positive drift assumption consistent with broad equity market trends and the underlying asset's recent momentum. At one month, the estimate of 183.5 incorporates a continuation of that drift while acknowledging that longer horizons allow more time for fundamental repricing, earnings revisions, or macro shifts to take effect. In all three cases, I leaned on recent price action as the primary anchor, with the drift component being modest rather than aggressive.\n\nThe confidence interval widths grow substantially as the horizon extends, reflecting the compounding nature of uncertainty over time. At one day, the 90% interval spans roughly 19 points, which accounts for normal intraday and overnight volatility. By one week, the interval widens to 34 points, incorporating the possibility of a notable news event, sector rotation, or broader market move. At one month, the interval stretches to 63 points, reflecting the realistic range of outcomes driven by earnings announcements, Federal Reserve communications, macroeconomic data releases, and shifts in market sentiment. The widening is roughly consistent with a volatility scaling approach where uncertainty grows with the square root of time, though I applied some additional width at the monthly horizon to account for tail risks that are harder to anticipate.\n\nThere are several specific risks that could push outcomes outside these stated intervals. On the downside, a sharper-than-expected deterioration in macroeconomic conditions, a surprise negative earnings report, or a sudden tightening in financial conditions could drive the asset well below the lower bounds of all three intervals. A broad equity market selloff driven by geopolitical escalation or a credit event could be particularly disruptive. On the upside, a strong earnings beat, unexpected dovish pivot from central banks, or a significant positive catalyst specific to the underlying company or sector could propel prices above the upper bounds. Fat-tail events by definition fall outside calibrated intervals, and I want to be transparent that black swan scenarios \u2014 while assigned low probability \u2014 remain real possibilities that the stated ranges do not fully capture.",
+  "status": "collected",
+  "error": null
+}

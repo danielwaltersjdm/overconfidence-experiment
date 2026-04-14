@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-14",
+  "timestamp": "2026-04-14T20:17:27.404004Z",
+  "domain": "stocks",
+  "item": "NVDA",
+  "item_label": "NVIDIA",
+  "unit": "USD",
+  "current_value": 196.50999450683594,
+  "context": "Current closing price of NVIDIA (NVDA): $196.51 USD as of 2026-04-14.",
+  "prompt_text": "Today is 2026-04-14.\n\nCurrent closing price of NVIDIA (NVDA): $196.51 USD as of 2026-04-14.\n\nPredict the closing price of NVIDIA at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-15\n  1-week target date: 2026-04-21\n  1-month target date: 2026-05-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 197.50,\n    \"90_ci\": [188.00, 207.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 199.00,\n    \"90_ci\": [180.00, 218.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 205.00,\n    \"90_ci\": [160.00, 250.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 197.5,
+      "90_ci": [
+        188.0,
+        207.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 199.0,
+      "90_ci": [
+        180.0,
+        218.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 205.0,
+      "90_ci": [
+        160.0,
+        250.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 197.5,\n    \"90_ci\": [\n      188.0,\n      207.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 199.0,\n    \"90_ci\": [\n      180.0,\n      218.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 205.0,\n    \"90_ci\": [\n      160.0,\n      250.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates were anchored primarily to the prevailing price level at the time of the forecast, with modest upward drift built in across horizons. For the 1-day estimate, I stayed close to the last observed price, reflecting the strong mean-reverting tendency of most financial assets over very short windows and the absence of any imminent scheduled catalyst that would justify a large move. The 1-week estimate incorporated a slight upward drift, consistent with a mild bullish bias in the broader market trend and typical momentum continuation patterns. The 1-month estimate pushed further upward, reflecting the compounding of that drift assumption over more trading days, though the magnitude of the step-up was deliberately modest because longer-horizon point estimates carry substantially more model uncertainty.\n\nThe confidence interval widths were calibrated to historical realized volatility at each horizon. For the 1-day window, recent intraday and day-over-day price swings suggested a relatively tight band was appropriate, as short-term price discovery tends to be anchored by liquidity and market microstructure. For the 1-week window, I widened the interval to account for the accumulation of daily shocks and the possibility of a macro data release or sentiment shift during that period. The 1-month interval is considerably wider because it must accommodate a full cycle of potential news flow, earnings announcements, Federal Reserve communications, and geopolitical developments, any one of which could shift the price level materially in either direction.\n\nThere are several tail risks that could push outcomes outside my stated intervals. On the downside, an unexpected deterioration in macroeconomic data, a sudden tightening of financial conditions, or a geopolitical shock could trigger risk-off selling that drives prices well below the lower bounds. On the upside, a positive earnings surprise, a dovish policy pivot, or a short-squeeze dynamic could push prices meaningfully above the upper bounds, particularly at the 1-month horizon where the 250 ceiling already reflects considerable optimism. Liquidity events or flash crashes, though rare, represent a specific structural risk that my intervals do not fully price in, as these can produce intraday moves that dwarf normal volatility estimates before quickly reverting.\n\nFinally, I want to be transparent that these forecasts rest on assumptions of relatively stable market regimes and do not explicitly model regime changes or structural breaks. If the underlying asset is transitioning between a low-volatility and high-volatility regime, all three intervals could simultaneously be too narrow. The 1-month interval in particular should be treated with humility, as the empirical record on point forecasts at that horizon is quite poor across nearly all asset classes, and the honest function of that estimate is more to communicate directional bias than to provide actionable precision.",
+  "status": "collected",
+  "error": null
+}
