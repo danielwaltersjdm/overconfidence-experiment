@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-15",
+  "timestamp": "2026-04-15T22:55:19.657783Z",
+  "domain": "stocks",
+  "item": "IDXX",
+  "item_label": "IDEXX Labs",
+  "unit": "USD",
+  "current_value": 580.760009765625,
+  "context": "Current closing price of IDEXX Labs (IDXX): $580.76 USD as of 2026-04-15.",
+  "prompt_text": "Today is 2026-04-15.\n\nCurrent closing price of IDEXX Labs (IDXX): $580.76 USD as of 2026-04-15.\n\nPredict the closing price of IDEXX Labs at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-16\n  1-week target date: 2026-04-22\n  1-month target date: 2026-05-15\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 583,\n    \"90_ci\": [558, 608]\n  },\n  \"1w\": {\n    \"point_estimate\": 587,\n    \"90_ci\": [540, 635]\n  },\n  \"1m\": {\n    \"point_estimate\": 595,\n    \"90_ci\": [505, 685]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 583,
+      "90_ci": [
+        558,
+        608
+      ]
+    },
+    "1w": {
+      "point_estimate": 587,
+      "90_ci": [
+        540,
+        635
+      ]
+    },
+    "1m": {
+      "point_estimate": 595,
+      "90_ci": [
+        505,
+        685
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 583,\n    \"90_ci\": [\n      558,\n      608\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 587,\n    \"90_ci\": [\n      540,\n      635\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 595,\n    \"90_ci\": [\n      505,\n      685\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the 1-day estimate of 583, I was essentially anchoring to the most recent observed level and assuming mean-reverting behavior with minimal drift, since overnight or intraday moves in most financial or economic series tend to be small relative to the prevailing level. The 1-week estimate of 587 builds in a slight positive drift, reflecting whatever underlying trend was present in the data I was working from. The 1-month estimate of 595 extends that drift further, compounding the same modest trend assumption over approximately four weeks while also allowing for the possibility that the series continues gradual upward movement.\n\nThe confidence interval widths were calibrated to reflect how uncertainty naturally expands with time horizon. At 1 day, the 25-point range from 558 to 608 is relatively tight because short-term variance in most series is constrained \u2014 there simply isn't much time for large deviations to accumulate. At 1 week, the interval widens to 95 points, reflecting that a full week introduces more opportunities for news, data releases, or structural shifts to move the series away from its trend. By 1 month, the interval spans 180 points, capturing the compounding effect of daily volatility over roughly 20 trading or calendar days, as well as the increased probability of regime-level changes.\n\nSpecific risks that could push outcomes outside these intervals include sudden macro shocks \u2014 policy announcements, geopolitical events, or unexpected economic data prints that sharply reprice whatever underlying variable I was forecasting. On the upside, a strong positive catalyst or momentum acceleration could push the 1-month realization above 685. On the downside, a risk-off episode, a policy reversal, or deteriorating fundamentals could push the series below 505.\n\nIt's worth being transparent that these intervals assume the recent distributional behavior of the series persists. If the data-generating process changes \u2014 a structural break, a liquidity crisis, or a sudden change in the institutional or policy environment \u2014 then even the 90% confidence intervals could prove too narrow, and the true outcome could fall well outside the stated bounds.",
+  "status": "collected",
+  "error": null
+}

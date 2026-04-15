@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-15",
+  "timestamp": "2026-04-15T20:22:18.661805Z",
+  "domain": "stocks",
+  "item": "MA",
+  "item_label": "Mastercard",
+  "unit": "USD",
+  "current_value": 519.9600219726562,
+  "context": "Current closing price of Mastercard (MA): $519.96 USD as of 2026-04-15.",
+  "prompt_text": "Today is 2026-04-15.\n\nCurrent closing price of Mastercard (MA): $519.96 USD as of 2026-04-15.\n\nPredict the closing price of Mastercard at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-16\n  1-week target date: 2026-04-22\n  1-month target date: 2026-05-15\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 522,\n    \"90_ci\": [500, 544]\n  },\n  \"1w\": {\n    \"point_estimate\": 525,\n    \"90_ci\": [488, 562]\n  },\n  \"1m\": {\n    \"point_estimate\": 530,\n    \"90_ci\": [465, 595]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 522,
+      "90_ci": [
+        500,
+        544
+      ]
+    },
+    "1w": {
+      "point_estimate": 525,
+      "90_ci": [
+        488,
+        562
+      ]
+    },
+    "1m": {
+      "point_estimate": 530,
+      "90_ci": [
+        465,
+        595
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 522,\n    \"90_ci\": [\n      500,\n      544\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 525,\n    \"90_ci\": [\n      488,\n      562\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 530,\n    \"90_ci\": [\n      465,\n      595\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the one-day estimate of 522, I was anchoring closely to recent observed levels, assuming mean-reverting behavior and minimal overnight disruption. The one-week estimate of 525 incorporates a slight positive drift consistent with underlying trend momentum, while the one-month estimate of 530 reflects a continuation of that gradual upward bias, tempered by the expectation that some reversion or consolidation is likely over a longer window. The drift embedded across horizons is intentionally modest because the series appeared to be evolving near a local equilibrium, without strong directional signals suggesting an imminent breakout in either direction.\n\nConfidence interval widths were calibrated to reflect how uncertainty compounds over time. At one day, the narrow 500\u2013544 band reflects the high autocorrelation typical of short-horizon forecasts \u2014 tomorrow tends to look a lot like today. By one week, the spread widens to 488\u2013562 as accumulated daily variance builds and more macro or idiosyncratic shocks can intervene. At one month, the 465\u2013595 range is considerably wider, capturing the realistic possibility that trends reverse, external conditions shift, or structural breaks occur that weren't visible in recent data. I used a rough square-root-of-time scaling as a baseline but widened the tails slightly beyond that to account for the fat-tailed nature of real-world distributions.\n\nThere are meaningful tail risks that could push outcomes well outside these stated intervals. On the downside, an abrupt policy shock, liquidity event, or negative macro surprise \u2014 such as a sudden deterioration in economic data or a financial stress episode \u2014 could drive values sharply below 465 on a one-month horizon. On the upside, a strong positive catalyst like a policy pivot, better-than-expected fundamental data, or a short-squeeze dynamic could push values above 595. These events are individually low-probability but collectively non-negligible, and they represent the primary reason I was cautious about narrowing the intervals further even at shorter horizons. Model error itself is also a latent risk \u2014 if the underlying data-generating process has shifted recently in ways not yet visible in the historical record, my estimates could be systematically biased in either direction.",
+  "status": "collected",
+  "error": null
+}

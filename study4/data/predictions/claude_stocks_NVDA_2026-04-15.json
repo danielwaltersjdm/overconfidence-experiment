@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-15",
+  "timestamp": "2026-04-15T20:10:23.790427Z",
+  "domain": "stocks",
+  "item": "NVDA",
+  "item_label": "NVIDIA",
+  "unit": "USD",
+  "current_value": 198.8699951171875,
+  "context": "Current closing price of NVIDIA (NVDA): $198.87 USD as of 2026-04-15.",
+  "prompt_text": "Today is 2026-04-15.\n\nCurrent closing price of NVIDIA (NVDA): $198.87 USD as of 2026-04-15.\n\nPredict the closing price of NVIDIA at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-16\n  1-week target date: 2026-04-22\n  1-month target date: 2026-05-15\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 200.50,\n    \"90_ci\": [191.00, 210.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 203.00,\n    \"90_ci\": [182.00, 224.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 210.00,\n    \"90_ci\": [165.00, 255.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 200.5,
+      "90_ci": [
+        191.0,
+        210.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 203.0,
+      "90_ci": [
+        182.0,
+        224.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 210.0,
+      "90_ci": [
+        165.0,
+        255.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 200.5,\n    \"90_ci\": [\n      191.0,\n      210.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 203.0,\n    \"90_ci\": [\n      182.0,\n      224.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 210.0,\n    \"90_ci\": [\n      165.0,\n      255.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift assumption from what I inferred to be the current price level near $200. For the one-day horizon, I placed the estimate at $200.5, essentially anchoring close to the prevailing price with only a tiny drift, consistent with the near-random-walk behavior of most financial assets over very short horizons. For one week, I nudged the estimate slightly higher to $203, reflecting a mild positive trend assumption while acknowledging that short-term momentum rarely persists strongly. For one month, I projected $210, embedding a somewhat more meaningful directional view \u2014 roughly a 5% move \u2014 which could reflect either a modest bullish bias in the underlying asset or simply the compounding effect of a small assumed daily drift over more trading sessions.\n\nThe confidence interval widths were calibrated to reflect how uncertainty compounds with time. Over one day, a roughly \u00b15% band felt appropriate for a typical equity or similar asset, capturing normal intraday-to-overnight volatility. Over one week, the interval widens to roughly \u00b110%, accounting for the accumulation of daily volatility and the possibility of a news-driven repricing within the week. Over one month, the band stretches to approximately \u00b121% around the point estimate, reflecting that a month provides ample time for macro developments, earnings surprises, or sentiment shifts to materially alter price levels. These widths are broadly consistent with annualized volatilities in the 30\u201350% range, typical of moderately volatile assets.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden macro shock \u2014 such as an unexpected interest rate decision, geopolitical escalation, or a liquidity event \u2014 could cause sharp drawdowns that breach the lower bounds, particularly at the one-week and one-month horizons. On the upside, a short squeeze, unexpected positive earnings, or a sector-wide rerating could drive prices well above $255 within a month. Fat tails are a genuine concern in financial markets, and my stated 90% confidence intervals explicitly leave 10% probability mass outside those bounds, meaning roughly one-in-ten outcomes would be expected to fall outside even under my model assumptions.\n\nFinally, my intervals assume relatively stable volatility regimes and normal market functioning. If the asset in question enters a period of elevated implied volatility \u2014 for instance, surrounding a binary event like a major product launch, regulatory decision, or macroeconomic release \u2014 realized moves could easily exceed my stated ranges. Model uncertainty itself is also a risk: I do not know the precise asset, its liquidity profile, or current market conditions with certainty, which means my calibration could be systematically off in ways that are difficult to quantify.",
+  "status": "collected",
+  "error": null
+}

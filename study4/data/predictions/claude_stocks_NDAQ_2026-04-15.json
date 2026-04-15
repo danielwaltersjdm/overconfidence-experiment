@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-15",
+  "timestamp": "2026-04-15T23:03:24.653802Z",
+  "domain": "stocks",
+  "item": "NDAQ",
+  "item_label": "Nasdaq Inc",
+  "unit": "USD",
+  "current_value": 88.55000305175781,
+  "context": "Current closing price of Nasdaq Inc (NDAQ): $88.55 USD as of 2026-04-15.",
+  "prompt_text": "Today is 2026-04-15.\n\nCurrent closing price of Nasdaq Inc (NDAQ): $88.55 USD as of 2026-04-15.\n\nPredict the closing price of Nasdaq Inc at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-16\n  1-week target date: 2026-04-22\n  1-month target date: 2026-05-15\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 88.90,\n    \"90_ci\": [85.50, 92.30]\n  },\n  \"1w\": {\n    \"point_estimate\": 89.50,\n    \"90_ci\": [82.00, 97.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 91.00,\n    \"90_ci\": [76.00, 106.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 88.9,
+      "90_ci": [
+        85.5,
+        92.3
+      ]
+    },
+    "1w": {
+      "point_estimate": 89.5,
+      "90_ci": [
+        82.0,
+        97.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 91.0,
+      "90_ci": [
+        76.0,
+        106.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 88.9,\n    \"90_ci\": [\n      85.5,\n      92.3\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 89.5,\n    \"90_ci\": [\n      82.0,\n      97.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 91.0,\n    \"90_ci\": [\n      76.0,\n      106.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "At the time of this forecast, the asset appeared to be trading near the 88\u201389 level, which anchored the 1-day point estimate closely to the prevailing price. The short-term estimate of 88.9 reflected an expectation of mean-reversion and low volatility over a single trading session, with modest drift built in. The 1-week estimate of 89.5 incorporated a slight upward bias, possibly reflecting a modestly positive trend or carry component, while the 1-month estimate of 91.0 extended that drift further, consistent with a gradual upward trajectory assumption over a longer horizon. Each successive estimate essentially layers in more expected drift while acknowledging that the compounding of uncertainty over time dominates.\n\nThe confidence interval widths were driven primarily by the time-scaling of volatility. At one day, the 90% interval of roughly \u00b13.4 points reflects daily price fluctuations consistent with moderate volatility. By one week, the interval expands to \u00b17.5 points, consistent with scaling daily vol by roughly the square root of five trading days. The one-month interval of \u00b115 points reflects further scaling across approximately twenty trading days, though the width is somewhat compressed relative to pure diffusion, suggesting some mean-reversion assumption was embedded in the model. Liquidity conditions and recent realized volatility were likely key inputs shaping those bands.\n\nSpecific risks that could push outcomes outside these stated intervals include sudden macroeconomic data releases, central bank policy announcements, or geopolitical shocks that cause discontinuous price moves. A flash crash, a surprise earnings or economic print, or a sharp change in risk sentiment could easily breach the 1-day interval. Over the 1-month horizon, a broader regime change \u2014 such as a shift in monetary policy expectations or a credit event \u2014 could push prices well outside the \u00b115 band. Illiquidity events or forced deleveraging could also cause outsized moves that model-based intervals, which typically assume log-normal diffusion, would fail to capture.\n\nIt is also worth noting that these intervals assume relatively stable correlations and volatility regimes, which is a fragile assumption. If realized volatility spikes \u2014 for example, during an equity selloff or currency dislocation \u2014 the actual distribution of outcomes would exhibit fat tails that make the stated 90% confidence interval appear overconfident. Conversely, if conditions remain calm and the asset trades in a narrow range, realized outcomes could cluster tightly around the point estimates, making the intervals appear conservative in hindsight.",
+  "status": "collected",
+  "error": null
+}

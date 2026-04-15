@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-15",
+  "timestamp": "2026-04-15T23:12:48.011916Z",
+  "domain": "stocks",
+  "item": "NUE",
+  "item_label": "Nucor",
+  "unit": "USD",
+  "current_value": 189.60000610351562,
+  "context": "Current closing price of Nucor (NUE): $189.60 USD as of 2026-04-15.",
+  "prompt_text": "Today is 2026-04-15.\n\nCurrent closing price of Nucor (NUE): $189.60 USD as of 2026-04-15.\n\nPredict the closing price of Nucor at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-16\n  1-week target date: 2026-04-22\n  1-month target date: 2026-05-15\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 190.50,\n    \"90_ci\": [183.00, 198.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 191.00,\n    \"90_ci\": [176.00, 206.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 192.00,\n    \"90_ci\": [165.00, 220.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 190.5,
+      "90_ci": [
+        183.0,
+        198.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 191.0,
+      "90_ci": [
+        176.0,
+        206.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 192.0,
+      "90_ci": [
+        165.0,
+        220.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 190.5,\n    \"90_ci\": [\n      183.0,\n      198.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 191.0,\n    \"90_ci\": [\n      176.0,\n      206.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 192.0,\n    \"90_ci\": [\n      165.0,\n      220.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what appears to be a current price around $189\u2013190, with the 1-day estimate of $190.5 anchored very close to the present level, the 1-week estimate of $191 incorporating a slight positive drift assumption, and the 1-month estimate of $192 extending that drift further while still remaining conservative. The reasoning behind this near-flat trajectory is that without a specific asset named, I defaulted to assuming mean-reverting behavior typical of a mature equity or ETF, where short-term momentum is modest and the expected return over days to weeks is small relative to the volatility. The slight upward bias reflects a general equity risk premium assumption rather than any strong directional view.\n\nThe confidence interval widths were calibrated to typical realized volatility at each horizon. For the 1-day interval of $183\u2013$198, I used a range consistent with roughly 2\u20134% daily moves, which captures most normal trading days while leaving some tail exposure. The 1-week interval widens to $176\u2013$206, reflecting how uncertainty compounds over five trading sessions, incorporating the possibility of macro data releases, earnings, or sentiment shifts. The 1-month interval of $165\u2013$220 is considerably wider, acknowledging that over 20-plus trading days, the distribution of outcomes fans out substantially and structural shifts in the underlying asset or broader market can accumulate.\n\nThere are several risks that could push outcomes well outside these stated intervals. On the downside, a sudden macro shock \u2014 such as an unexpected central bank policy shift, a geopolitical escalation, or a credit event \u2014 could easily push prices below $183 within a single session, let alone a month. Liquidity crises or sector-specific bad news (depending on the asset) could accelerate moves beyond my stated lower bounds. On the upside, a strong earnings surprise, a dovish policy pivot, or a short-squeeze dynamic could drive prices above $220 within the month. My intervals implicitly assume no such extreme catalysts materialize with high probability, which is a meaningful assumption that may not hold.\n\nFinally, it's worth noting that my forecast carries inherent model uncertainty on top of market uncertainty. Without knowing the exact asset, I cannot calibrate to its specific historical volatility, beta, or liquidity profile. If this is a high-beta growth stock rather than a broad index ETF, the true intervals should be substantially wider. If it is a low-volatility instrument like a bond ETF, the intervals may be too wide. The stated ranges should therefore be treated as rough order-of-magnitude guidance rather than precise probabilistic commitments.",
+  "status": "collected",
+  "error": null
+}
