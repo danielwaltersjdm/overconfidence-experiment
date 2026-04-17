@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-16",
+  "timestamp": "2026-04-16T22:32:27.020309Z",
+  "domain": "stocks",
+  "item": "NEE",
+  "item_label": "NextEra Energy",
+  "unit": "USD",
+  "current_value": 91.83000183105469,
+  "context": "Current closing price of NextEra Energy (NEE): $91.83 USD as of 2026-04-16.",
+  "prompt_text": "Today is 2026-04-16.\n\nCurrent closing price of NextEra Energy (NEE): $91.83 USD as of 2026-04-16.\n\nPredict the closing price of NextEra Energy at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-17\n  1-week target date: 2026-04-23\n  1-month target date: 2026-05-16\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 92.10,\n    \"90_ci\": [88.50, 95.70]\n  },\n  \"1w\": {\n    \"point_estimate\": 92.50,\n    \"90_ci\": [85.00, 100.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 93.50,\n    \"90_ci\": [79.00, 108.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 92.1,
+      "90_ci": [
+        88.5,
+        95.7
+      ]
+    },
+    "1w": {
+      "point_estimate": 92.5,
+      "90_ci": [
+        85.0,
+        100.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 93.5,
+      "90_ci": [
+        79.0,
+        108.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 92.1,\n    \"90_ci\": [\n      88.5,\n      95.7\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 92.5,\n    \"90_ci\": [\n      85.0,\n      100.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 93.5,\n    \"90_ci\": [\n      79.0,\n      108.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near 92.1 for the one-day horizon and rising gradually to 93.5 at the one-month mark. The one-day estimate is anchored primarily by recent price momentum and mean-reversion tendencies that tend to dominate over very short windows \u2014 whatever the asset was trading at recently provides a strong prior for where it will be tomorrow. The slight upward drift in the weekly and monthly estimates reflects a baseline assumption of positive drift, consistent with either a modest growth trend or a risk premium embedded in the asset. In the absence of strong directional signals, I defaulted to a mild bullish lean rather than a flat forecast, which is a reasonable prior for many financial assets over these horizons.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which reflects the classical square-root-of-time scaling of uncertainty. At one day, the 90% interval spans roughly 7 points, which is relatively tight and reflects that short-term realized volatility tends to be modest on any given day. By one month, the interval has grown to nearly 29 points, capturing the compounding of daily uncertainties and the increased likelihood that structural or macro factors could materially shift the price level. I also accounted for the possibility of non-normal return distributions \u2014 specifically, fat tails \u2014 which tend to widen intervals beyond what simple volatility estimates would suggest, particularly at longer horizons.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden macro shock \u2014 such as an unexpected central bank policy shift, geopolitical escalation, or a credit event in a correlated market \u2014 could drive the price well below the lower bound of even the monthly interval. Liquidity crunches or forced selling episodes are particularly dangerous because they can cause rapid, discontinuous price moves that dwarf typical volatility estimates. On the upside, a positive surprise such as better-than-expected earnings, a dovish policy pivot, or a short-squeeze dynamic could propel the price above the upper bound. The monthly interval in particular should be treated with humility \u2014 a full month contains enough time for narratives to shift dramatically, and the true tails of the distribution are almost certainly fatter than my stated 90% confidence interval implies.",
+  "status": "collected",
+  "error": null
+}

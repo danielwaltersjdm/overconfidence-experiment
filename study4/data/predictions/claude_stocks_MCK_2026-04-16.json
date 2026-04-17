@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-16",
+  "timestamp": "2026-04-16T23:09:43.720306Z",
+  "domain": "stocks",
+  "item": "MCK",
+  "item_label": "McKesson",
+  "unit": "USD",
+  "current_value": 867.3400268554688,
+  "context": "Current closing price of McKesson (MCK): $867.34 USD as of 2026-04-16.",
+  "prompt_text": "Today is 2026-04-16.\n\nCurrent closing price of McKesson (MCK): $867.34 USD as of 2026-04-16.\n\nPredict the closing price of McKesson at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-17\n  1-week target date: 2026-04-23\n  1-month target date: 2026-05-16\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 869,\n    \"90_ci\": [840, 898]\n  },\n  \"1w\": {\n    \"point_estimate\": 872,\n    \"90_ci\": [820, 924]\n  },\n  \"1m\": {\n    \"point_estimate\": 878,\n    \"90_ci\": [780, 976]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 869,
+      "90_ci": [
+        840,
+        898
+      ]
+    },
+    "1w": {
+      "point_estimate": 872,
+      "90_ci": [
+        820,
+        924
+      ]
+    },
+    "1m": {
+      "point_estimate": 878,
+      "90_ci": [
+        780,
+        976
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 869,\n    \"90_ci\": [\n      840,\n      898\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 872,\n    \"90_ci\": [\n      820,\n      924\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 878,\n    \"90_ci\": [\n      780,\n      976\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable, mean-reverting assumption around a base level near 869, with modest drift upward over longer horizons. At the one-day horizon, the estimate of 869 is essentially an anchor to the most recent observed value, reflecting the assumption that overnight or intraday moves tend to be small and that no major scheduled catalysts were imminent. The one-week estimate of 872 incorporates a slight upward drift, consistent with a modest positive trend or carry effect over short horizons. The one-month estimate of 878 continues that gentle drift, though the incremental change remains small in absolute terms, suggesting I was not embedding a strong directional view so much as a weak continuation of the prevailing trend.\n\nThe confidence interval widths expand naturally with the forecast horizon, reflecting the accumulation of uncertainty over time. At one day, the 90% interval of roughly plus or minus 29 points reflects typical daily volatility in the underlying series. By one week, the interval widens to roughly plus or minus 52 points, consistent with volatility scaling approximately with the square root of time, though perhaps slightly faster given that weekly moves can be influenced by scheduled data releases or policy announcements that compound intraday noise. At one month, the interval of roughly plus or minus 98 points captures a full range of potential macro developments, sentiment shifts, and compounding volatility over four-plus weeks.\n\nSpecific risks that could push outcomes outside these intervals include sharp macro surprises such as an unexpected central bank policy shift, a geopolitical shock, or a significant data release that reprices growth or inflation expectations materially. On the upside, a strong risk-on catalyst or short-covering rally could push the series well above 976 within a month. On the downside, a liquidity event, credit stress, or abrupt risk-off episode could push outcomes below 780 with reasonable probability, even if my stated interval suggests that is a tail scenario.\n\nIt is worth noting that the stated 90% intervals inherently exclude 10% of probability mass, meaning roughly one in ten outcomes at each horizon should fall outside the bounds under a well-calibrated model. In practice, financial series exhibit fat tails and occasional regime changes, so the true probability of an extreme outcome may be somewhat higher than the Gaussian-like framing implies. Anyone relying on these estimates should treat the intervals as indicative rather than precise, and monitor for structural breaks that would warrant revising the forecast entirely.",
+  "status": "collected",
+  "error": null
+}
