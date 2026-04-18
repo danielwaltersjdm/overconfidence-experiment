@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-17",
+  "timestamp": "2026-04-17T19:58:03.457085Z",
+  "domain": "stocks",
+  "item": "TSLA",
+  "item_label": "Tesla",
+  "unit": "USD",
+  "current_value": 400.1000061035156,
+  "context": "Current closing price of Tesla (TSLA): $400.10 USD as of 2026-04-17.",
+  "prompt_text": "Today is 2026-04-17.\n\nCurrent closing price of Tesla (TSLA): $400.10 USD as of 2026-04-17.\n\nPredict the closing price of Tesla at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-18\n  1-week target date: 2026-04-24\n  1-month target date: 2026-05-17\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 398,\n    \"90_ci\": [372, 428]\n  },\n  \"1w\": {\n    \"point_estimate\": 395,\n    \"90_ci\": [340, 455]\n  },\n  \"1m\": {\n    \"point_estimate\": 390,\n    \"90_ci\": [290, 510]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 398,
+      "90_ci": [
+        372,
+        428
+      ]
+    },
+    "1w": {
+      "point_estimate": 395,
+      "90_ci": [
+        340,
+        455
+      ]
+    },
+    "1m": {
+      "point_estimate": 390,
+      "90_ci": [
+        290,
+        510
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 398,\n    \"90_ci\": [\n      372,\n      428\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 395,\n    \"90_ci\": [\n      340,\n      455\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 390,\n    \"90_ci\": [\n      290,\n      510\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest downward drift from what I'd assume was a recent observed value near 400, with the 1-day estimate of 398 essentially treating near-term momentum as flat to slightly negative. For the 1-week horizon I nudged the estimate down slightly to 395, reflecting a mild mean-reversion assumption and the general tendency for whatever asset or metric this tracks to exhibit modest drift over weekly timescales. The 1-month estimate of 390 continues that gentle downward slope, incorporating a longer-run view that conditions are marginally softer than the immediate reading, though not dramatically so. In all three cases, the point estimates are anchored heavily on the current level with small adjustments rather than any strong directional conviction.\n\nThe confidence interval widths expand in a fairly standard way as the horizon lengthens, reflecting the compounding of daily uncertainty over time. At the 1-day horizon the interval of 372\u2013428 captures normal intraday-to-next-day variability, essentially a narrow band around the anchor. By one week, the 340\u2013455 range reflects that several days of movement can accumulate in either direction, and by one month the 290\u2013510 range acknowledges that a full month contains enough trading sessions or observation periods that outcomes far from today's level are genuinely plausible. The asymmetry in the monthly interval, with more room to the upside than downside from the point estimate, reflects a slight skew in my uncertainty \u2014 sharp dislocations can push values higher or lower, but recoveries can be swift.\n\nSpecific risks that could push outcomes outside even these fairly wide monthly bounds include sudden macroeconomic shocks such as an unexpected central bank policy shift, a geopolitical escalation, or a significant data release that reprices the fundamental outlook. On the upside, a surprise positive catalyst \u2014 policy easing, a strong earnings or economic beat, or a broader risk-on sentiment shift \u2014 could push the metric well above 510 for a sustained period. On the downside, a liquidity event, credit stress, or sharp growth scare could drive values below 290. These tail events are real but assigned low probability, which is why they sit outside the 90% interval rather than within it.\n\nIt is worth noting that my forecasts carry inherent limitations because I lack real-time data and do not know the precise current value or context of the series being forecast. The intervals are calibrated using general statistical reasoning about volatility scaling with time rather than asset-specific implied volatility or model-based estimates, so users should treat them as indicative rather than precisely calibrated.",
+  "status": "collected",
+  "error": null
+}
