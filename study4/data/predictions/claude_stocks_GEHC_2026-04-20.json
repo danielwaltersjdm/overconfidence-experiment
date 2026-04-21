@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-20",
+  "timestamp": "2026-04-21T01:30:27.980509Z",
+  "domain": "stocks",
+  "item": "GEHC",
+  "item_label": "GE HealthCare",
+  "unit": "USD",
+  "current_value": 74.1500015258789,
+  "context": "Current closing price of GE HealthCare (GEHC): $74.15 USD as of 2026-04-20.",
+  "prompt_text": "Today is 2026-04-20.\n\nCurrent closing price of GE HealthCare (GEHC): $74.15 USD as of 2026-04-20.\n\nPredict the closing price of GE HealthCare at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-21\n  1-week target date: 2026-04-27\n  1-month target date: 2026-05-20\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 74.50,\n    \"90_ci\": [71.20, 77.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 75.00,\n    \"90_ci\": [68.50, 81.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 76.50,\n    \"90_ci\": [63.00, 90.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 74.5,
+      "90_ci": [
+        71.2,
+        77.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 75.0,
+      "90_ci": [
+        68.5,
+        81.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 76.5,
+      "90_ci": [
+        63.0,
+        90.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 74.5,\n    \"90_ci\": [\n      71.2,\n      77.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 75.0,\n    \"90_ci\": [\n      68.5,\n      81.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 76.5,\n    \"90_ci\": [\n      63.0,\n      90.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift over time, anchored to what I would presume was a recent observed price or index level near 74\u201375. At the one-day horizon, the estimate of 74.5 stays close to the current level because over such a short window, mean reversion and momentum effects tend to roughly cancel out, and any single day's drift is statistically small relative to the starting value. At the one-week horizon, I nudged the estimate slightly higher to 75.0, reflecting a weak positive drift assumption consistent with long-run equity risk premiums or a mild trending environment. At the one-month horizon, the estimate rises further to 76.5, compounding that modest drift assumption over roughly 20 trading days while acknowledging that longer horizons allow more time for fundamental repricing.\n\nThe confidence interval widths expand significantly as the horizon lengthens, which is the natural consequence of volatility scaling with the square root of time. At one day, the 90% interval spans roughly 6.6 units, consistent with a daily volatility regime that is moderate but not extreme. By one week, the interval widens to 13 units, and by one month it reaches 27 units, reflecting how uncertainty compounds over time even if the point estimate drifts only modestly. I also likely incorporated the possibility that realized volatility could differ from recent historical norms, which adds a layer of parameter uncertainty on top of the baseline price uncertainty.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic surprises such as unexpected central bank policy shifts, inflation data releases, or geopolitical shocks, all of which can produce gap moves that dwarf typical daily volatility. On the upside, a strong earnings season, a dovish policy pivot, or a resolution of a geopolitical flashpoint could drive prices above the upper bound of even the one-month interval. On the downside, a financial contagion event, a sharp credit spread widening, or a significant deterioration in growth expectations could push prices well below the lower bound. Liquidity crises in particular are notorious for producing tail moves that standard volatility-based intervals systematically underestimate, so the true tail risk is likely somewhat fatter than the stated intervals suggest.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-20",
+  "timestamp": "2026-04-20T20:31:19.716078Z",
+  "domain": "stocks",
+  "item": "AVGO",
+  "item_label": "Broadcom",
+  "unit": "USD",
+  "current_value": 399.6300048828125,
+  "context": "Current closing price of Broadcom (AVGO): $399.63 USD as of 2026-04-20.",
+  "prompt_text": "Today is 2026-04-20.\n\nCurrent closing price of Broadcom (AVGO): $399.63 USD as of 2026-04-20.\n\nPredict the closing price of Broadcom at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-21\n  1-week target date: 2026-04-27\n  1-month target date: 2026-05-20\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 403,\n    \"90_ci\": [382, 424]\n  },\n  \"1w\": {\n    \"point_estimate\": 408,\n    \"90_ci\": [368, 448]\n  },\n  \"1m\": {\n    \"point_estimate\": 415,\n    \"90_ci\": [330, 500]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 403,
+      "90_ci": [
+        382,
+        424
+      ]
+    },
+    "1w": {
+      "point_estimate": 408,
+      "90_ci": [
+        368,
+        448
+      ]
+    },
+    "1m": {
+      "point_estimate": 415,
+      "90_ci": [
+        330,
+        500
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 403,\n    \"90_ci\": [\n      382,\n      424\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 408,\n    \"90_ci\": [\n      368,\n      448\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 415,\n    \"90_ci\": [\n      330,\n      500\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-sloping trajectory from a baseline I assessed to be around 400\u2013403 at the time of the forecast. For the 1-day horizon, I anchored closely to recent observed levels, with only minimal drift expected over such a short window. For the 1-week horizon, I applied a small positive drift reflecting whatever underlying trend or momentum was present in the series, bringing the estimate to 408. For the 1-month horizon, I extended that drift further to 415, assuming the trend persists at roughly the same pace but acknowledging that compounding uncertainty over time means the point estimate itself carries less weight as a prediction.\n\nThe confidence interval widths reflect my uncertainty at each horizon scaling with time, as is standard in forecasting. At 1 day, the interval is relatively tight \u2014 plus or minus roughly 21 units \u2014 because there is limited time for the underlying process to deviate meaningfully from its current level. By 1 week, that range expands to roughly 80 units total, reflecting the possibility of larger cumulative moves. At 1 month, the interval opens considerably to a range of 170 units, capturing the realistic possibility of sustained moves in either direction driven by factors that are difficult to anticipate weeks in advance.\n\nSpecific risks that could push outcomes outside these stated intervals include abrupt structural breaks \u2014 for example, a policy announcement, an unexpected macroeconomic shock, or a sudden shift in market regime \u2014 that could cause the series to jump discontinuously rather than evolve smoothly. On the upside, a strong momentum acceleration could carry the value well above 500 within a month. On the downside, a sharp reversal or negative shock could push the value below 330 or even further.\n\nIt is also worth noting that my intervals assume relatively well-behaved, near-normal distributions of outcomes around the trend. If the underlying process has fat tails \u2014 meaning extreme events are more likely than a normal distribution would suggest \u2014 then the true probability of outcomes outside my stated 90% interval is meaningfully higher than 10%. Any model I used to arrive at these estimates is necessarily a simplification, and real-world outcomes frequently surprise even well-calibrated forecasters at the monthly horizon.",
+  "status": "collected",
+  "error": null
+}

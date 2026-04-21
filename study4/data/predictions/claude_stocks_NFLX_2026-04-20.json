@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-20",
+  "timestamp": "2026-04-20T21:55:01.379828Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 94.83000183105469,
+  "context": "Current closing price of Netflix (NFLX): $94.83 USD as of 2026-04-20.",
+  "prompt_text": "Today is 2026-04-20.\n\nCurrent closing price of Netflix (NFLX): $94.83 USD as of 2026-04-20.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-21\n  1-week target date: 2026-04-27\n  1-month target date: 2026-05-20\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to predict Netflix's closing price at three horizons. Let me think through this carefully.\n\n**Current situation:**\n- Today: 2026-04-20\n- Current price: $94.83 USD\n\n**Key observations:**\n- Netflix at $94.83 is dramatically lower than its historical highs (it was trading around $1,000+ in 2021-2022 peak, then crashed, then recovered to ~$700-900 range in 2024-2025). A price of $94.83 in April 2026 suggests either a significant correction, stock split, or broader market downturn.\n- This price level suggests something notable has happened - possibly a 10:1 stock split, or a significant market/company-specific decline.\n- Without knowing the exact context, I'll treat $94.83 as the current baseline and apply typical volatility estimates.\n\n**Volatility considerations:**\n- NFLX historical daily volatility is typically around 2-3% (annualized ~40-50%)\n- Daily std dev: ~2-2.5% \u2192 ~$1.90-$2.40\n- Weekly std dev: ~4-6% \u2192 ~$3.80-$5.70\n- Monthly std dev: ~8-12% \u2192 ~$7.60-$11.40\n\n**Market context (April 2026):**\n- Broader market uncertainty, potential tariff/trade war concerns\n- Slight downward bias given macro uncertainty\n\n**Point estimates:**\n- 1-day: slight drift, ~$94.50 (markets tend to be slightly uncertain)\n- 1-week: ~$95.50 (slight recovery tendency after down moves)\n- 1-month: ~$97.00 (modest recovery)\n\n**90% CI calculations (\u00b11.645 sigma):**\n- 1-day: \u00b11.645 \u00d7 $2.20 = \u00b1$3.62 \u2192 [91.2, 98.4]\n- 1-week: \u00b11.645 \u00d7 $5.20 = \u00b1$8.55 \u2192 [86.3, 103.7]\n- 1-month: \u00b11.645 \u00d7 $10.50 = \u00b1$17.27 \u2192 [79.7, 114.3]\n\n{\n  \"1d\": {\n    \"point_estimate\": 94.50,\n    \"90_ci\": [91.2, 98.4]\n  },\n  \"1w\": {\n    \"point_estimate\": 95.50,\n    \"90_ci\": [86.3, 103.7]\n  },\n  \"1m\": {\n    \"point_estimate\": 97.00,\n    \"90_ci\": [79.7, 114.3]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 94.5,
+      "90_ci": [
+        91.2,
+        98.4
+      ]
+    },
+    "1w": {
+      "point_estimate": 95.5,
+      "90_ci": [
+        86.3,
+        103.7
+      ]
+    },
+    "1m": {
+      "point_estimate": 97.0,
+      "90_ci": [
+        79.7,
+        114.3
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 94.5,\n    \"90_ci\": [\n      91.2,\n      98.4\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 95.5,\n    \"90_ci\": [\n      86.3,\n      103.7\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 97.0,\n    \"90_ci\": [\n      79.7,\n      114.3\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near 94.5 for the one-day horizon and rising gradually to 97.0 at one month. The one-day estimate is anchored primarily by recent price momentum and mean-reversion tendencies over very short windows \u2014 essentially, I'm assuming that whatever the asset closed at recently is a reasonable starting point, and that overnight or intraday moves are unlikely to be dramatic absent a specific catalyst. The one-week and one-month estimates edge higher based on a slight positive drift assumption, consistent with the long-run tendency of many financial assets to appreciate modestly over time. There is no strong directional signal driving these upward nudges; they represent a relatively neutral, baseline drift rather than a confident bullish view.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which reflects the fundamental reality that uncertainty compounds over time. At one day, the 90% interval spans roughly 7 points, reflecting typical short-term volatility. By one week, that range nearly triples, and at one month it widens to roughly 35 points \u2014 consistent with the square-root-of-time scaling that characterizes diffusion-based uncertainty. The width also reflects uncertainty about the volatility regime itself: if we are in a low-volatility environment, the realized range may be much tighter, but if volatility picks up, even the wide monthly interval could prove too narrow.\n\nSpecific risks that could push outcomes outside these stated intervals include macro surprises such as unexpected central bank policy shifts, geopolitical shocks, or significant earnings or economic data releases that deviate sharply from consensus. On the upside, a sudden surge in risk appetite or a short-squeeze dynamic could drive prices well above the upper bound, particularly at the one-week and one-month horizons. On the downside, a liquidity event, credit stress, or broad market selloff could push prices below the lower bounds with relatively little warning.\n\nIt is also worth acknowledging that my stated intervals are model-derived and assume roughly stationary volatility and no structural breaks. Real markets experience fat tails \u2014 the probability of extreme outcomes is meaningfully higher than a normal distribution would suggest. This means that while I've tried to set wide intervals, truly tail-risk events (a flash crash, a sudden regulatory action, or a pandemic-style shock) could produce outcomes far outside what I've outlined here, and no confidence interval of reasonable width can fully account for those possibilities.",
+  "status": "collected",
+  "error": null
+}
