@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-21",
+  "timestamp": "2026-04-21T23:38:08.481053Z",
+  "domain": "stocks",
+  "item": "GIS",
+  "item_label": "General Mills",
+  "unit": "USD",
+  "current_value": 35.04999923706055,
+  "context": "Current closing price of General Mills (GIS): $35.05 USD as of 2026-04-21.",
+  "prompt_text": "Today is 2026-04-21.\n\nCurrent closing price of General Mills (GIS): $35.05 USD as of 2026-04-21.\n\nPredict the closing price of General Mills at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-22\n  1-week target date: 2026-04-28\n  1-month target date: 2026-05-21\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 35.20,\n    \"90_ci\": [33.80, 36.60]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.40,\n    \"90_ci\": [32.50, 38.30]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.80,\n    \"90_ci\": [30.00, 41.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 35.2,
+      "90_ci": [
+        33.8,
+        36.6
+      ]
+    },
+    "1w": {
+      "point_estimate": 35.4,
+      "90_ci": [
+        32.5,
+        38.3
+      ]
+    },
+    "1m": {
+      "point_estimate": 35.8,
+      "90_ci": [
+        30.0,
+        41.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 35.2,\n    \"90_ci\": [\n      33.8,\n      36.6\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.4,\n    \"90_ci\": [\n      32.5,\n      38.3\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.8,\n    \"90_ci\": [\n      30.0,\n      41.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with a modest upward drift over time. At the one-day horizon, the estimate of 35.2 is anchored heavily on the most recent observed value, assuming mean-reversion dynamics and continuity in whatever underlying process is being tracked. At the one-week horizon, the slight uptick to 35.4 incorporates a mild positive trend or drift term while acknowledging that short-run noise tends to partially cancel out. By the one-month horizon, the estimate rises to 35.8, reflecting a continuation of that gradual trend extrapolated forward, though the signal becomes increasingly diluted by accumulated uncertainty over the longer window.\n\nThe confidence interval widths expand progressively across horizons in a pattern consistent with a random-walk-like process, where uncertainty scales roughly with the square root of time. At one day, the 90% interval of 33.8 to 36.6 is relatively tight, reflecting the high persistence and predictability of short-term dynamics. By one week, the interval widens to 32.5\u201338.3, incorporating the potential for several days of compounding deviations. At one month, the interval of 30.0\u201341.5 is quite wide, reflecting the substantial accumulation of shocks, regime shifts, and mean-reversion forces that could pull the outcome in either direction over a four-week period.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden negative shock \u2014 such as an unexpected macroeconomic announcement, a liquidity event, or a structural break in the data-generating process \u2014 could drive the outcome well below 30. On the upside, a strong positive catalyst or momentum-driven overshoot could push values above 41.5. Fat-tailed distributions in the underlying process are a persistent concern; my intervals assume something close to Gaussian behavior, but real-world data often exhibits heavier tails, meaning extreme outcomes are more likely than the 10% residual probability I've assigned outside the bounds.\n\nFinally, model misspecification is a meta-risk worth acknowledging. If the true process has a stronger trend, a structural break, or significant autocorrelation at lags I haven't fully captured, all three horizons could be systematically biased. The one-month estimate is especially vulnerable to this, since small errors in trend or drift assumptions compound meaningfully over longer windows. Anyone acting on these forecasts should treat the intervals as approximations rather than precise probability statements.",
+  "status": "collected",
+  "error": null
+}

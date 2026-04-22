@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-21",
+  "timestamp": "2026-04-21T22:38:08.492371Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 36.04999923706055,
+  "context": "Current closing price of Chipotle (CMG): $36.05 USD as of 2026-04-21.",
+  "prompt_text": "Today is 2026-04-21.\n\nCurrent closing price of Chipotle (CMG): $36.05 USD as of 2026-04-21.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-22\n  1-week target date: 2026-04-28\n  1-month target date: 2026-05-21\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate Chipotle's future closing prices. Let me think through this carefully.\n\n**Current situation:**\n- CMG at $36.05 as of 2026-04-21\n- Note: CMG did a 50-for-1 stock split in June 2024, so this $36.05 price reflects post-split pricing (pre-split would have been ~$1,800+)\n\n**Context to consider:**\n- CMG has been under pressure from broader market volatility in early 2026 (tariff concerns, macro uncertainty)\n- The stock was trading much higher in 2024 (post-split ~$55-65 range in late 2024)\n- At $36.05, it's already down significantly from peaks\n- Restaurant sector faces consumer spending headwinds\n- Typical daily volatility for CMG: ~1.5-2.5%\n- Weekly volatility: ~3-5%\n- Monthly volatility: ~8-15%\n\n**Point estimates:**\n- 1-day: Markets have been volatile; slight drift, assume near flat with slight upward bias from oversold conditions \u2192 ~$36.50\n- 1-week: Some mean reversion possible, but macro headwinds persist \u2192 ~$37.00\n- 1-month: Modest recovery attempt, but uncertainty remains high \u2192 ~$38.00\n\n**Confidence intervals:**\n- 1-day: 90% CI \u2248 \u00b13% \u2192 roughly $35.00 to $37.20, widened given current volatility\n- 1-week: 90% CI \u2248 \u00b17% \u2192 roughly $33.50 to $39.50\n- 1-month: 90% CI \u2248 \u00b118% \u2192 roughly $29.50 to $44.50\n\n{\n  \"1d\": {\n    \"point_estimate\": 36.50,\n    \"90_ci\": [34.80, 38.20]\n  },\n  \"1w\": {\n    \"point_estimate\": 37.00,\n    \"90_ci\": [33.20, 40.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 38.00,\n    \"90_ci\": [29.50, 45.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 36.5,
+      "90_ci": [
+        34.8,
+        38.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 37.0,
+      "90_ci": [
+        33.2,
+        40.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 38.0,
+      "90_ci": [
+        29.5,
+        45.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 36.5,\n    \"90_ci\": [\n      34.8,\n      38.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 37.0,\n    \"90_ci\": [\n      33.2,\n      40.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 38.0,\n    \"90_ci\": [\n      29.5,\n      45.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near current market levels and gently trending higher. At the one-day horizon, the estimate of 36.5 is anchored heavily to the most recent observed price or index level, with very little expected deviation given that short-term momentum and intraday mean-reversion tendencies tend to keep prices close to their prior close. At the one-week horizon, I nudged the estimate slightly higher to 37.0, reflecting a mild positive drift assumption consistent with a modest risk premium or prevailing trend. At the one-month horizon, the estimate rises further to 38.0, incorporating a longer-run expected return component while acknowledging that over four weeks, trend continuation has somewhat more room to express itself than noise would allow.\n\nThe confidence interval widths widen substantially as the horizon extends, which is the natural consequence of volatility compounding over time. At one day, the 90% interval is quite tight at roughly plus or minus 1.7 units around the point estimate, consistent with typical daily realized volatility for a moderately liquid asset. By one week, the interval expands to roughly plus or minus 3.5 to 4 units, reflecting approximately the square root of five scaling of daily vol, with some additional uncertainty from event risk within the week. At one month, the interval stretches to a range of about 16 units wide, capturing the much greater dispersion that accumulates over approximately 20 trading days and the possibility of regime shifts or macro surprises materializing over that longer window.\n\nSeveral specific risks could push outcomes outside the stated intervals. On the downside, a sudden deterioration in macroeconomic data, an unexpected central bank policy tightening, or a geopolitical shock could easily breach the lower bound, particularly at the one-month horizon. Liquidity events or correlated selling across asset classes \u2014 such as those seen during credit stress episodes \u2014 could produce gap moves that overwhelm the daily interval as well. On the upside, a significant positive surprise in earnings, economic data, or a dovish policy pivot could push the asset well above the upper bound of the one-month range.\n\nIt is also worth noting that my intervals assume roughly stationary volatility and no structural breaks in the underlying process. If the asset is subject to event risk from a scheduled announcement \u2014 an earnings release, a central bank decision, or a geopolitical development \u2014 within the forecast horizon, the true distribution of outcomes would have fatter tails than my stated intervals imply. In such cases, the confidence intervals should be treated as lower bounds on uncertainty rather than precise probabilistic statements, and additional scenario analysis around specific catalysts would be warranted.",
+  "status": "collected",
+  "error": null
+}
