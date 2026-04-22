@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-22",
+  "timestamp": "2026-04-22T20:34:14.081155Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 93.23999786376953,
+  "context": "Current closing price of Netflix (NFLX): $93.24 USD as of 2026-04-22.",
+  "prompt_text": "Today is 2026-04-22.\n\nCurrent closing price of Netflix (NFLX): $93.24 USD as of 2026-04-22.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-23\n  1-week target date: 2026-04-29\n  1-month target date: 2026-05-22\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to predict Netflix's closing price at three horizons from a current price of $93.24.\n\n**Key observations:**\n- Current price: $93.24 (this seems unusually low for Netflix, which historically traded much higher - around $600-900+ range in recent years)\n- This could reflect a stock split or significant decline. I'll treat $93.24 as the current market price and work from there.\n- Netflix is a high-beta tech/streaming stock with meaningful volatility\n\n**Volatility assumptions:**\n- Netflix typically has ~35-45% annualized volatility\n- Using ~40% annualized volatility as baseline\n- Daily vol: 40%/\u221a252 \u2248 2.52%\n- Weekly vol (5 days): 2.52% \u00d7 \u221a5 \u2248 5.63%\n- Monthly vol (22 days): 2.52% \u00d7 \u221a22 \u2248 11.8%\n\n**Point estimates:**\n- I'll assume slight upward drift given the current market context and earnings season, but with uncertainty\n- 1-day: modest mean reversion/slight drift \u2192 ~$93.80\n- 1-week: slight positive momentum \u2192 ~$95.00\n- 1-month: moderate recovery assumption \u2192 ~$97.00\n\n**Confidence intervals (90%):**\nUsing ~1.645 standard deviations for 90% CI:\n\n- 1-day: \u00b11.645 \u00d7 2.52% \u00d7 $93.24 \u2248 \u00b1$3.86 \u2192 [89.40, 98.20]\n- 1-week: \u00b11.645 \u00d7 5.63% \u00d7 $93.24 \u2248 \u00b1$8.63 \u2192 [86.40, 103.60]\n- 1-month: \u00b11.645 \u00d7 11.8% \u00d7 $93.24 \u2248 \u00b1$18.11 \u2192 [78.90, 116.00]\n\nI'll widen these slightly to account for fat tails and model uncertainty:\n\n{\n  \"1d\": {\n    \"point_estimate\": 93.8,\n    \"90_ci\": [88.5, 99.2]\n  },\n  \"1w\": {\n    \"point_estimate\": 95.0,\n    \"90_ci\": [84.0, 106.5]\n  },\n  \"1m\": {\n    \"point_estimate\": 97.0,\n    \"90_ci\": [75.0, 120.0]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 93.8,
+      "90_ci": [
+        88.5,
+        99.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 95.0,
+      "90_ci": [
+        84.0,
+        106.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 97.0,
+      "90_ci": [
+        75.0,
+        120.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 93.8,\n    \"90_ci\": [\n      88.5,\n      99.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 95.0,\n    \"90_ci\": [\n      84.0,\n      106.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 97.0,\n    \"90_ci\": [\n      75.0,\n      120.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift assumption across all three horizons, starting near the current price level and gradually trending higher. At the one-day horizon, the estimate of 93.8 is essentially anchored to recent trading levels with very little directional conviction, reflecting the assumption that short-term price action is dominated by noise and mean reversion around the prevailing level. At the one-week horizon, the slight increase to 95.0 incorporates a small positive drift, consistent with a long-run equity risk premium or modest bullish momentum if the asset in question is an equity or index. At the one-month horizon, the estimate of 97.0 continues that gradual drift, assuming no major structural breaks and a broadly constructive macro environment.\n\nThe confidence interval widths widen considerably as the time horizon extends, which reflects the square-root-of-time scaling of uncertainty that underlies most financial price models. At one day, the 90% interval of roughly plus or minus 5.5 points is consistent with typical daily volatility for a moderately volatile asset. By one week, the interval has expanded to roughly plus or minus 11 points, and by one month it spans approximately 45 points, reflecting the compounding of daily uncertainties over longer periods. Intraday liquidity conditions, bid-ask spreads, and short-term sentiment all contribute noise at the one-day level, while macroeconomic data releases, central bank communications, and earnings reports drive uncertainty at the weekly and monthly horizons.\n\nSeveral specific risks could push outcomes outside the stated intervals. On the downside, a sudden deterioration in risk sentiment \u2014 triggered by a geopolitical shock, an unexpected hawkish central bank pivot, or a significant credit event \u2014 could produce sharp drawdowns that breach the lower bounds, particularly at longer horizons. A flash crash or liquidity dislocation could even violate the one-day lower bound in extreme circumstances.\n\nOn the upside, a strongly positive catalyst such as a better-than-expected inflation print, a surprise dovish policy shift, or a major positive earnings surprise could drive prices above the upper confidence bounds. The one-month upper bound of 120.0 in particular assumes no exceptional positive shock, and a sustained risk-on rally driven by multiple converging positive catalysts could push through that level. Overall, these intervals should be treated as probabilistic guides rather than hard limits, since fat-tailed return distributions mean the true probability of extreme outcomes is higher than a normal distribution would suggest.",
+  "status": "collected",
+  "error": null
+}

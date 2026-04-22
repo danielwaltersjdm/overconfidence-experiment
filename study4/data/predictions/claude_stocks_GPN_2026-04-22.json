@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-22",
+  "timestamp": "2026-04-22T23:16:53.490670Z",
+  "domain": "stocks",
+  "item": "GPN",
+  "item_label": "Global Payments",
+  "unit": "USD",
+  "current_value": 71.62000274658203,
+  "context": "Current closing price of Global Payments (GPN): $71.62 USD as of 2026-04-22.",
+  "prompt_text": "Today is 2026-04-22.\n\nCurrent closing price of Global Payments (GPN): $71.62 USD as of 2026-04-22.\n\nPredict the closing price of Global Payments at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-23\n  1-week target date: 2026-04-29\n  1-month target date: 2026-05-22\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 72.10,\n    \"90_ci\": [68.50, 75.70]\n  },\n  \"1w\": {\n    \"point_estimate\": 72.80,\n    \"90_ci\": [65.00, 80.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 74.50,\n    \"90_ci\": [58.00, 91.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 72.1,
+      "90_ci": [
+        68.5,
+        75.7
+      ]
+    },
+    "1w": {
+      "point_estimate": 72.8,
+      "90_ci": [
+        65.0,
+        80.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 74.5,
+      "90_ci": [
+        58.0,
+        91.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 72.1,\n    \"90_ci\": [\n      68.5,\n      75.7\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 72.8,\n    \"90_ci\": [\n      65.0,\n      80.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 74.5,\n    \"90_ci\": [\n      58.0,\n      91.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "At the one-day horizon, the point estimate of 72.1 reflects a near-term anchor to whatever the current observed value or recent trend is, with the assumption that prices, rates, or the measured quantity tend to exhibit strong short-term autocorrelation. Over a single day, there is limited time for fundamentals to shift materially, so the estimate stays close to the prevailing level with only modest drift. The tight 90% confidence interval of 68.5 to 75.7 reflects this short-horizon stability, where the main sources of day-to-day noise are intraday volatility, minor data releases, or sentiment shifts that are unlikely to produce large moves.\n\nAt the one-week horizon, the point estimate nudges slightly higher to 72.8, suggesting a mild upward drift embedded in the model, perhaps reflecting a modest trend or mean-reversion dynamic pulling the series gradually in one direction. The wider confidence interval of 65.0 to 80.5 acknowledges that over seven days, there are more opportunities for new information to arrive \u2014 economic data, policy signals, geopolitical developments \u2014 each of which can compound uncertainty. The asymmetry between the downside and upside bands is roughly symmetric here, implying the model sees balanced two-sided risk over this horizon.\n\nThe one-month estimate of 74.5 reflects a continuation of the upward drift, extrapolating a gradual trend while also incorporating some mean-reversion that prevents the estimate from moving too aggressively. The very wide confidence interval of 58.0 to 91.0 captures the reality that a month is a long time for structural changes, sentiment reversals, or macroeconomic surprises to materialize and compound. Uncertainty grows roughly with the square root of time, and this interval reflects that scaling alongside model uncertainty about whether the current regime persists.\n\nSeveral tail risks could push outcomes outside even these wide bounds. A sudden policy shock \u2014 an unexpected central bank decision, a geopolitical escalation, or a major data surprise \u2014 could breach the upper or lower edges of the one-week or one-month intervals. Structural breaks, such as a market regime change or a liquidity crisis, are by definition poorly captured by models trained on historical norms. On the upside, a strongly positive catalyst like a surprise policy pivot or better-than-expected macro data could push values above 91. On the downside, a risk-off episode or negative fundamental shock could easily take outcomes below 58, particularly if volatility clustering causes moves to reinforce themselves over time.",
+  "status": "collected",
+  "error": null
+}

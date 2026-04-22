@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-22",
+  "timestamp": "2026-04-22T20:57:38.137603Z",
+  "domain": "stocks",
+  "item": "GS",
+  "item_label": "Goldman Sachs",
+  "unit": "USD",
+  "current_value": 934.8400268554688,
+  "context": "Current closing price of Goldman Sachs (GS): $934.84 USD as of 2026-04-22.",
+  "prompt_text": "Today is 2026-04-22.\n\nCurrent closing price of Goldman Sachs (GS): $934.84 USD as of 2026-04-22.\n\nPredict the closing price of Goldman Sachs at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-23\n  1-week target date: 2026-04-29\n  1-month target date: 2026-05-22\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 938,\n    \"90_ci\": [905, 970]\n  },\n  \"1w\": {\n    \"point_estimate\": 945,\n    \"90_ci\": [880, 1010]\n  },\n  \"1m\": {\n    \"point_estimate\": 960,\n    \"90_ci\": [830, 1090]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 938,
+      "90_ci": [
+        905,
+        970
+      ]
+    },
+    "1w": {
+      "point_estimate": 945,
+      "90_ci": [
+        880,
+        1010
+      ]
+    },
+    "1m": {
+      "point_estimate": 960,
+      "90_ci": [
+        830,
+        1090
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 938,\n    \"90_ci\": [\n      905,\n      970\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 945,\n    \"90_ci\": [\n      880,\n      1010\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 960,\n    \"90_ci\": [\n      830,\n      1090\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I assumed was a current price near 935, with the 1-day estimate of 938 essentially anchoring close to the prevailing level given how little tends to change in a single session under normal conditions. The 1-week estimate of 945 incorporates a slight positive drift consistent with a low-volatility, mean-reverting asset or index trading near fair value, while the 1-month estimate of 960 extends that gentle upward trend further, assuming no major structural disruptions. In each case, the point estimates are not bold directional calls but rather reflect the statistical tendency of many financial assets to drift modestly higher over short horizons when there is no strong signal pointing decisively in either direction.\n\nThe confidence interval widths widen in a roughly proportional way as the horizon extends, which is consistent with the square-root-of-time scaling that underlies standard volatility modeling. At the 1-day horizon, the 90% interval of roughly plus or minus 35 points reflects typical daily realized volatility for a moderately volatile instrument. By one week, the interval spans about 130 points, and by one month it has grown to roughly 260 points, capturing the compounding uncertainty that accumulates as more trading sessions introduce new information and potential shocks. The widening also reflects my uncertainty about the regime itself \u2014 whether the current environment remains calm or transitions into a higher-volatility state is itself a source of second-order uncertainty.\n\nSeveral specific risks could push outcomes well outside these intervals. On the downside, an unexpected macroeconomic shock \u2014 a surprise central bank policy shift, a geopolitical escalation, or a sharp deterioration in credit markets \u2014 could produce moves far beyond the lower bound, especially at the 1-month horizon where tail risks have more time to materialize. On the upside, a strong risk-on catalyst such as better-than-expected economic data or a resolution of a known geopolitical tension could drive prices through the upper bound. Liquidity events, such as forced deleveraging or a flash crash dynamic, represent a particular tail risk that standard volatility-based intervals systematically underweight, meaning the true tails of the distribution are likely fatter than my stated intervals imply.",
+  "status": "collected",
+  "error": null
+}

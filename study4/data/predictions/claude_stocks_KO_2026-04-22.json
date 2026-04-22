@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-22",
+  "timestamp": "2026-04-22T20:39:14.548093Z",
+  "domain": "stocks",
+  "item": "KO",
+  "item_label": "Coca-Cola",
+  "unit": "USD",
+  "current_value": 74.62999725341797,
+  "context": "Current closing price of Coca-Cola (KO): $74.63 USD as of 2026-04-22.",
+  "prompt_text": "Today is 2026-04-22.\n\nCurrent closing price of Coca-Cola (KO): $74.63 USD as of 2026-04-22.\n\nPredict the closing price of Coca-Cola at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-23\n  1-week target date: 2026-04-29\n  1-month target date: 2026-05-22\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 74.80,\n    \"90_ci\": [73.20, 76.40]\n  },\n  \"1w\": {\n    \"point_estimate\": 75.10,\n    \"90_ci\": [71.50, 78.70]\n  },\n  \"1m\": {\n    \"point_estimate\": 75.50,\n    \"90_ci\": [68.00, 83.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 74.8,
+      "90_ci": [
+        73.2,
+        76.4
+      ]
+    },
+    "1w": {
+      "point_estimate": 75.1,
+      "90_ci": [
+        71.5,
+        78.7
+      ]
+    },
+    "1m": {
+      "point_estimate": 75.5,
+      "90_ci": [
+        68.0,
+        83.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 74.8,\n    \"90_ci\": [\n      73.2,\n      76.4\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 75.1,\n    \"90_ci\": [\n      71.5,\n      78.7\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 75.5,\n    \"90_ci\": [\n      68.0,\n      83.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates across all three horizons were anchored near the current price level, reflecting a mild upward drift assumption consistent with typical equity or index behavior over short-to-medium timeframes. For the one-day estimate, I placed the value close to the prevailing price since daily moves in most financial instruments tend to be small relative to the overall price level, and absent specific catalysts, mean-reversion and momentum forces roughly balance out. The one-week and one-month estimates nudge slightly higher, incorporating a modest positive drift that reflects the long-run tendency of risk assets to appreciate over time, while acknowledging that any single short window can deviate meaningfully from that trend.\n\nThe width of my confidence intervals was driven primarily by historical volatility at each respective horizon. For one day, the interval is relatively tight because the time window is short and large moves, while possible, are statistically uncommon on any given day. As the horizon extends to one week and then one month, uncertainty compounds: daily volatility accumulates, and the range of plausible outcomes widens substantially. This scaling behavior \u2014 where uncertainty grows roughly with the square root of time \u2014 is a foundational principle in financial modeling and explains why the one-month interval is more than twice as wide as the one-day interval.\n\nSpecific risks that could push outcomes outside my stated intervals include macroeconomic surprises such as unexpected central bank decisions, inflation data releases, or geopolitical shocks. For shorter horizons, a sudden liquidity event or a large institutional trade could cause an outsized intraday move. Over the one-month window, a broader regime shift \u2014 such as a recession signal, a credit market dislocation, or an unexpected earnings shock in a highly weighted sector \u2014 could move prices well beyond the stated range. These tail events are real but assigned low probability by construction when using a 90% confidence interval.\n\nIt is also worth noting that my estimates assume relatively stable market conditions and do not explicitly model structural breaks or black swan events. If market conditions were already elevated in volatility at the time of forecasting, the intervals may be too narrow, and real-world outcomes could exceed the stated bounds more frequently than the 10% implied by a 90% confidence interval. Anyone relying on these estimates should treat them as probabilistic guides rather than precise predictions.",
+  "status": "collected",
+  "error": null
+}

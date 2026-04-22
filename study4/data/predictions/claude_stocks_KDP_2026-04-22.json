@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-22",
+  "timestamp": "2026-04-22T22:31:16.515941Z",
+  "domain": "stocks",
+  "item": "KDP",
+  "item_label": "Keurig Dr Pepper",
+  "unit": "USD",
+  "current_value": 26.540000915527344,
+  "context": "Current closing price of Keurig Dr Pepper (KDP): $26.54 USD as of 2026-04-22.",
+  "prompt_text": "Today is 2026-04-22.\n\nCurrent closing price of Keurig Dr Pepper (KDP): $26.54 USD as of 2026-04-22.\n\nPredict the closing price of Keurig Dr Pepper at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-23\n  1-week target date: 2026-04-29\n  1-month target date: 2026-05-22\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 26.60,\n    \"90_ci\": [25.80, 27.40]\n  },\n  \"1w\": {\n    \"point_estimate\": 26.75,\n    \"90_ci\": [25.20, 28.30]\n  },\n  \"1m\": {\n    \"point_estimate\": 27.00,\n    \"90_ci\": [23.50, 30.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 26.6,
+      "90_ci": [
+        25.8,
+        27.4
+      ]
+    },
+    "1w": {
+      "point_estimate": 26.75,
+      "90_ci": [
+        25.2,
+        28.3
+      ]
+    },
+    "1m": {
+      "point_estimate": 27.0,
+      "90_ci": [
+        23.5,
+        30.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 26.6,\n    \"90_ci\": [\n      25.8,\n      27.4\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 26.75,\n    \"90_ci\": [\n      25.2,\n      28.3\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 27.0,\n    \"90_ci\": [\n      23.5,\n      30.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mildly bullish drift assumption built on top of a recent anchor price near $26.60. For the one-day horizon, I essentially assumed very little movement from the prevailing level, since short-term mean reversion and intraday noise tend to cancel out directional views, leaving the estimate close to the last observed price. For the one-week horizon, I applied a small upward drift to reflect a modest positive bias that many liquid assets exhibit over short windows when broader market conditions are stable. For the one-month horizon, the drift compounds slightly further, pushing the estimate toward $27.00, though at that horizon the drift assumption matters less than the accumulated variance, so the point estimate itself carries less conviction.\n\nThe confidence interval widths were driven primarily by realized volatility at each time scale. At one day, the interval is tight because daily price fluctuations for a moderately liquid asset in the mid-$26 range tend to be contained within roughly one to two percent absent a specific catalyst. By one week, I widened the interval to reflect the square-root-of-time scaling of volatility \u2014 roughly 2.5 times the daily standard deviation \u2014 and added a small additional buffer for event risk that might occur over a multi-day window. At one month, the interval widens considerably to reflect not just the accumulated random walk variance but also the possibility that the fundamental backdrop or market regime could shift materially, introducing fat-tail risk that a simple Gaussian model would understate.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic announcements such as unexpected inflation prints, central bank decisions, or geopolitical shocks that reprice risk assets broadly. For a single asset, idiosyncratic events like earnings surprises, regulatory actions, or large institutional flows could create gap moves that breach the one-day interval entirely. At the one-month horizon, a broader market correction or rally driven by sentiment shifts \u2014 particularly in a high-beta or commodity-linked name \u2014 could easily push prices beyond the $23.50\u2013$30.50 range I specified, since that range already assumes roughly normal return distributions without accounting for tail scenarios like a financial stress event or a sharp sector rotation.",
+  "status": "collected",
+  "error": null
+}
