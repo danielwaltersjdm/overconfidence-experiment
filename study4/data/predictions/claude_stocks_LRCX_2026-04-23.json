@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-23",
+  "timestamp": "2026-04-23T20:08:15.061900Z",
+  "domain": "stocks",
+  "item": "LRCX",
+  "item_label": "Lam Research",
+  "unit": "USD",
+  "current_value": 258.55999755859375,
+  "context": "Current closing price of Lam Research (LRCX): $258.56 USD as of 2026-04-23.",
+  "prompt_text": "Today is 2026-04-23.\n\nCurrent closing price of Lam Research (LRCX): $258.56 USD as of 2026-04-23.\n\nPredict the closing price of Lam Research at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-24\n  1-week target date: 2026-04-30\n  1-month target date: 2026-05-23\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 261,\n    \"90_ci\": [245, 277]\n  },\n  \"1w\": {\n    \"point_estimate\": 263,\n    \"90_ci\": [235, 291]\n  },\n  \"1m\": {\n    \"point_estimate\": 268,\n    \"90_ci\": [215, 320]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 261,
+      "90_ci": [
+        245,
+        277
+      ]
+    },
+    "1w": {
+      "point_estimate": 263,
+      "90_ci": [
+        235,
+        291
+      ]
+    },
+    "1m": {
+      "point_estimate": 268,
+      "90_ci": [
+        215,
+        320
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 261,\n    \"90_ci\": [\n      245,\n      277\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 263,\n    \"90_ci\": [\n      235,\n      291\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 268,\n    \"90_ci\": [\n      215,\n      320\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I interpreted as a current price level near 260, with the 1-day estimate of 261 essentially anchoring on near-term mean reversion and inertia, the 1-week estimate of 263 incorporating a slight positive drift assumption consistent with gradual trend continuation, and the 1-month estimate of 268 extrapolating that same mild bullish bias forward while acknowledging that longer horizons tend to pull forecasts toward expected growth trajectories. The progression is deliberately conservative because short-term price action in most liquid assets tends to exhibit low autocorrelation, meaning today's price is the single best predictor of tomorrow's price, with only modest adjustments for trend.\n\nThe confidence interval widths were calibrated to reflect typical realized volatility scaling with the square root of time. At 1 day, a range of roughly plus or minus 16 points reflects a relatively tight band consistent with daily volatility in the low single-digit percentage range. By 1 week, the interval widens to plus or minus 28 points as uncertainty compounds across five trading sessions. At 1 month, the interval stretches to plus or minus 52 points, acknowledging that over a four-week window, macro developments, earnings surprises, or sentiment shifts can accumulate meaningfully. These widths implicitly assume something like a 4\u20135% annualized volatility regime, which may itself be a source of model risk if volatility is currently elevated or suppressed relative to historical norms.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic shocks such as an unexpected central bank policy change, a geopolitical escalation, or a credit event that triggers broad risk-off selling. On the upside, a stronger-than-expected earnings report, a dovish policy pivot, or a short-squeeze dynamic in a crowded trade could push prices well above the upper confidence bound. At the 1-month horizon in particular, the interval could easily be violated because 90% confidence intervals constructed from volatility scaling alone do not fully account for fat-tailed jump processes, meaning black swan events \u2014 by definition \u2014 fall outside any reasonably constructed statistical band. Liquidity conditions and correlated asset movements also introduce tail risks that simple Gaussian assumptions tend to understate.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-23",
+  "timestamp": "2026-04-23T19:46:00.333267Z",
+  "domain": "stocks",
+  "item": "SPGI",
+  "item_label": "S&P Global",
+  "unit": "USD",
+  "current_value": 438.239990234375,
+  "context": "Current closing price of S&P Global (SPGI): $438.24 USD as of 2026-04-23.",
+  "prompt_text": "Today is 2026-04-23.\n\nCurrent closing price of S&P Global (SPGI): $438.24 USD as of 2026-04-23.\n\nPredict the closing price of S&P Global at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-24\n  1-week target date: 2026-04-30\n  1-month target date: 2026-05-23\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 441.0,\n    \"90_ci\": [425.0, 457.0]\n  },\n  \"1w\": {\n    \"point_estimate\": 443.0,\n    \"90_ci\": [415.0, 471.0]\n  },\n  \"1m\": {\n    \"point_estimate\": 448.0,\n    \"90_ci\": [395.0, 500.0]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 441.0,
+      "90_ci": [
+        425.0,
+        457.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 443.0,
+      "90_ci": [
+        415.0,
+        471.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 448.0,
+      "90_ci": [
+        395.0,
+        500.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 441.0,\n    \"90_ci\": [\n      425.0,\n      457.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 443.0,\n    \"90_ci\": [\n      415.0,\n      471.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 448.0,\n    \"90_ci\": [\n      395.0,\n      500.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assess as a current baseline around 440 for the underlying asset. At the one-day horizon, the estimate of 441 is essentially a near-random-walk projection, anchored heavily to the prevailing price level with only a slight positive drift assumption baked in. At one week (443) and one month (448), I applied a small positive trend component consistent with longer-run equity momentum tendencies, while keeping the incremental gains modest given the uncertainty that accumulates over longer horizons. These estimates essentially reflect a continuation of recent conditions without assuming any major catalysts in either direction.\n\nThe confidence interval widths reflect how uncertainty compounds over time. At one day, a 32-point range (425\u2013457) captures typical daily volatility scaled to roughly 1\u20132 standard deviations for a large-cap equity or index instrument in this price range. By one week, the interval widens to 56 points (415\u2013471), reflecting how daily volatility aggregates across multiple sessions and introduces greater path dependency. At one month, the 105-point range (395\u2013500) accounts for the full accumulation of daily uncertainties plus the possibility of regime changes, earnings events, or macro shifts that could meaningfully reprice the asset. The asymmetry is roughly symmetric around the point estimate, though in practice fat tails and negative shock asymmetry in equity markets suggest the downside tail may be slightly heavier.\n\nThere are several specific risks that could push outcomes well outside these intervals. On the downside, a sudden macroeconomic shock \u2014 such as an unexpected Federal Reserve policy shift, a deterioration in credit conditions, or a geopolitical escalation \u2014 could drive prices sharply below 395 within the month. On the upside, a strong earnings surprise, a dovish policy pivot, or a broadly risk-on sentiment shift could push prices above 500. At the one-day horizon, a flash crash, a major after-hours announcement, or an index rebalancing event could breach the stated range even within a single session. These tail events are by definition underweighted in interval estimates built primarily around normal volatility assumptions, and real-world distributions tend to have fatter tails than the implied ranges suggest.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-23",
+  "timestamp": "2026-04-23T20:56:19.753921Z",
+  "domain": "stocks",
+  "item": "SHW",
+  "item_label": "Sherwin-Williams",
+  "unit": "USD",
+  "current_value": 337.6600036621094,
+  "context": "Current closing price of Sherwin-Williams (SHW): $337.66 USD as of 2026-04-23.",
+  "prompt_text": "Today is 2026-04-23.\n\nCurrent closing price of Sherwin-Williams (SHW): $337.66 USD as of 2026-04-23.\n\nPredict the closing price of Sherwin-Williams at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-24\n  1-week target date: 2026-04-30\n  1-month target date: 2026-05-23\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 340,\n    \"90_ci\": [322, 358]\n  },\n  \"1w\": {\n    \"point_estimate\": 343,\n    \"90_ci\": [310, 376]\n  },\n  \"1m\": {\n    \"point_estimate\": 348,\n    \"90_ci\": [290, 406]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 340,
+      "90_ci": [
+        322,
+        358
+      ]
+    },
+    "1w": {
+      "point_estimate": 343,
+      "90_ci": [
+        310,
+        376
+      ]
+    },
+    "1m": {
+      "point_estimate": 348,
+      "90_ci": [
+        290,
+        406
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 340,\n    \"90_ci\": [\n      322,\n      358\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 343,\n    \"90_ci\": [\n      310,\n      376\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 348,\n    \"90_ci\": [\n      290,\n      406\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. At the one-day horizon, the estimate of 340 likely anchored closely to the most recent observed value, assuming mean-reverting behavior and no major catalyst imminent. The one-week estimate of 343 incorporates a small positive drift, consistent with a slight upward trend or baseline momentum in the series, while the one-month estimate of 348 extrapolates that drift further, assuming the underlying process continues along its recent trajectory without significant structural breaks.\n\nThe confidence interval widths widen appropriately as the time horizon extends, reflecting the compounding of uncertainty over time. At one day, the 90% interval spans roughly 36 units, which is relatively tight and consistent with short-term volatility that is largely predictable from recent realized variance. By one week, the interval widens to 66 units, and at one month it reaches 116 units, capturing the growing range of plausible outcomes as random shocks accumulate and the forecast has less information to constrain it. These widths were informed by historical volatility patterns and the assumption that variance scales roughly with time, though the exact scaling depends on whether the process exhibits mean reversion or persistent trending behavior.\n\nSeveral risks could push outcomes outside these stated intervals. On the upside, a positive macro surprise, a sudden shift in sentiment, or a structural break in the underlying trend could drive the series well above 406 within a month. On the downside, an adverse shock \u2014 such as a policy change, geopolitical disruption, or liquidity event \u2014 could push the value below 290, which would represent a move roughly two standard deviations below the point estimate. The intervals also do not fully account for tail risks associated with regime changes, where the data-generating process itself shifts in ways that historical volatility estimates cannot anticipate.\n\nIt is also worth noting that the intervals assume roughly symmetric uncertainty around the point estimates, which may not hold in practice. Many real-world series exhibit skewed distributions, where downside risks are fatter-tailed than upside risks or vice versa. If the series in question has historically shown negative skewness or jump behavior, the lower bounds of the intervals may be too optimistic, and a more conservative forecast would shift the lower tail further out. Users relying on these forecasts for decision-making should treat the stated bounds as indicative rather than definitive, particularly at the one-month horizon where model uncertainty becomes substantial.",
+  "status": "collected",
+  "error": null
+}
