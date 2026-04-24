@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-24",
+  "timestamp": "2026-04-24T22:30:35.170227Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 34.209999084472656,
+  "context": "Current closing price of Chipotle (CMG): $34.21 USD as of 2026-04-24.",
+  "prompt_text": "Today is 2026-04-24.\n\nCurrent closing price of Chipotle (CMG): $34.21 USD as of 2026-04-24.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-25\n  1-week target date: 2026-05-01\n  1-month target date: 2026-05-24\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 34.50,\n    \"90_ci\": [32.80, 36.20]\n  },\n  \"1w\": {\n    \"point_estimate\": 34.80,\n    \"90_ci\": [31.50, 38.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.50,\n    \"90_ci\": [28.00, 43.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 34.5,
+      "90_ci": [
+        32.8,
+        36.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 34.8,
+      "90_ci": [
+        31.5,
+        38.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 35.5,
+      "90_ci": [
+        28.0,
+        43.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 34.5,\n    \"90_ci\": [\n      32.8,\n      36.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 34.8,\n    \"90_ci\": [\n      31.5,\n      38.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.5,\n    \"90_ci\": [\n      28.0,\n      43.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "At the 1-day horizon, the point estimate of 34.5 was driven primarily by the most recent observed value and short-term momentum, assuming no major discontinuous events would occur overnight. At this very short horizon, mean reversion and inertia in the underlying series tend to dominate, so the forecast essentially anchors near the current level with only modest drift expected. The 1-week estimate of 34.8 reflects a slight upward drift assumption, perhaps based on a gentle trend or seasonal pattern in the data, while the 1-month estimate of 35.5 extends that drift further, incorporating a slightly more optimistic directional view over a longer accumulation period.\n\nThe confidence interval widths reflect how uncertainty compounds over time. At 1 day, the interval of roughly plus or minus 1.7 units is relatively tight because there is limited time for the underlying process to deviate meaningfully from its current state. By 1 week, the interval widens to about plus or minus 3.3 units, reflecting the accumulation of daily volatility and the possibility that short-term shocks could persist or reverse. At 1 month, the interval spans roughly 15 units, which captures not only compounded daily uncertainty but also the possibility of structural shifts, regime changes, or cyclical turning points that become more plausible over longer horizons.\n\nSeveral tail risks could push outcomes outside these stated intervals. On the downside, an unexpected adverse shock \u2014 such as a sudden policy change, macroeconomic deterioration, or a data release that signals weakening fundamentals \u2014 could push the actual value well below 28. On the upside, a positive surprise or acceleration in an underlying trend could push values above 43 within the month. These kinds of discontinuous events are precisely what confidence intervals based on historical volatility tend to underweight, since they are calibrated on typical fluctuations rather than rare but impactful breaks.\n\nIt is also worth noting that model uncertainty itself is a source of risk not fully captured in these intervals. The forecast assumes some degree of stationarity or predictable trend in the underlying process, but if the data-generating process has shifted in ways not yet visible in recent observations, both the point estimates and the interval bounds could be systematically wrong in the same direction. This is sometimes called parameter uncertainty or model misspecification risk, and it is one reason why real-world outcomes at the 1-month horizon especially should be treated with considerable humility beyond what the stated confidence interval alone suggests.",
+  "status": "collected",
+  "error": null
+}
