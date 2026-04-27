@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-27",
+  "timestamp": "2026-04-27T22:24:34.093878Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 33.63999938964844,
+  "context": "Current closing price of Chipotle (CMG): $33.64 USD as of 2026-04-27.",
+  "prompt_text": "Today is 2026-04-27.\n\nCurrent closing price of Chipotle (CMG): $33.64 USD as of 2026-04-27.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-28\n  1-week target date: 2026-05-04\n  1-month target date: 2026-05-27\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future prices for CMG at $33.64 (note: this appears to be post-split adjusted, as CMG did a 50:1 stock split in 2024, so $33.64 is reasonable in that context).\n\nLet me think through this carefully:\n\n**Current price:** $33.64 on 2026-04-27\n\n**Key considerations:**\n- CMG's historical daily volatility is roughly 1.5-2% (post-split)\n- The broader market has been volatile in 2026 (tariff concerns, macro uncertainty)\n- No specific earnings catalyst information, but need to consider upcoming earnings\n- CMG typically reports Q1 earnings around late April/early May - this could be a significant factor for the 1-week horizon\n\n**Volatility estimates:**\n- Daily vol: ~1.8% \u2192 daily \u03c3 \u2248 $0.60\n- Weekly vol: ~4% \u2192 weekly \u03c3 \u2248 $1.35\n- Monthly vol: ~9% \u2192 monthly \u03c3 \u2248 $3.03\n\n**For 90% CI:** Using ~1.645\u03c3 on each side\n\n**1-day (2026-04-28):**\n- Point estimate: $33.75 (slight upward drift)\n- 90% CI: \u00b1$0.99 \u2192 [$32.76, $34.74]\n\n**1-week (2026-05-04):**\n- Earnings risk adds uncertainty\n- Point estimate: $34.00\n- 90% CI: \u00b1$2.20 \u2192 [$31.80, $36.20]\n\n**1-month (2026-05-27):**\n- Point estimate: $34.50 (modest upward drift)\n- 90% CI: \u00b1$5.00 \u2192 [$29.50, $39.50]\n\n{\n  \"1d\": {\n    \"point_estimate\": 33.75,\n    \"90_ci\": [32.76, 34.74]\n  },\n  \"1w\": {\n    \"point_estimate\": 34.00,\n    \"90_ci\": [31.80, 36.20]\n  },\n  \"1m\": {\n    \"point_estimate\": 34.50,\n    \"90_ci\": [29.50, 39.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 33.75,
+      "90_ci": [
+        32.76,
+        34.74
+      ]
+    },
+    "1w": {
+      "point_estimate": 34.0,
+      "90_ci": [
+        31.8,
+        36.2
+      ]
+    },
+    "1m": {
+      "point_estimate": 34.5,
+      "90_ci": [
+        29.5,
+        39.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 33.75,\n    \"90_ci\": [\n      32.76,\n      34.74\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 34.0,\n    \"90_ci\": [\n      31.8,\n      36.2\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 34.5,\n    \"90_ci\": [\n      29.5,\n      39.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "At the time of the forecast, the asset appeared to be trading near the $33.75 level, which anchored the 1-day point estimate directly. For very short horizons, the most reliable assumption is typically mean-reversion toward the recent price, with minimal drift expected in a single session. The 1-week estimate nudged slightly higher to $34.00, reflecting a modest upward bias that might stem from prevailing momentum or a slightly bullish near-term trend. The 1-month estimate of $34.50 extended that gentle drift further, implying a continuation of a slow, gradual upward trajectory rather than any sharp directional move. In essence, each successive horizon layered on a small positive drift assumption while keeping the baseline close to the current observed price.\n\nThe confidence interval widths were calibrated to expand with time, which is a standard reflection of uncertainty compounding over longer horizons. At one day, the interval of roughly plus or minus one dollar is quite tight, consistent with typical daily volatility for a moderately liquid asset in this price range. By one week, the interval widens to about plus or minus $2.20, accounting for the accumulation of daily price fluctuations over five trading sessions. At one month, the interval stretches to plus or minus $5.00, which acknowledges that over four-plus weeks, macroeconomic releases, sector-specific news, and shifts in market sentiment can meaningfully move prices in either direction. The widening also reflects model uncertainty \u2014 the further out you project, the less reliable any single model's assumptions become.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a surprise positive catalyst such as a strong earnings beat, favorable regulatory news, or a broad market rally driven by better-than-expected economic data could propel the price well above $39.50 at the monthly horizon. On the downside, a risk-off episode triggered by geopolitical escalation, a Federal Reserve policy surprise, or deteriorating sector fundamentals could push the price below $29.50. Liquidity events or forced selling by large holders represent tail risks that are particularly hard to quantify and could compress prices rapidly beyond the stated bounds.\n\nFinally, it is worth noting that even the 1-day interval could be violated if there is a company-specific announcement \u2014 such as an unexpected earnings preannouncement, a merger rumor, or a significant lawsuit \u2014 that arrives outside of normal market hours. These binary-type events are precisely the kind of risk that standard volatility-based intervals tend to underweight, since they reflect jump risk rather than the smooth diffusion process most interval-estimation methods assume. Readers should treat these intervals as representing typical market conditions rather than guarantees against extreme outcomes.",
+  "status": "collected",
+  "error": null
+}

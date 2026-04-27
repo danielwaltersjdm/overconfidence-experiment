@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-27",
+  "timestamp": "2026-04-27T21:21:34.425528Z",
+  "domain": "stocks",
+  "item": "CSCO",
+  "item_label": "Cisco",
+  "unit": "USD",
+  "current_value": 88.26000213623047,
+  "context": "Current closing price of Cisco (CSCO): $88.26 USD as of 2026-04-27.",
+  "prompt_text": "Today is 2026-04-27.\n\nCurrent closing price of Cisco (CSCO): $88.26 USD as of 2026-04-27.\n\nPredict the closing price of Cisco at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-28\n  1-week target date: 2026-05-04\n  1-month target date: 2026-05-27\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 88.50,\n    \"90_ci\": [85.50, 91.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 89.00,\n    \"90_ci\": [83.00, 95.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 90.00,\n    \"90_ci\": [78.00, 102.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 88.5,
+      "90_ci": [
+        85.5,
+        91.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 89.0,
+      "90_ci": [
+        83.0,
+        95.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 90.0,
+      "90_ci": [
+        78.0,
+        102.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 88.5,\n    \"90_ci\": [\n      85.5,\n      91.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 89.0,\n    \"90_ci\": [\n      83.0,\n      95.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 90.0,\n    \"90_ci\": [\n      78.0,\n      102.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a recent market price around 88-89 for the underlying asset in question. At the one-day horizon, the point estimate of 88.5 essentially anchors near the last observed price, incorporating minimal expected drift since short-term price movements are close to a random walk with slight mean-reverting tendencies. At one week, I nudged the estimate slightly higher to 89.0, reflecting a small positive drift assumption consistent with modest long-run equity or asset appreciation trends. At one month, the estimate rises further to 90.0, incorporating a slightly more pronounced drift component over the longer horizon while still remaining close to current levels, as fundamental repricing rarely moves dramatically in a single month under normal conditions.\n\nThe confidence interval widths were driven primarily by realized and implied volatility assumptions scaled across each time horizon. For the one-day interval, the relatively tight band of plus or minus three points reflects typical daily price variation under normal market conditions. As the horizon extends to one week, I widened the interval to plus or minus six points, scaling roughly with the square root of time, which is the standard statistical approach for random walk uncertainty. By one month, the interval expands to plus or minus twelve points, again following approximate square-root-of-time scaling, though I may have applied slightly more caution given that monthly windows can capture regime shifts, earnings events, or macro surprises that are harder to model linearly.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic shocks such as unexpected central bank policy changes, geopolitical escalations, or credit market dislocations that could trigger sharp repricing well beyond normal volatility bounds. On the upside, stronger-than-expected economic data, a surprise policy easing, or positive earnings surprises could drive prices above the upper confidence bounds. Liquidity crises or flash crash dynamics represent tail risks particularly dangerous at shorter horizons, where my intervals may be too tight if market microstructure breaks down. At the monthly horizon, structural regime changes \u2014 such as a recession signal or a significant inflation surprise \u2014 represent the most plausible mechanisms for exceeding the stated range in either direction.",
+  "status": "collected",
+  "error": null
+}
