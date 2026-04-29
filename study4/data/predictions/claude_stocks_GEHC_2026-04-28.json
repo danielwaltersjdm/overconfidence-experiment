@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-28",
+  "timestamp": "2026-04-28T23:38:38.179419Z",
+  "domain": "stocks",
+  "item": "GEHC",
+  "item_label": "GE HealthCare",
+  "unit": "USD",
+  "current_value": 68.5,
+  "context": "Current closing price of GE HealthCare (GEHC): $68.50 USD as of 2026-04-28.",
+  "prompt_text": "Today is 2026-04-28.\n\nCurrent closing price of GE HealthCare (GEHC): $68.50 USD as of 2026-04-28.\n\nPredict the closing price of GE HealthCare at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-29\n  1-week target date: 2026-05-05\n  1-month target date: 2026-05-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 69.00,\n    \"90_ci\": [65.50, 72.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 69.50,\n    \"90_ci\": [62.00, 77.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 71.00,\n    \"90_ci\": [57.00, 85.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 69.0,
+      "90_ci": [
+        65.5,
+        72.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 69.5,
+      "90_ci": [
+        62.0,
+        77.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 71.0,
+      "90_ci": [
+        57.0,
+        85.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 69.0,\n    \"90_ci\": [\n      65.5,\n      72.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 69.5,\n    \"90_ci\": [\n      62.0,\n      77.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 71.0,\n    \"90_ci\": [\n      57.0,\n      85.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a current price near $69, with the 1-day estimate staying essentially flat at $69.0, the 1-week estimate nudging slightly higher to $69.5, and the 1-month estimate rising to $71.0. This gentle upward trajectory likely reflected a baseline assumption of slight positive drift consistent with long-run equity or commodity price trends, combined with whatever near-term momentum or fundamental backdrop was present at the time of the forecast. The 1-day estimate is anchored most tightly to the last observed price since overnight information flow is limited and mean reversion dominates at very short horizons.\n\nThe confidence interval widths widen systematically across horizons, which is the natural consequence of uncertainty compounding over time. At 1 day, the 90% interval spans roughly 7 points, reflecting typical daily volatility. At 1 week, it widens to 15 points, and at 1 month it reaches 28 points. These widths were likely calibrated using historical realized volatility scaled by the square root of time, a standard approach. The relatively moderate widths suggest I was working with an asset that had moderate but not extreme volatility \u2014 consistent with something like an equity index, a mid-volatility stock, or a commodity with reasonably stable supply-demand dynamics.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic announcements such as surprise inflation prints, central bank policy shifts, or geopolitical shocks that can gap prices well beyond normal volatility bands. Earnings releases, if this is a single stock, represent a classic tail risk that can produce moves of 10\u201320% in a single session, easily breaching the 1-day interval. Liquidity crises or broader market dislocations could similarly cause correlated moves that dwarf historical volatility estimates.\n\nFinally, model risk itself is a meaningful source of out-of-interval outcomes. If the forecast was built assuming a roughly normal return distribution, fat-tailed events \u2014 which occur far more frequently in financial markets than a Gaussian model predicts \u2014 would be systematically underrepresented in the confidence intervals. Structural breaks, such as a sector rotation, a regulatory change, or a sudden shift in market regime, could also render the historical volatility estimate stale, making the intervals too narrow in ways that are difficult to anticipate in advance.",
+  "status": "collected",
+  "error": null
+}
