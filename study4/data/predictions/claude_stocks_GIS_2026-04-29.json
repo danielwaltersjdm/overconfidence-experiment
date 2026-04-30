@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-29",
+  "timestamp": "2026-04-29T23:35:42.856491Z",
+  "domain": "stocks",
+  "item": "GIS",
+  "item_label": "General Mills",
+  "unit": "USD",
+  "current_value": 34.470001220703125,
+  "context": "Current closing price of General Mills (GIS): $34.47 USD as of 2026-04-29.",
+  "prompt_text": "Today is 2026-04-29.\n\nCurrent closing price of General Mills (GIS): $34.47 USD as of 2026-04-29.\n\nPredict the closing price of General Mills at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-30\n  1-week target date: 2026-05-06\n  1-month target date: 2026-05-29\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 34.55,\n    \"90_ci\": [33.20, 35.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 34.70,\n    \"90_ci\": [32.00, 37.40]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.10,\n    \"90_ci\": [29.50, 40.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 34.55,
+      "90_ci": [
+        33.2,
+        35.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 34.7,
+      "90_ci": [
+        32.0,
+        37.4
+      ]
+    },
+    "1m": {
+      "point_estimate": 35.1,
+      "90_ci": [
+        29.5,
+        40.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 34.55,\n    \"90_ci\": [\n      33.2,\n      35.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 34.7,\n    \"90_ci\": [\n      32.0,\n      37.4\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.1,\n    \"90_ci\": [\n      29.5,\n      40.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across all three horizons, anchored around the most recent price level and adjusted slightly higher to account for a mild positive trend bias that tends to persist in the short run. At the one-day horizon, the estimate stays close to the current price since overnight moves are typically small and mean-reverting forces dominate at that scale. At the one-week horizon, I allow for slightly more drift, acknowledging that short-term momentum can carry prices a bit further. At the one-month horizon, the estimate drifts higher still, reflecting a combination of any underlying trend and the compounding effect of daily expected returns, though the incremental change remains modest because I have no strong directional conviction beyond what recent price action suggests.\n\nThe confidence interval widths widen substantially as the horizon extends, and this is largely mechanical. Daily volatility compounds over time, so uncertainty at one month is roughly the square root of 20 times the daily uncertainty, all else equal. At the one-day level, the interval is relatively tight because the range of plausible overnight outcomes is constrained. By one week, the interval nearly doubles in width, and by one month it is quite wide, reflecting the accumulation of daily shocks that could push the price meaningfully in either direction. I also gave slightly fatter tails than a pure Gaussian model would suggest, because financial assets tend to exhibit excess kurtosis and occasional large moves.\n\nSpecific risks that could push outcomes outside these intervals include surprise macroeconomic announcements such as inflation prints, central bank policy shifts, or employment data that deviate sharply from consensus expectations. Geopolitical events, sudden shifts in risk appetite, or liquidity crises could produce gap moves well beyond the stated ranges, particularly at the one-week and one-month horizons. Earnings announcements or sector-specific news could also generate outsized moves if the underlying asset is equity-related.\n\nOn the downside, a sharp deterioration in market sentiment, a flight to safety, or an unexpected tightening of financial conditions could push the price well below the lower bound of my one-month interval. Conversely, a strong risk-on rally driven by better-than-expected economic data or a dovish policy surprise could send the price above the upper bound. My intervals are intended to capture roughly 90 percent of plausible outcomes under normal market conditions, but they should not be interpreted as hard boundaries during tail events, which by definition fall outside what historical volatility alone would predict.",
+  "status": "collected",
+  "error": null
+}

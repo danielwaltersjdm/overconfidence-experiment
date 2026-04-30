@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-29",
+  "timestamp": "2026-04-29T23:06:37.393174Z",
+  "domain": "stocks",
+  "item": "F",
+  "item_label": "Ford Motor",
+  "unit": "USD",
+  "current_value": 12.239999771118164,
+  "context": "Current closing price of Ford Motor (F): $12.24 USD as of 2026-04-29.",
+  "prompt_text": "Today is 2026-04-29.\n\nCurrent closing price of Ford Motor (F): $12.24 USD as of 2026-04-29.\n\nPredict the closing price of Ford Motor at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-30\n  1-week target date: 2026-05-06\n  1-month target date: 2026-05-29\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 12.20,\n    \"90_ci\": [11.60, 12.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 12.10,\n    \"90_ci\": [11.00, 13.20]\n  },\n  \"1m\": {\n    \"point_estimate\": 11.80,\n    \"90_ci\": [9.50, 14.20]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 12.2,
+      "90_ci": [
+        11.6,
+        12.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 12.1,
+      "90_ci": [
+        11.0,
+        13.2
+      ]
+    },
+    "1m": {
+      "point_estimate": 11.8,
+      "90_ci": [
+        9.5,
+        14.2
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 12.2,\n    \"90_ci\": [\n      11.6,\n      12.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 12.1,\n    \"90_ci\": [\n      11.0,\n      13.2\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 11.8,\n    \"90_ci\": [\n      9.5,\n      14.2\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest downward drift over time, starting near 12.2 and edging toward 11.8 over the one-month horizon. At the one-day horizon, the estimate is anchored heavily by recent observed values and short-term momentum, assuming no major discontinuous shock arrives overnight. The slight decline at one week and one month reflects a weak mean-reversion assumption \u2014 if the current reading is somewhat elevated relative to a longer-run equilibrium, I'd expect gradual normalization. The differences across horizons are intentionally small because the underlying signal doesn't show a strong directional trend, so I'm not projecting aggressive movement in either direction.\n\nConfidence interval widths widen substantially as the horizon extends, which is a natural consequence of forecast uncertainty compounding over time. At one day, the interval is relatively tight (11.6\u201312.8) because short-term dynamics are more predictable and noise tends to be limited within a single trading or observation period. By one week, idiosyncratic events, data revisions, or shifting sentiment can introduce meaningful variance, pushing the interval out to roughly 11.0\u201313.2. At one month, the range nearly doubles in width compared to the one-day case, reflecting the accumulated uncertainty from macroeconomic developments, policy signals, and behavioral shifts that are simply unknowable this far in advance.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, an unexpected positive shock \u2014 such as a stronger-than-anticipated data release, a policy announcement that boosts confidence, or a supply disruption affecting the underlying variable \u2014 could lift the value well above 14.2. On the downside, a deterioration in macro conditions, a sentiment-driven selloff, or a negative surprise in correlated indicators could push the reading below 9.5 at the one-month horizon. These tail scenarios are real but assigned low probability precisely because they require a confluence of unfavorable or favorable developments.\n\nIt's also worth noting that the intervals themselves carry a form of model uncertainty \u2014 they assume the data-generating process remains relatively stable. If there is a structural break, such as a regime change in policy or a sudden liquidity event, the historical relationships underpinning my estimates may no longer hold, and the true distribution of outcomes could be fatter-tailed than my stated 90% intervals suggest. Readers should treat these forecasts as a central tendency with acknowledged limitations rather than a precise probabilistic guarantee.",
+  "status": "collected",
+  "error": null
+}

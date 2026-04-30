@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-29",
+  "timestamp": "2026-04-29T21:41:14.602960Z",
+  "domain": "stocks",
+  "item": "INTU",
+  "item_label": "Intuit",
+  "unit": "USD",
+  "current_value": 395.0799865722656,
+  "context": "Current closing price of Intuit (INTU): $395.08 USD as of 2026-04-29.",
+  "prompt_text": "Today is 2026-04-29.\n\nCurrent closing price of Intuit (INTU): $395.08 USD as of 2026-04-29.\n\nPredict the closing price of Intuit at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-04-30\n  1-week target date: 2026-05-06\n  1-month target date: 2026-05-29\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 397,\n    \"90_ci\": [378, 416]\n  },\n  \"1w\": {\n    \"point_estimate\": 400,\n    \"90_ci\": [365, 435]\n  },\n  \"1m\": {\n    \"point_estimate\": 410,\n    \"90_ci\": [340, 480]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 397,
+      "90_ci": [
+        378,
+        416
+      ]
+    },
+    "1w": {
+      "point_estimate": 400,
+      "90_ci": [
+        365,
+        435
+      ]
+    },
+    "1m": {
+      "point_estimate": 410,
+      "90_ci": [
+        340,
+        480
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 397,\n    \"90_ci\": [\n      378,\n      416\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 400,\n    \"90_ci\": [\n      365,\n      435\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 410,\n    \"90_ci\": [\n      340,\n      480\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'll assume was a baseline near 395\u2013397 at the time of forecasting. For the 1-day horizon, the estimate of 397 essentially anchors on near-term price continuity, assuming no major catalysts and typical overnight/session drift patterns. The 1-week estimate of 400 builds in a slight positive bias, consistent with a general tendency for equity indices to drift upward over short horizons in the absence of clear negative signals. The 1-month estimate of 410 extends that logic further, reflecting a rough annualized return assumption in the mid-single digits applied over roughly four weeks, while acknowledging that medium-term mean reversion and macro conditions were relatively neutral at the time.\n\nThe confidence interval widths expand as they should across horizons, but the specific calibration reflects the typical realized volatility of whatever underlying instrument this tracks \u2014 likely an ETF or index near the 400 level such as SPY. Daily moves of roughly plus or minus 1% imply a roughly 4-point range at one standard deviation for a single day, so the 90% interval of 378\u2013416 captures roughly two to two-and-a-half standard deviations of daily movement. At one week, volatility scales by the square root of time, widening the interval to 365\u2013435, and at one month further still to 340\u2013480, reflecting the compounding uncertainty of roughly 21 trading days.\n\nSpecific risks that could push outcomes outside those stated intervals include a sudden shift in Federal Reserve policy signaling \u2014 either an unexpected rate hike or a pivot \u2014 which historically produces outsized single-day moves in equity markets. Geopolitical shocks, a surprise in inflation or employment data, or a credit event in a systemically important institution could all generate tail moves beyond what historical volatility alone would suggest. Liquidity conditions also matter: in thin markets, gap moves can exceed what a normal distribution predicts.\n\nIt is also worth acknowledging model limitations. My intervals assume something close to log-normal price dynamics with relatively stable volatility, but realized volatility is itself uncertain and can spike sharply. If implied volatility were elevated at the time of the forecast \u2014 as it is during earnings seasons or macro event clusters \u2014 the true uncertainty would be wider than my stated intervals, meaning I may have been underconfident at the tails while being reasonably calibrated near the center.",
+  "status": "collected",
+  "error": null
+}
