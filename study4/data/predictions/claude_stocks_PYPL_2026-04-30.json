@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-30",
+  "timestamp": "2026-04-30T22:59:42.400694Z",
+  "domain": "stocks",
+  "item": "PYPL",
+  "item_label": "PayPal",
+  "unit": "USD",
+  "current_value": 50.13999938964844,
+  "context": "Current closing price of PayPal (PYPL): $50.14 USD as of 2026-04-30.",
+  "prompt_text": "Today is 2026-04-30.\n\nCurrent closing price of PayPal (PYPL): $50.14 USD as of 2026-04-30.\n\nPredict the closing price of PayPal at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-01\n  1-week target date: 2026-05-07\n  1-month target date: 2026-05-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 50.50,\n    \"90_ci\": [47.50, 53.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 51.00,\n    \"90_ci\": [45.00, 57.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 52.00,\n    \"90_ci\": [41.00, 63.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 50.5,
+      "90_ci": [
+        47.5,
+        53.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 51.0,
+      "90_ci": [
+        45.0,
+        57.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 52.0,
+      "90_ci": [
+        41.0,
+        63.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 50.5,\n    \"90_ci\": [\n      47.5,\n      53.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 51.0,\n    \"90_ci\": [\n      45.0,\n      57.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 52.0,\n    \"90_ci\": [\n      41.0,\n      63.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift from a presumed current level near 50, with the 1-day estimate of 50.5 suggesting near-term stability and only marginal movement, the 1-week estimate of 51.0 incorporating slightly more room for directional momentum to develop, and the 1-month estimate of 52.0 reflecting a modest but not dramatic trend. This gradual escalation in the point estimates suggests I was likely anchoring to some mean-reverting process or slow-moving underlying variable \u2014 perhaps a polling average, an index level, or a probability estimate \u2014 where the baseline expectation is for modest continuation of a slight upward trend rather than a sharp break in either direction.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a standard feature of forecasting under uncertainty. At one day, the 90% CI spans only 6 points, reflecting the relatively constrained range of outcomes when very little time has elapsed for new information or volatility to accumulate. By one week, the interval widens to 12 points, and by one month it spans 22 points, capturing the compounding uncertainty that comes from unknown events, measurement noise, and the possibility of structural shifts in whatever underlying process is being tracked. The symmetric widening around the point estimates also suggests I was treating upside and downside risks as roughly balanced at each horizon.\n\nSpecific risks that could push outcomes outside even the stated intervals include sudden discrete events \u2014 a major geopolitical shock, an unexpected policy announcement, a significant data release, or a black swan development \u2014 that would cause a rapid repricing or shift in whatever variable is being forecast. At the one-month horizon especially, the tails of the true distribution are likely fatter than a simple symmetric 90% CI implies, meaning there is meaningful probability of outcomes well below 41 or above 63 that I may have underweighted.\n\nIt's worth noting that without knowing the specific variable being forecast, there is an additional layer of meta-uncertainty in this explanation. If the underlying series has hard boundaries \u2014 such as a probability constrained between 0 and 100, or a percentage \u2014 then the intervals near those boundaries would naturally compress, and the symmetric structure of my stated CIs could be slightly miscalibrated at extreme values. Users relying on these forecasts should treat the intervals as indicative rather than precise probabilistic commitments.",
+  "status": "collected",
+  "error": null
+}

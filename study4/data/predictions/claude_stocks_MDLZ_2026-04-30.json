@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-04-30",
+  "timestamp": "2026-04-30T22:24:16.407366Z",
+  "domain": "stocks",
+  "item": "MDLZ",
+  "item_label": "Mondelez",
+  "unit": "USD",
+  "current_value": 61.439998626708984,
+  "context": "Current closing price of Mondelez (MDLZ): $61.44 USD as of 2026-04-30.",
+  "prompt_text": "Today is 2026-04-30.\n\nCurrent closing price of Mondelez (MDLZ): $61.44 USD as of 2026-04-30.\n\nPredict the closing price of Mondelez at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-01\n  1-week target date: 2026-05-07\n  1-month target date: 2026-05-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 61.60,\n    \"90_ci\": [59.80, 63.40]\n  },\n  \"1w\": {\n    \"point_estimate\": 61.80,\n    \"90_ci\": [58.50, 65.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 62.50,\n    \"90_ci\": [55.00, 69.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 61.6,
+      "90_ci": [
+        59.8,
+        63.4
+      ]
+    },
+    "1w": {
+      "point_estimate": 61.8,
+      "90_ci": [
+        58.5,
+        65.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 62.5,
+      "90_ci": [
+        55.0,
+        69.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 61.6,\n    \"90_ci\": [\n      59.8,\n      63.4\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 61.8,\n    \"90_ci\": [\n      58.5,\n      65.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 62.5,\n    \"90_ci\": [\n      55.0,\n      69.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-drifting baseline from a presumed current level near 61.5, with the 1-day estimate of 61.6 essentially anchoring to the most recent observed value and applying only a minimal drift. The 1-week estimate of 61.8 incorporates a small positive trend assumption, perhaps reflecting a modest mean-reversion or momentum signal, while the 1-month estimate of 62.5 extrapolates that gentle drift further out. The incremental increases across horizons suggest I was modeling a slow-moving variable \u2014 likely an index, rate, or ratio \u2014 that doesn't exhibit sharp short-term volatility but has a slight structural upward bias based on recent trend or fundamental anchoring.\n\nThe confidence interval widths widen progressively across horizons in a pattern consistent with a random-walk-style uncertainty model. The 1-day interval of roughly \u00b11.8 reflects the tight bound that near-term price or value continuity provides, while the 1-week interval of \u00b13.3 and the 1-month interval of roughly \u00b17 reflect the compounding of daily uncertainty over more sessions. The dominant sources of uncertainty include data revisions or measurement noise at the short end, and macroeconomic shifts, sentiment changes, or structural breaks at the longer end. The asymmetric widening \u2014 slightly more room to the downside in some cases \u2014 may reflect a mild skew toward downside risk I implicitly embedded.\n\nSpecific risks that could push outcomes outside the stated intervals are meaningful. On the upside, a surprise policy announcement, stronger-than-expected economic data release, or a sudden shift in market sentiment could drive the value well above 65 or even 69 within a month. On the downside, a financial shock, geopolitical escalation, or deteriorating macro conditions could breach the lower bounds \u2014 particularly the 1-month floor of 55, which already represents a fairly wide move. The 90% confidence intervals by construction exclude roughly one-in-ten outcomes on each tail, so genuinely tail events remain live possibilities.\n\nIt's also worth noting that model misspecification is itself a risk. If the underlying variable exhibits regime changes, fat tails, or structural breaks not captured in recent history, all three intervals could be systematically too narrow. Correlation with broader market conditions or policy variables that I may not have fully incorporated could also introduce biases into the point estimates themselves, particularly at the 1-month horizon where compounding errors have the most room to accumulate.",
+  "status": "collected",
+  "error": null
+}
