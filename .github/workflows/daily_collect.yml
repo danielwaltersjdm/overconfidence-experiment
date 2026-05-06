@@ -11,6 +11,7 @@ on:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    timeout-minutes: 240  # 4h cap — fail fast instead of hitting GH 6h kill
     permissions:
       contents: write
 
@@ -39,6 +40,8 @@ jobs:
         run: python collect_predictions.py
 
       - name: Commit new predictions
+        # Run even if Run collection failed/timed out so we capture partial progress
+        if: always()
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

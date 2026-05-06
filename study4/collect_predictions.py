@@ -190,7 +190,10 @@ def parse_json_response(text: str) -> dict:
     raise ValueError(f"No valid JSON found in response: {text[:200]}")
 
 
-def call_with_retry(fn, retries: int = 5, base_delay: float = 5.0):
+def call_with_retry(fn, retries: int = 3, base_delay: float = 2.0):
+    """Retry with bounded total wait per item. Capped to ~70s max for 503/rate-limit
+    errors and ~15s for other errors, so a sustained provider outage doesn't blow
+    past the GitHub Actions 6-hour job limit at scale (200 tickers × 3 models)."""
     for attempt in range(retries):
         try:
             return fn()
@@ -198,9 +201,9 @@ def call_with_retry(fn, retries: int = 5, base_delay: float = 5.0):
             if attempt == retries - 1:
                 raise
             err_str = str(e).lower()
-            # 503/rate-limit errors get longer backoff
             if "503" in err_str or "unavailable" in err_str or "rate" in err_str:
-                delay = 30.0 * (2 ** attempt) + random.uniform(0, 5)
+                # 10s, 30s, 60s — cap at ~100s total for a single item
+                delay = min(60.0, 10.0 * (3 ** attempt)) + random.uniform(0, 3)
             else:
                 delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
             console.print(f"  [yellow]Retry {attempt+1}/{retries}: {e}. Waiting {delay:.1f}s[/yellow]")
