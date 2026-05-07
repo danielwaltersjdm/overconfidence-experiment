@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-07",
+  "timestamp": "2026-05-07T19:52:14.831886Z",
+  "domain": "stocks",
+  "item": "PYPL",
+  "item_label": "PayPal",
+  "unit": "USD",
+  "current_value": 46.34000015258789,
+  "context": "Current closing price of PayPal (PYPL): $46.34 USD as of 2026-05-07.",
+  "prompt_text": "Today is 2026-05-07.\n\nCurrent closing price of PayPal (PYPL): $46.34 USD as of 2026-05-07.\n\nPredict the closing price of PayPal at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-08\n  1-week target date: 2026-05-14\n  1-month target date: 2026-06-06\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 46.60,\n    \"90_ci\": [44.20, 49.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 47.00,\n    \"90_ci\": [42.50, 51.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 48.50,\n    \"90_ci\": [39.00, 58.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 46.6,
+      "90_ci": [
+        44.2,
+        49.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 47.0,
+      "90_ci": [
+        42.5,
+        51.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 48.5,
+      "90_ci": [
+        39.0,
+        58.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 46.6,\n    \"90_ci\": [\n      44.2,\n      49.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 47.0,\n    \"90_ci\": [\n      42.5,\n      51.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 48.5,\n    \"90_ci\": [\n      39.0,\n      58.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd infer is a current level near 46\u201347, based on typical mean-reversion dynamics and whatever underlying trend context was available at the time of forecasting. For the one-day horizon, the estimate of 46.6 is essentially anchored to the most recent observed value, with very little expected movement over such a short window \u2014 short-term price or metric behavior tends to be dominated by noise rather than trend, so I kept the estimate close to the current level. At one week, the slight uptick to 47.0 reflects a marginal positive drift assumption, perhaps from a modest underlying trend or momentum signal. By one month, the estimate rises to 48.5, incorporating a somewhat stronger trend component compounding over time, though I held this increase modest to avoid overconfidence in directional persistence.\n\nThe confidence interval widths widen substantially as the horizon extends, which reflects the fundamental nature of uncertainty compounding over time. At one day, the 90% CI of roughly plus or minus 2.4 units is tight, reflecting that short-term volatility is relatively constrained and predictable. By one week, the interval expands to roughly plus or minus 4.5 units, capturing a full week's worth of realized volatility and path uncertainty. At one month, the interval nearly doubles again to plus or minus 9.5 units, reflecting not only compounded volatility but also the possibility that the trend assumption itself may be wrong \u2014 mean reversion could dominate, or an acceleration could occur. Model uncertainty also grows with horizon, as structural relationships that hold over short windows can break down.\n\nThere are several specific risks that could push outcomes outside my stated intervals. On the upside, a strong exogenous positive shock \u2014 such as a major policy announcement, better-than-expected data release, or a sentiment shift \u2014 could push the one-month outcome well above 58. On the downside, a sharp reversal driven by macro deterioration, a liquidity event, or a regime change in underlying fundamentals could push values below 39. These tail events are precisely what the 90% CI is designed to exclude by construction \u2014 meaning there is still a 10% probability allocated to outcomes beyond those bounds. Structural breaks, which are rare but not negligible, are the hardest risk to quantify and represent the most likely source of interval violation if one were to occur.",
+  "status": "collected",
+  "error": null
+}

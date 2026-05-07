@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-07",
+  "timestamp": "2026-05-07T19:50:13.893738Z",
+  "domain": "stocks",
+  "item": "IWM",
+  "item_label": "iShares Russell 2000",
+  "unit": "USD",
+  "current_value": 282.2735900878906,
+  "context": "Current closing price of iShares Russell 2000 (IWM): $282.27 USD as of 2026-05-07.",
+  "prompt_text": "Today is 2026-05-07.\n\nCurrent closing price of iShares Russell 2000 (IWM): $282.27 USD as of 2026-05-07.\n\nPredict the closing price of iShares Russell 2000 at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-08\n  1-week target date: 2026-05-14\n  1-month target date: 2026-06-06\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 283.50,\n    \"90_ci\": [276.00, 291.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 285.00,\n    \"90_ci\": [268.00, 302.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 287.00,\n    \"90_ci\": [255.00, 320.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 283.5,
+      "90_ci": [
+        276.0,
+        291.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 285.0,
+      "90_ci": [
+        268.0,
+        302.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 287.0,
+      "90_ci": [
+        255.0,
+        320.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 283.5,\n    \"90_ci\": [\n      276.0,\n      291.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 285.0,\n    \"90_ci\": [\n      268.0,\n      302.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 287.0,\n    \"90_ci\": [\n      255.0,\n      320.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three horizons, starting near 283.5 for the one-day forecast and gradually rising to 287.0 at one month. This gentle positive slope is consistent with a baseline assumption of slow mean-reversion or mild bullish momentum in whatever asset is being tracked, likely an equity index or ETF given the price level. At the one-day horizon, I anchored heavily on the most recent observed price and assumed minimal overnight drift, with the estimate sitting close to the last known value. At the one-week and one-month horizons, I applied a small positive drift assumption reflecting long-run equity risk premium expectations, while acknowledging that short-term noise dominates over such windows.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a standard reflection of volatility compounding over time. At one day, the 90% interval spans roughly 15 points, consistent with typical daily volatility in a mid-to-large cap index or fund. By one week, the interval widens to 34 points, and by one month it reaches 65 points, roughly following a square-root-of-time scaling rule applied to an assumed annualized volatility in the range of 15\u201320%. The primary sources of uncertainty include macroeconomic data surprises, Federal Reserve communications, earnings announcements, and broader risk sentiment shifts that are inherently unpredictable but regularly move markets by meaningful percentages within these timeframes.\n\nSpecific risks that could push outcomes outside my stated intervals include tail events such as an unexpected geopolitical escalation, a sudden credit market disruption, or a significant policy surprise from a major central bank. On the upside, an unexpectedly strong economic data release or a dovish pivot in monetary policy could drive prices well above the 302 upper bound for the one-week interval. Structural liquidity events, such as a flash crash or forced de-leveraging by large institutional players, could also produce intraday moves that breach the one-day bounds in either direction. These intervals should therefore be treated as reasonable probabilistic ranges under normal market conditions rather than hard limits under all scenarios.",
+  "status": "collected",
+  "error": null
+}
