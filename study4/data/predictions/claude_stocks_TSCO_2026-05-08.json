@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-08",
+  "timestamp": "2026-05-08T20:54:28.091300Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 30.649999618530273,
+  "context": "Current closing price of Tractor Supply (TSCO): $30.65 USD as of 2026-05-08.",
+  "prompt_text": "Today is 2026-05-08.\n\nCurrent closing price of Tractor Supply (TSCO): $30.65 USD as of 2026-05-08.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-09\n  1-week target date: 2026-05-15\n  1-month target date: 2026-06-07\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to think carefully about this. The current price of $30.65 for TSCO seems extremely low - TSCO typically trades around $200-270 range. This might be a post-split price or there's something unusual. Let me work with the given price of $30.65 as the current baseline.\n\nFor a stock at $30.65, I'll estimate typical daily volatility. TSCO historically has had annualized volatility around 25-30%. At $30.65, daily vol \u2248 30.65 \u00d7 0.27 / \u221a252 \u2248 $0.52/day.\n\nFor the confidence intervals:\n- 1-day: ~1.645 \u00d7 $0.52 \u2248 \u00b1$0.86\n- 1-week (5 days): ~1.645 \u00d7 $0.52 \u00d7 \u221a5 \u2248 \u00b1$1.91\n- 1-month (~22 days): ~1.645 \u00d7 $0.52 \u00d7 \u221a22 \u2248 \u00b1$4.01\n\nPoint estimates: slight upward drift assumed (small positive expected return).\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.75,\n    \"90_ci\": [29.90, 31.60]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.90,\n    \"90_ci\": [29.00, 32.80]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.20,\n    \"90_ci\": [27.20, 35.20]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 30.75,
+      "90_ci": [
+        29.9,
+        31.6
+      ]
+    },
+    "1w": {
+      "point_estimate": 30.9,
+      "90_ci": [
+        29.0,
+        32.8
+      ]
+    },
+    "1m": {
+      "point_estimate": 31.2,
+      "90_ci": [
+        27.2,
+        35.2
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.75,\n    \"90_ci\": [\n      29.9,\n      31.6\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.9,\n    \"90_ci\": [\n      29.0,\n      32.8\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.2,\n    \"90_ci\": [\n      27.2,\n      35.2\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "At the time of the forecast, the asset appeared to be trading around the $30\u201331 range, and the 1-day point estimate of $30.75 reflects a near-term expectation of modest stability with very little drift from the prevailing price. The 1-week estimate of $30.90 incorporates a slight upward tilt, consistent with a neutral-to-mildly-bullish near-term bias, perhaps driven by modest momentum or mean-reversion dynamics. The 1-month estimate of $31.20 extends that gradual drift further, reflecting an assumption that no major structural shift would occur but that a small positive drift is more likely than a sharp decline over that timeframe. All three point estimates are essentially anchored close to the observed price, which is typical when there is no strong directional catalyst immediately visible.\n\nThe confidence interval widths grow substantially across horizons, which reflects the compounding uncertainty that naturally accumulates over longer forecast windows. At 1 day, the 90% interval of roughly \u00b10.85 around the point estimate is quite tight, consistent with normal daily price fluctuations for a relatively stable asset. By 1 week the interval widens to about \u00b11.9, and by 1 month it expands to roughly \u00b14, reflecting the increased probability that a range of macro, sector, or idiosyncratic developments could materialize over that longer window. The width scaling is broadly consistent with a square-root-of-time diffusion model, though I likely also incorporated some fat-tail awareness to keep the intervals from being overconfident.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden deterioration in macro conditions \u2014 such as an unexpected rate hike signal, a credit event, or sector-specific bad news \u2014 could easily push the price well below the lower bound of the 1-month interval. On the upside, a strong earnings surprise, an acquisition rumor, or a broad risk-on rally could drive prices meaningfully above $35. Liquidity conditions and broader equity market sentiment are also relevant; if volatility spikes across markets, the actual realized range could be substantially wider than what the stated intervals imply.\n\nFinally, it is worth noting that these intervals represent probabilistic ranges, not guarantees, and a 90% confidence interval by construction leaves 10% probability mass outside its bounds. In practice, financial prices exhibit heavier tails than a simple Gaussian model would suggest, meaning the true probability of an extreme outcome is likely somewhat higher than the interval structure implies. Events like sudden geopolitical shocks, flash crashes, or regulatory announcements are inherently difficult to model and represent the primary source of tail risk that could render even the 1-month interval too narrow.",
+  "status": "collected",
+  "error": null
+}
