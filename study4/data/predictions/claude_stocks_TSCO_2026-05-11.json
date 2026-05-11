@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-11",
+  "timestamp": "2026-05-11T21:13:50.409050Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 30.25,
+  "context": "Current closing price of Tractor Supply (TSCO): $30.25 USD as of 2026-05-11.",
+  "prompt_text": "Today is 2026-05-11.\n\nCurrent closing price of Tractor Supply (TSCO): $30.25 USD as of 2026-05-11.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-12\n  1-week target date: 2026-05-18\n  1-month target date: 2026-06-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason about Tractor Supply's stock price at $30.25 as of 2026-05-11.\n\nFirst, let me note that $30.25 for TSCO seems unusually low. Historically, TSCO traded around $200-270 range in 2023-2024. A price of $30.25 in May 2026 would suggest either a significant stock decline or possibly a stock split. I'll work with the given current price of $30.25.\n\nKey considerations:\n1. TSCO is a defensive retail stock (farm/ranch supplies), relatively stable\n2. Typical daily volatility for TSCO historically around 1-2%\n3. At $30.25, typical daily move might be ~$0.30-0.60\n4. Weekly volatility ~2-4%, monthly ~4-8%\n\nFor a stock at this price level:\n- 1-day: minimal expected drift, small range\n- 1-week: slight uncertainty expansion\n- 1-month: broader uncertainty\n\nGiven the defensive nature of TSCO and assuming current market conditions (2026), I'll use:\n- Daily volatility: ~1.5% \u2192 ~$0.45/day\n- Weekly volatility: ~3.5% \u2192 ~$1.06\n- Monthly volatility: ~7% \u2192 ~$2.12\n\nFor 90% CI (roughly \u00b11.645 sigma):\n- 1-day: \u00b1$0.74\n- 1-week: \u00b1$1.75\n- 1-month: \u00b1$3.49\n\nPoint estimates slightly biased toward current price with minimal drift assumption:\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.35,\n    \"90_ci\": [29.55, 31.15]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.50,\n    \"90_ci\": [28.75, 32.25]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.75,\n    \"90_ci\": [27.25, 34.25]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 30.35,
+      "90_ci": [
+        29.55,
+        31.15
+      ]
+    },
+    "1w": {
+      "point_estimate": 30.5,
+      "90_ci": [
+        28.75,
+        32.25
+      ]
+    },
+    "1m": {
+      "point_estimate": 30.75,
+      "90_ci": [
+        27.25,
+        34.25
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.35,\n    \"90_ci\": [\n      29.55,\n      31.15\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.5,\n    \"90_ci\": [\n      28.75,\n      32.25\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.75,\n    \"90_ci\": [\n      27.25,\n      34.25\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assess as the current trading level around $30.35, with the 1-day estimate essentially anchored to the prevailing price, the 1-week estimate nudging slightly higher to $30.50, and the 1-month estimate reaching $30.75. This gentle positive slope reflects a baseline assumption of slight mean-reversion tendencies combined with modest bullish drift typical of equity or commodity markets in the absence of strong directional signals. Without knowing the specific asset, I've assumed a relatively stable macro environment and no imminent catalysts that would dramatically reprice the instrument in either direction. The incremental increases across horizons capture the idea that longer holding periods tend to accumulate small expected positive returns.\n\nThe confidence interval widths expand substantially as the time horizon lengthens, which reflects the classical square-root-of-time scaling of uncertainty. At the 1-day horizon, the 90% interval of roughly \u00b1$0.80 is narrow because overnight volatility is bounded by typical intraday ranges. By one week, the interval widens to about \u00b1$1.75, incorporating the possibility of mid-week macro data releases, earnings surprises, or sentiment shifts. At one month, the \u00b1$3.50 band acknowledges that a great deal can change over roughly 22 trading days, including Federal Reserve communications, geopolitical developments, sector rotation, and liquidity conditions.\n\nSeveral specific risks could push outcomes well outside these stated intervals. On the upside, a surprise positive catalyst \u2014 such as a blowout earnings report, a favorable regulatory decision, or a broader risk-on rally \u2014 could push the asset meaningfully above the upper bounds. On the downside, a sudden deterioration in macro conditions, an unexpected interest rate shock, a credit event, or a liquidity crunch could drive prices below the lower bounds. Tail events like geopolitical escalation or a flash crash are particularly difficult to capture in symmetrical confidence intervals.\n\nIt's also worth noting that my intervals assume roughly log-normal return distributions without heavy fat tails, which is a known limitation. Real financial markets exhibit kurtosis and skewness that make extreme outcomes more probable than a Gaussian framework suggests. If the asset in question has elevated implied volatility or is sensitive to binary events \u2014 such as a drug approval, an election outcome, or a merger decision \u2014 the true probability of outcomes outside my stated range is meaningfully higher than the stated 10% residual probability would imply.",
+  "status": "collected",
+  "error": null
+}
