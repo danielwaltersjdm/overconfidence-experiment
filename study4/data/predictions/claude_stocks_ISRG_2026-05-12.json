@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-12",
+  "timestamp": "2026-05-12T19:03:39.805501Z",
+  "domain": "stocks",
+  "item": "ISRG",
+  "item_label": "Intuitive Surgical",
+  "unit": "USD",
+  "current_value": 431.07501220703125,
+  "context": "Current closing price of Intuitive Surgical (ISRG): $431.08 USD as of 2026-05-12.",
+  "prompt_text": "Today is 2026-05-12.\n\nCurrent closing price of Intuitive Surgical (ISRG): $431.08 USD as of 2026-05-12.\n\nPredict the closing price of Intuitive Surgical at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-13\n  1-week target date: 2026-05-19\n  1-month target date: 2026-06-11\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 433,\n    \"90_ci\": [418, 448]\n  },\n  \"1w\": {\n    \"point_estimate\": 436,\n    \"90_ci\": [408, 464]\n  },\n  \"1m\": {\n    \"point_estimate\": 442,\n    \"90_ci\": [385, 500]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 433,
+      "90_ci": [
+        418,
+        448
+      ]
+    },
+    "1w": {
+      "point_estimate": 436,
+      "90_ci": [
+        408,
+        464
+      ]
+    },
+    "1m": {
+      "point_estimate": 442,
+      "90_ci": [
+        385,
+        500
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 433,\n    \"90_ci\": [\n      418,\n      448\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 436,\n    \"90_ci\": [\n      408,\n      464\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 442,\n    \"90_ci\": [\n      385,\n      500\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I took to be a baseline level near 430\u2013433, with each successive horizon showing a small increment. At the one-day horizon, the estimate of 433 is essentially anchored to the most recent observed value, assuming mean-reverting behavior over very short timeframes with minimal directional bias. Moving to one week, I nudged the estimate slightly higher to 436, reflecting a weak trend assumption \u2014 perhaps a slow-moving positive drift embedded in recent price or index behavior. The one-month estimate of 442 extends that same gentle trend further, compounding a small expected gain over roughly 22 trading days. None of these increments are large, which signals that my prior was closer to a random walk with a slight upward tilt than to any strong directional conviction.\n\nThe confidence interval widths widen substantially as the horizon extends, which is the natural consequence of uncertainty compounding over time. At one day, the 90% interval spans only 30 units (418\u2013448), reflecting that short-term realized volatility is relatively constrained and most of the next day's outcome is determined by overnight and intraday noise within a fairly tight band. By one week, the interval widens to 56 units (408\u2013464), incorporating the accumulation of daily variance across five sessions. At one month, the interval opens to 115 units (385\u2013500), where the range is now wide enough to encompass meaningful trend reversals, macro surprises, or volatility regime shifts. These widths were calibrated to something approximating historical volatility scaled to each horizon, though without precise data they remain rough approximations.\n\nSeveral specific risks could push outcomes outside even these relatively wide bounds. On the downside, a sudden macro shock \u2014 a surprise central bank policy move, a geopolitical escalation, or a credit event \u2014 could drive prices well below 385 within a month. A sharp liquidity dislocation or flash crash could briefly pierce the one-day lower bound. On the upside, unexpectedly strong economic data, a dovish policy pivot, or a short-squeeze dynamic could push through 500 faster than the one-month window implies. There is also model uncertainty: if the underlying series was already in a trending or volatile regime that I underweighted, my intervals would be systematically too narrow. The honest caveat is that the tails of financial distributions are fatter than normal-distribution-based intervals suggest, so true extreme outcomes are more probable than my stated 5% boundary on each side implies.",
+  "status": "collected",
+  "error": null
+}

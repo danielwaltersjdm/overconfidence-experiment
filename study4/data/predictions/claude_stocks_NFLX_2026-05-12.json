@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-12",
+  "timestamp": "2026-05-12T18:43:00.604435Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 87.45500183105469,
+  "context": "Current closing price of Netflix (NFLX): $87.46 USD as of 2026-05-12.",
+  "prompt_text": "Today is 2026-05-12.\n\nCurrent closing price of Netflix (NFLX): $87.46 USD as of 2026-05-12.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-13\n  1-week target date: 2026-05-19\n  1-month target date: 2026-06-11\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to provide price predictions for Netflix (NFLX) at three horizons, given a current price of $87.46 on 2026-05-12.\n\nLet me reason through this carefully.\n\n**Current context:**\n- NFLX at $87.46 seems unusually low compared to historical NFLX prices (NFLX traded around $600-900+ range in 2024-2025). This could reflect a stock split, or my training data may not fully capture current market conditions. I'll treat $87.46 as the current baseline and work from it.\n\n**Volatility estimation:**\n- Netflix historically has annualized volatility around 35-45%\n- Daily volatility \u2248 40%/\u221a252 \u2248 2.5% per day\n- 1-day \u03c3 \u2248 2.5% \u2192 ~$2.19\n- 1-week \u03c3 \u2248 2.5% \u00d7 \u221a5 \u2248 5.6% \u2192 ~$4.90\n- 1-month \u03c3 \u2248 2.5% \u00d7 \u221a21 \u2248 11.5% \u2192 ~$10.06\n\n**Point estimates:**\n- Slight upward drift assumed (equity risk premium), but small over short horizons\n- 1d: ~$87.50\n- 1w: ~$88.00\n- 1m: ~$89.00\n\n**90% CI construction (\u00b11.645\u03c3):**\n- 1d: \u00b11.645 \u00d7 $2.19 \u2248 \u00b1$3.60 \u2192 [83.9, 91.1]\n- 1w: \u00b11.645 \u00d7 $4.90 \u2248 \u00b1$8.06 \u2192 [79.9, 96.1]\n- 1m: \u00b11.645 \u00d7 $10.06 \u2248 \u00b1$16.55 \u2192 [72.4, 105.5]\n\nI'll round these sensibly:\n\n{\n  \"1d\": {\n    \"point_estimate\": 87.50,\n    \"90_ci\": [83.90, 91.10]\n  },\n  \"1w\": {\n    \"point_estimate\": 88.00,\n    \"90_ci\": [79.90, 96.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 89.00,\n    \"90_ci\": [72.50, 105.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 87.5,
+      "90_ci": [
+        83.9,
+        91.1
+      ]
+    },
+    "1w": {
+      "point_estimate": 88.0,
+      "90_ci": [
+        79.9,
+        96.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 89.0,
+      "90_ci": [
+        72.5,
+        105.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 87.5,\n    \"90_ci\": [\n      83.9,\n      91.1\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 88.0,\n    \"90_ci\": [\n      79.9,\n      96.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 89.0,\n    \"90_ci\": [\n      72.5,\n      105.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near 87.5 at the one-day mark and rising gradually to 89.0 at one month. This pattern likely stems from an assumption of slight positive momentum or mean-reverting behavior around a near-term trend, where the current level serves as a strong anchor for the immediate forecast but where longer-run structural factors or drift assumptions pull the estimate modestly higher. The one-day estimate is essentially anchored to the current observed value with minimal expected movement, while the one-week and one-month estimates incorporate a small expected drift that could reflect seasonal patterns, underlying growth trends, or momentum signals embedded in recent data.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which is a standard consequence of uncertainty compounding over time. At one day, the 90% interval spans roughly 7.2 units, reflecting relatively tight short-run predictability where most variation comes from intraday noise or minor shocks. By one week, the interval widens to about 16 units, incorporating uncertainty about news, policy changes, or demand shocks that could materialize over several days. At one month, the interval stretches to 33 units, reflecting the full range of macro, behavioral, and structural uncertainties that accumulate over a four-week window. The asymmetry and absolute width at the monthly horizon suggest meaningful tail risk in both directions.\n\nSpecific risks that could push outcomes outside even these wider intervals include sudden structural breaks such as an unexpected policy announcement, a significant geopolitical event, or a data revision that fundamentally reframes the underlying trajectory. On the upside, a stronger-than-expected demand surge or positive surprise in related indicators could push the value well above 105.5. On the downside, a sharp correction, liquidity shock, or negative macro surprise could push below 72.5. These fat-tail events are by definition underweighted in standard probabilistic forecasts, which tend to assume relatively smooth dynamics between now and the forecast horizon.\n\nIt is also worth noting that model misspecification is a latent risk at all horizons. If the data-generating process has recently shifted in ways not captured by historical patterns \u2014 for instance, a regime change in volatility or correlation structure \u2014 then even the widest stated intervals may be overconfident. Forecast users should treat the monthly interval in particular as an indication of plausible central tendency rather than a reliable bound on outcomes.",
+  "status": "collected",
+  "error": null
+}
