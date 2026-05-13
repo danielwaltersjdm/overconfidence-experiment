@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-13",
+  "timestamp": "2026-05-13T18:42:45.099485Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 88.30999755859375,
+  "context": "Current closing price of Netflix (NFLX): $88.31 USD as of 2026-05-13.",
+  "prompt_text": "Today is 2026-05-13.\n\nCurrent closing price of Netflix (NFLX): $88.31 USD as of 2026-05-13.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-14\n  1-week target date: 2026-05-20\n  1-month target date: 2026-06-12\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to make price predictions for Netflix (NFLX) at $88.31 as of 2026-05-13.\n\nLet me think through this carefully:\n\n**Current context:**\n- NFLX at $88.31 seems unusually low for Netflix historically (it was ~$600-900 range in 2024-2025). This could reflect a stock split, significant decline, or other corporate action. I'll work with the given price as the baseline.\n\n**Volatility assessment:**\n- Netflix historically has annualized volatility around 30-40%\n- Daily volatility: ~1.5-2.5%\n- Weekly volatility: ~3.5-6%\n- Monthly volatility: ~7-12%\n\n**Point estimates:**\n- Short-term: slight upward drift assumption (market tends to drift slightly positive)\n- 1-day: minimal change expected, ~$88.50\n- 1-week: modest move, ~$89.50\n- 1-month: slight upward drift, ~$91.00\n\n**Confidence intervals:**\n- 1-day (90% CI): \u00b12.5% \u2192 roughly \u00b1$2.20, so ~[$86.10, $90.90]\n- 1-week (90% CI): \u00b16% \u2192 roughly \u00b1$5.30, so ~[$83.00, $95.00] \u2014 widening for uncertainty\n- 1-month (90% CI): \u00b112% \u2192 roughly \u00b1$10.60, so ~[$79.00, $103.00]\n\nI'll use 1.645 standard deviations for 90% CI:\n- 1d: daily \u03c3 \u2248 2%, so 1.645 \u00d7 $1.77 \u2248 $2.90 \u2192 [$85.40, $91.20]\n- 1w: weekly \u03c3 \u2248 4.5%, so 1.645 \u00d7 $3.97 \u2248 $6.53 \u2192 [$81.80, $95.20]\n- 1m: monthly \u03c3 \u2248 9%, so 1.645 \u00d7 $7.95 \u2248 $13.08 \u2192 [$75.20, $105.40]\n\n{\n  \"1d\": {\n    \"point_estimate\": 88.5,\n    \"90_ci\": [85.4, 91.2]\n  },\n  \"1w\": {\n    \"point_estimate\": 89.5,\n    \"90_ci\": [81.8, 95.2]\n  },\n  \"1m\": {\n    \"point_estimate\": 91.0,\n    \"90_ci\": [75.2, 105.4]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 88.5,
+      "90_ci": [
+        85.4,
+        91.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 89.5,
+      "90_ci": [
+        81.8,
+        95.2
+      ]
+    },
+    "1m": {
+      "point_estimate": 91.0,
+      "90_ci": [
+        75.2,
+        105.4
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 88.5,\n    \"90_ci\": [\n      85.4,\n      91.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 89.5,\n    \"90_ci\": [\n      81.8,\n      95.2\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 91.0,\n    \"90_ci\": [\n      75.2,\n      105.4\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three horizons, starting near 88.5 for the one-day forecast and rising to 91.0 at one month. The one-day estimate is anchored heavily by the most recent observed price or level, assuming continuity and mean-reversion tendencies that dominate over very short windows. At one week, I incorporated a slight positive drift reflecting either recent momentum or a modest fundamental bias, while the one-month estimate extends that trend further, accounting for the possibility that whatever underlying force is driving near-term movement has some persistence. The gradual step-up in point estimates across horizons reflects an assumption of a mild bullish lean rather than a flat or mean-reverting baseline.\n\nThe confidence interval widths widen substantially as the horizon extends, which is the expected behavior under almost any reasonable probabilistic model. At one day, the interval is relatively tight \u2014 roughly plus or minus 3 points \u2014 because overnight or intraday volatility is constrained and there are limited scheduled catalysts that could cause large discontinuous moves. By one week, the interval broadens meaningfully to reflect the possibility of macro data releases, central bank communications, or geopolitical developments that could shift the level materially. At one month, the interval spans roughly 30 points, reflecting compounding uncertainty from multiple potential market-moving events, regime shifts in sentiment, and the simple reality that forecasting accuracy degrades rapidly over longer windows.\n\nSpecific risks that could push outcomes outside these intervals include tail events such as an unexpected central bank policy surprise, a sharp deterioration in credit conditions, a geopolitical shock, or a liquidity event in related markets. On the upside, a stronger-than-expected economic print or a sudden reversal in risk sentiment could drive values well above the upper bound of the one-month interval. On the downside, a financial stress event or a significant disappointment in growth data could push the level below 75, outside the stated lower bound. These scenarios are assigned low individual probability but collectively represent meaningful tail risk, particularly at the one-month horizon where the distribution has fat tails that a simple symmetric confidence interval may understate.",
+  "status": "collected",
+  "error": null
+}

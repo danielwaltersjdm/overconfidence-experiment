@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-13",
+  "timestamp": "2026-05-13T18:28:55.412335Z",
+  "domain": "stocks",
+  "item": "BRK-B",
+  "item_label": "Berkshire Hathaway B",
+  "unit": "USD",
+  "current_value": 483.8399963378906,
+  "context": "Current closing price of Berkshire Hathaway B (BRK-B): $483.84 USD as of 2026-05-13.",
+  "prompt_text": "Today is 2026-05-13.\n\nCurrent closing price of Berkshire Hathaway B (BRK-B): $483.84 USD as of 2026-05-13.\n\nPredict the closing price of Berkshire Hathaway B at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-14\n  1-week target date: 2026-05-20\n  1-month target date: 2026-06-12\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 485.50,\n    \"90_ci\": [475.00, 496.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 487.00,\n    \"90_ci\": [468.00, 506.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 491.00,\n    \"90_ci\": [455.00, 528.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 485.5,
+      "90_ci": [
+        475.0,
+        496.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 487.0,
+      "90_ci": [
+        468.0,
+        506.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 491.0,
+      "90_ci": [
+        455.0,
+        528.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 485.5,\n    \"90_ci\": [\n      475.0,\n      496.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 487.0,\n    \"90_ci\": [\n      468.0,\n      506.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 491.0,\n    \"90_ci\": [\n      455.0,\n      528.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what appears to be a current price level around $484\u2013485 for the underlying asset. At the one-day horizon, I anchored closely to the prevailing price with only a small drift component, as daily returns for most equity indices or ETFs tend to be close to zero in expectation. At the one-week horizon, I allowed for slightly more drift, reflecting a mild positive bias consistent with the long-run equity risk premium when annualized over short windows. At the one-month horizon, the drift compounds further, pushing the point estimate to around $491, which corresponds to roughly a 1\u20131.5% expected gain over the month \u2014 a reasonable assumption for a broad market instrument in a neutral macro environment.\n\nThe confidence interval widths are primarily driven by realized volatility assumptions. At one day, I used a daily volatility figure consistent with roughly 15\u201318% annualized volatility, producing a relatively tight band of about \u00b110\u201311 points. As the horizon extends to one week, uncertainty scales with the square root of time, widening the interval to approximately \u00b119 points. By one month, the interval spans roughly \u00b136\u201337 points around the point estimate, again following the square-root-of-time scaling. The asymmetry is modest because I did not apply a strong skew adjustment, though equity distributions do tend to have fat left tails in practice.\n\nThere are several risks that could push outcomes outside these stated intervals. On the downside, a sudden deterioration in macroeconomic data \u2014 such as a worse-than-expected inflation print, a Federal Reserve policy surprise, or renewed financial stress in the banking or credit sectors \u2014 could produce a move of 5\u201310% or more, easily breaching the lower bounds especially at the one-week and one-month horizons. Geopolitical escalation or a liquidity shock could similarly compress risk appetite rapidly.\n\nOn the upside, a strong earnings season surprise, a dovish pivot signal from the Fed, or a resolution of an ongoing geopolitical risk could push prices well above the upper bounds. Additionally, my intervals assume roughly stationary volatility, but if implied volatility were already elevated \u2014 suggesting the market itself is pricing in a larger distribution of outcomes \u2014 then my bands may be too narrow. Regime changes, such as a shift from low-volatility to high-volatility environments, are a known blind spot of simple scaling approaches and represent a structural risk to the stated intervals at all horizons.",
+  "status": "collected",
+  "error": null
+}

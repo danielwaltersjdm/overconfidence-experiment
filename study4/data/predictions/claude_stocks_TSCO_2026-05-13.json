@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-13",
+  "timestamp": "2026-05-13T21:15:06.520411Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 29.850000381469727,
+  "context": "Current closing price of Tractor Supply (TSCO): $29.85 USD as of 2026-05-13.",
+  "prompt_text": "Today is 2026-05-13.\n\nCurrent closing price of Tractor Supply (TSCO): $29.85 USD as of 2026-05-13.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-14\n  1-week target date: 2026-05-20\n  1-month target date: 2026-06-12\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to make predictions about Tractor Supply (TSCO) stock price from a current price of $29.85.\n\nFirst, let me note that $29.85 seems unusually low for TSCO, which historically traded in the $200-270 range. This likely reflects either a stock split or my knowledge cutoff limitations. I'll work from the given current price of $29.85 as the baseline.\n\nFor volatility estimation:\n- TSCO is a mid-large cap retail stock\n- Typical daily volatility for such stocks: ~1.5-2%\n- Daily std dev \u2248 $29.85 \u00d7 0.018 \u2248 $0.54\n- Weekly std dev \u2248 $0.54 \u00d7 \u221a5 \u2248 $1.21\n- Monthly std dev \u2248 $0.54 \u00d7 \u221a21 \u2248 $2.47\n\nFor 90% CI, I use \u00b11.645 standard deviations.\n\n**1-day:**\n- Point estimate: ~$29.90 (slight upward drift)\n- 90% CI: $29.85 \u00b1 $0.89 \u2192 [$28.96, $30.74]\n\n**1-week:**\n- Point estimate: ~$30.00\n- 90% CI: $29.85 \u00b1 $1.99 \u2192 [$27.86, $31.84]\n\n**1-month:**\n- Point estimate: ~$30.20\n- 90% CI: $29.85 \u00b1 $4.06 \u2192 [$25.79, $34.11]\n\n{\n  \"1d\": {\n    \"point_estimate\": 29.90,\n    \"90_ci\": [28.96, 30.74]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.00,\n    \"90_ci\": [27.86, 31.84]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.20,\n    \"90_ci\": [25.79, 34.11]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 29.9,
+      "90_ci": [
+        28.96,
+        30.74
+      ]
+    },
+    "1w": {
+      "point_estimate": 30.0,
+      "90_ci": [
+        27.86,
+        31.84
+      ]
+    },
+    "1m": {
+      "point_estimate": 30.2,
+      "90_ci": [
+        25.79,
+        34.11
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 29.9,\n    \"90_ci\": [\n      28.96,\n      30.74\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.0,\n    \"90_ci\": [\n      27.86,\n      31.84\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.2,\n    \"90_ci\": [\n      25.79,\n      34.11\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a broadly stable near-term outlook with a slight upward drift over longer horizons. For the one-day estimate of 29.9, I anchored heavily on the current price level, assuming mean-reversion tendencies dominate over such a short window and that no major catalysts are imminent. The one-week estimate of 30.0 reflects essentially the same logic with marginal drift, acknowledging that short-term momentum is roughly neutral. The one-month estimate of 30.2 incorporates a small positive bias, consistent with a mild long-run drift assumption common in equity or commodity markets, while recognizing that over four weeks there is more room for the underlying trend to assert itself.\n\nThe confidence interval widths reflect increasing uncertainty as the horizon extends, which is a standard feature of forecasting under uncertainty. At one day, the interval is relatively tight (roughly 28.96 to 30.74), reflecting low expected volatility over a single session and strong anchoring to current price. By one week, the interval widens to roughly 27.86 to 31.84, incorporating the compounding effect of daily volatility. At one month, the interval expands substantially to 25.79 to 34.11, reflecting that over approximately 20 trading days, volatility accumulates and macroeconomic or fundamental developments have more time to materialize. The widths were calibrated using an assumed daily volatility consistent with historical norms for this type of asset.\n\nSpecific risks that could push outcomes outside these stated intervals include sudden macroeconomic shocks \u2014 such as surprise central bank decisions, geopolitical escalations, or unexpected earnings or economic data releases \u2014 that could produce gap moves far beyond the one-day range. Liquidity events or market dislocations, while rare, can cause prices to overshoot dramatically in either direction. On the upside, a strong risk-on catalyst or short squeeze could push the one-month outcome well above 34. On the downside, a broad de-risking episode or sector-specific negative news could easily break below 25.79.\n\nIt is also worth noting that my intervals, being 90% confidence intervals, are by construction expected to be violated roughly 10% of the time under the assumed model. Real-world fat tails and regime changes mean actual coverage may be lower than 90%, so the true probability of extreme outcomes is likely somewhat higher than the model implies. Structural breaks \u2014 for instance, a fundamental change in the underlying asset's supply-demand dynamics or regulatory environment \u2014 represent a class of risk that historical volatility alone cannot fully capture.",
+  "status": "collected",
+  "error": null
+}
