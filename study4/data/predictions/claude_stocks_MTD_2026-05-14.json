@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-14",
+  "timestamp": "2026-05-14T21:09:04.214366Z",
+  "domain": "stocks",
+  "item": "MTD",
+  "item_label": "Mettler-Toledo",
+  "unit": "USD",
+  "current_value": 1041.9100341796875,
+  "context": "Current closing price of Mettler-Toledo (MTD): $1041.91 USD as of 2026-05-14.",
+  "prompt_text": "Today is 2026-05-14.\n\nCurrent closing price of Mettler-Toledo (MTD): $1041.91 USD as of 2026-05-14.\n\nPredict the closing price of Mettler-Toledo at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-15\n  1-week target date: 2026-05-21\n  1-month target date: 2026-06-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 1047,\n    \"90_ci\": [1010, 1085]\n  },\n  \"1w\": {\n    \"point_estimate\": 1052,\n    \"90_ci\": [985, 1120]\n  },\n  \"1m\": {\n    \"point_estimate\": 1060,\n    \"90_ci\": [940, 1185]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1047,
+      "90_ci": [
+        1010,
+        1085
+      ]
+    },
+    "1w": {
+      "point_estimate": 1052,
+      "90_ci": [
+        985,
+        1120
+      ]
+    },
+    "1m": {
+      "point_estimate": 1060,
+      "90_ci": [
+        940,
+        1185
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1047,\n    \"90_ci\": [\n      1010,\n      1085\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1052,\n    \"90_ci\": [\n      985,\n      1120\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1060,\n    \"90_ci\": [\n      940,\n      1185\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the 1-day estimate of 1047, I was anchoring closely to what appeared to be the prevailing level, assuming mean-reverting behavior and no major catalysts within the immediate session. The 1-week estimate of 1052 incorporates a slight positive drift assumption, reflecting that markets or the underlying asset tend to trend mildly upward over short periods in the absence of disrupting news. The 1-month estimate of 1060 extends that drift further while acknowledging that the compounding of small directional biases over four weeks produces only a modest expected move from current levels.\n\nThe confidence interval widths were designed to capture typical realized volatility at each horizon. At one day, the range of roughly 75 points (1010\u20131085) reflects daily fluctuation patterns that are relatively constrained under normal conditions. At one week, the interval widens to about 135 points, consistent with the square-root-of-time scaling that governs random walk uncertainty \u2014 roughly 2.2 times the daily range. At one month, the interval stretches to 245 points, again reflecting that uncertainty compounds over time. I also added a slight asymmetric skew consideration in the monthly interval, given that downside moves in many markets tend to be sharper and faster than upside moves.\n\nSpecific risks that could push outcomes outside these intervals include macroeconomic surprises such as unexpected central bank decisions, inflation prints, or geopolitical shocks that could easily gap the price through either bound within a single session. Liquidity-driven events \u2014 flash crashes, large forced liquidations, or sudden risk-off episodes \u2014 are particularly dangerous to short-horizon intervals and could violate the 1-day range without any fundamental justification. On the upside, a sudden positive catalyst such as a major policy announcement or a short-squeeze dynamic could drive prices sharply above the upper bounds.\n\nMore structurally, my intervals assume roughly stationary volatility, which is a known weakness. If the underlying asset is entering a regime change \u2014 for instance, a transition from low-volatility drift to high-volatility trending behavior \u2014 the stated intervals would be materially too narrow, especially at the monthly horizon. In such environments, the true 90% interval could easily be two to three times wider than what I stated, and the point estimates themselves would carry much less informational value.",
+  "status": "collected",
+  "error": null
+}

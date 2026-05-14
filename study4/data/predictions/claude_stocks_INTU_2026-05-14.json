@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-14",
+  "timestamp": "2026-05-14T18:59:11.493906Z",
+  "domain": "stocks",
+  "item": "INTU",
+  "item_label": "Intuit",
+  "unit": "USD",
+  "current_value": 378.95001220703125,
+  "context": "Current closing price of Intuit (INTU): $378.95 USD as of 2026-05-14.",
+  "prompt_text": "Today is 2026-05-14.\n\nCurrent closing price of Intuit (INTU): $378.95 USD as of 2026-05-14.\n\nPredict the closing price of Intuit at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-15\n  1-week target date: 2026-05-21\n  1-month target date: 2026-06-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 381,\n    \"90_ci\": [368, 394]\n  },\n  \"1w\": {\n    \"point_estimate\": 383,\n    \"90_ci\": [358, 408]\n  },\n  \"1m\": {\n    \"point_estimate\": 388,\n    \"90_ci\": [340, 436]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 381,
+      "90_ci": [
+        368,
+        394
+      ]
+    },
+    "1w": {
+      "point_estimate": 383,
+      "90_ci": [
+        358,
+        408
+      ]
+    },
+    "1m": {
+      "point_estimate": 388,
+      "90_ci": [
+        340,
+        436
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 381,\n    \"90_ci\": [\n      368,\n      394\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 383,\n    \"90_ci\": [\n      358,\n      408\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 388,\n    \"90_ci\": [\n      340,\n      436\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over time. For the 1-day estimate of 381, I was anchoring closely to the most recent observed level, assuming mean-reversion dynamics and minimal overnight shock. The 1-week estimate of 383 incorporates a slight drift assumption \u2014 perhaps reflecting a mild bullish bias in the underlying trend or carry \u2014 while the 1-month estimate of 388 extends that drift further, compounding a small expected return over roughly 20 trading days. The increasing gap between successive point estimates is modest, suggesting I did not anticipate a strong directional catalyst but rather slow, grinding appreciation consistent with recent momentum.\n\nThe confidence interval widths expand predictably with time horizon, reflecting the square-root-of-time scaling that governs uncertainty accumulation under standard diffusion assumptions. At 1 day, the 90% CI spans roughly 26 units, implying relatively tight realized volatility expectations consistent with recent low-volatility regimes. By 1 week, the interval widens to 50 units, and by 1 month it reaches roughly 96 units, consistent with annualized volatility somewhere in the 15\u201320% range depending on the underlying asset level. These widths also implicitly embed some jump or fat-tail risk premium, since pure Gaussian diffusion at those vol levels might produce slightly narrower bands.\n\nThe primary risks that could push outcomes outside these stated intervals include sudden macroeconomic data surprises \u2014 such as an unexpected inflation print, central bank policy shift, or geopolitical escalation \u2014 any of which could produce gap moves well beyond the stated ranges. On the upside, a risk-on sentiment surge or short-squeeze dynamic could push the 1-month outcome well above 436. On the downside, a liquidity event, credit shock, or sharp deterioration in growth expectations could easily breach 340. Essentially, the tails of the distribution are fatter than a normal model implies, and my stated 90% intervals likely understate true tail risk in stressed market conditions.",
+  "status": "collected",
+  "error": null
+}

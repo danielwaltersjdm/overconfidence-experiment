@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-14",
+  "timestamp": "2026-05-14T21:13:07.987103Z",
+  "domain": "stocks",
+  "item": "CPRT",
+  "item_label": "Copart",
+  "unit": "USD",
+  "current_value": 32.650001525878906,
+  "context": "Current closing price of Copart (CPRT): $32.65 USD as of 2026-05-14.",
+  "prompt_text": "Today is 2026-05-14.\n\nCurrent closing price of Copart (CPRT): $32.65 USD as of 2026-05-14.\n\nPredict the closing price of Copart at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-15\n  1-week target date: 2026-05-21\n  1-month target date: 2026-06-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 32.80,\n    \"90_ci\": [31.60, 34.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 33.10,\n    \"90_ci\": [30.80, 35.40]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.50,\n    \"90_ci\": [29.50, 37.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 32.8,
+      "90_ci": [
+        31.6,
+        34.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 33.1,
+      "90_ci": [
+        30.8,
+        35.4
+      ]
+    },
+    "1m": {
+      "point_estimate": 33.5,
+      "90_ci": [
+        29.5,
+        37.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 32.8,\n    \"90_ci\": [\n      31.6,\n      34.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 33.1,\n    \"90_ci\": [\n      30.8,\n      35.4\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.5,\n    \"90_ci\": [\n      29.5,\n      37.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-drifting baseline from a current price level near $32.8. At the one-day horizon, I anchored closely to the last observed price, expecting minimal drift given typical daily volatility in this kind of asset and the absence of any immediately known catalysts. For the one-week estimate, I nudged the point estimate slightly higher to $33.1, reflecting a mild positive drift assumption consistent with recent momentum or a slight bullish bias in the underlying trend. At the one-month horizon, I extended that drift further to $33.5, incorporating a longer runway for any underlying fundamental or macro tailwinds to express themselves, while also acknowledging that mean-reversion forces and compounding uncertainty pull the distribution wider over time.\n\nThe confidence interval widths were driven primarily by the scaling of uncertainty with time. At one day, daily price volatility is relatively contained, so the 90% interval spans only about $1.20 on each side. By one week, I roughly scaled by the square root of time for a volatility-based expansion, arriving at a roughly $2.30 half-width. By one month, that expansion continued meaningfully, producing a $4.00 half-width, reflecting that over four-plus weeks, macro shifts, earnings announcements, sector rotations, or liquidity changes can materially alter outcomes. I also factored in that short-term realized volatility in this price range tends to be somewhat moderate, keeping the intervals from being excessively wide.\n\nSpecific risks that could push outcomes outside my stated intervals include sudden macro shocks such as unexpected central bank decisions, geopolitical escalations, or a sharp risk-off move in broader markets that could gap prices well below the lower bound. On the upside, a positive catalyst like a strong earnings surprise, an activist investor disclosure, or a sector-wide re-rating could push prices above the upper bound of the one-month interval. Liquidity events or forced selling \u2014 such as a large fund unwind \u2014 represent tail risks that are particularly hard to quantify in advance and could easily break through the 90% bounds I've specified.\n\nFinally, I want to be transparent that these estimates carry model uncertainty on top of market uncertainty. If the underlying asset has recently experienced a regime change in volatility \u2014 for instance, a period of unusually low realized volatility masking latent risk \u2014 my intervals may be too narrow. Similarly, if the asset is correlated with a broader theme that is approaching a binary resolution event within the month, the distribution could be bimodal rather than the roughly symmetric shape I implicitly assumed, meaning my stated intervals could be simultaneously too wide in the center and too narrow in the tails.",
+  "status": "collected",
+  "error": null
+}

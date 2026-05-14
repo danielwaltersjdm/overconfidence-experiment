@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-14",
+  "timestamp": "2026-05-14T18:36:48.681224Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 86.96499633789062,
+  "context": "Current closing price of Netflix (NFLX): $86.96 USD as of 2026-05-14.",
+  "prompt_text": "Today is 2026-05-14.\n\nCurrent closing price of Netflix (NFLX): $86.96 USD as of 2026-05-14.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-15\n  1-week target date: 2026-05-21\n  1-month target date: 2026-06-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about Netflix's stock price prediction.\n\nCurrent price: $86.96 on 2026-05-14.\n\nWait - $86.96 seems unusually low for Netflix. As of my knowledge cutoff, NFLX was trading around $600-900+ range. This might reflect a stock split or some major event I'm not aware of. I'll take the current price as given and work from it.\n\nLet me think about typical volatility for NFLX:\n- NFLX historical daily volatility is roughly 1.5-2.5% per day\n- If there's been a recent major move (given the unusual price level), volatility might be elevated\n\nUsing the current price of $86.96 as my anchor:\n\n**1-day estimate:**\n- Daily volatility ~2%, so \u03c3 \u2248 $1.74\n- 90% CI: roughly \u00b11.645\u03c3 \u2248 \u00b1$2.86\n- Point estimate: slight drift upward ~$87.20\n- CI: [$84.10, $90.30]\n\n**1-week estimate:**\n- 5 trading days, \u03c3_week \u2248 $1.74 \u00d7 \u221a5 \u2248 $3.89\n- 90% CI: \u00b1$6.40\n- Point estimate: $87.50\n- CI: [$81.00, $94.00]\n\n**1-month estimate:**\n- ~22 trading days, \u03c3_month \u2248 $1.74 \u00d7 \u221a22 \u2248 $8.16\n- 90% CI: \u00b1$13.40\n- Point estimate: $88.00\n- CI: [$73.00, $103.00]\n\nGiven the unusual price level and potential elevated uncertainty, I'll widen these intervals somewhat:\n\n{\n  \"1d\": {\n    \"point_estimate\": 87.20,\n    \"90_ci\": [83.80, 90.60]\n  },\n  \"1w\": {\n    \"point_estimate\": 87.50,\n    \"90_ci\": [80.50, 94.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 88.50,\n    \"90_ci\": [73.00, 105.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 87.2,
+      "90_ci": [
+        83.8,
+        90.6
+      ]
+    },
+    "1w": {
+      "point_estimate": 87.5,
+      "90_ci": [
+        80.5,
+        94.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 88.5,
+      "90_ci": [
+        73.0,
+        105.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 87.2,\n    \"90_ci\": [\n      83.8,\n      90.6\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 87.5,\n    \"90_ci\": [\n      80.5,\n      94.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 88.5,\n    \"90_ci\": [\n      73.0,\n      105.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term trajectory with modest upward drift over longer horizons. For the 1-day estimate of 87.2, I was largely anchoring to recent observed price or index levels and assuming mean-reverting behavior with minimal overnight shock. The 1-week estimate of 87.5 nudges slightly higher, reflecting a mild positive drift assumption consistent with whatever underlying trend was present in the data at the time of forecasting. The 1-month estimate of 88.5 extends that drift further while acknowledging that compounding small positive expectations over roughly 20 trading days produces only a modest nominal shift from current levels. In all three cases, the point estimates are close to one another, suggesting I saw no strong directional catalyst likely to produce large moves in any direction.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which reflects the classical square-root-of-time scaling of uncertainty under random-walk or near-random-walk assumptions. The 1-day interval of roughly 3.4 points on each side is tight because there is limited time for new information to accumulate. By one week, the interval widens to about 7 points on each side, and by one month it reaches roughly 16 points on each side. These widths incorporate both typical daily volatility and the compounding of that volatility over time. I also likely applied some additional uncertainty premium at the monthly horizon to account for the possibility of structural shifts, earnings events, macroeconomic data releases, or policy changes that are difficult to anticipate but become more probable over a longer window.\n\nSeveral specific risks could push realized outcomes outside my stated intervals. On the upside, a positive surprise \u2014 such as a better-than-expected economic report, a policy easing announcement, or a sector-specific catalyst \u2014 could push values well above 105 on the monthly horizon. On the downside, a sudden risk-off event such as a geopolitical shock, a credit market disruption, or an unexpected tightening in financial conditions could drive values below 73. Even at the 1-day horizon, a major after-hours announcement or gap-open event could breach the 83.8\u201390.6 range with some probability, since confidence intervals by construction do not capture all possible outcomes. Liquidity conditions and any idiosyncratic news specific to the underlying asset or market segment represent tail risks that my probabilistic framework may underweight if historical volatility was the primary calibration input.",
+  "status": "collected",
+  "error": null
+}
