@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-15",
+  "timestamp": "2026-05-15T19:31:34.032393Z",
+  "domain": "stocks",
+  "item": "MU",
+  "item_label": "Micron",
+  "unit": "USD",
+  "current_value": 733.7150268554688,
+  "context": "Current closing price of Micron (MU): $733.72 USD as of 2026-05-15.",
+  "prompt_text": "Today is 2026-05-15.\n\nCurrent closing price of Micron (MU): $733.72 USD as of 2026-05-15.\n\nPredict the closing price of Micron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-16\n  1-week target date: 2026-05-22\n  1-month target date: 2026-06-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to make reasonable estimates for Micron's stock price. Let me think through this carefully.\n\nCurrent price: $733.72 as of 2026-05-15.\n\nNote: This price seems very high compared to MU's historical trading range (which was typically $50-$130 in 2023-2024). By May 2026, if MU has reached $733.72, it may have undergone significant appreciation, possibly driven by AI/memory chip demand cycles.\n\nFor volatility estimation:\n- MU is a volatile semiconductor stock\n- Typical daily volatility: ~2-3% annualized at ~50-60%, so daily sigma \u2248 50%/sqrt(252) \u2248 3.1%\n- 1-day sigma: ~$733.72 \u00d7 0.031 \u2248 ~$22.75\n- 1-week sigma: ~$22.75 \u00d7 sqrt(5) \u2248 ~$50.9\n- 1-month sigma: ~$22.75 \u00d7 sqrt(21) \u2248 ~$104.3\n\nFor 90% CI, I use \u00b11.645 sigma:\n- 1-day: \u00b1$37.4\n- 1-week: \u00b1$83.7\n- 1-month: \u00b1$171.6\n\nPoint estimates: I'll assume slight upward drift (modest bullish bias for a semiconductor in AI cycle, but uncertain):\n\n1-day: ~$735 (minimal drift)\n1-week: ~$738 (slight drift)\n1-month: ~$748 (slight drift)\n\n{\n  \"1d\": {\n    \"point_estimate\": 735,\n    \"90_ci\": [697, 773]\n  },\n  \"1w\": {\n    \"point_estimate\": 738,\n    \"90_ci\": [654, 822]\n  },\n  \"1m\": {\n    \"point_estimate\": 748,\n    \"90_ci\": [577, 919]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 735,
+      "90_ci": [
+        697,
+        773
+      ]
+    },
+    "1w": {
+      "point_estimate": 738,
+      "90_ci": [
+        654,
+        822
+      ]
+    },
+    "1m": {
+      "point_estimate": 748,
+      "90_ci": [
+        577,
+        919
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 735,\n    \"90_ci\": [\n      697,\n      773\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 738,\n    \"90_ci\": [\n      654,\n      822\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 748,\n    \"90_ci\": [\n      577,\n      919\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term baseline with modest drift upward over longer horizons. For the 1-day estimate, I anchored primarily on recent observed values and short-term momentum, assuming minimal disruption and mean-reverting behavior in the absence of major catalysts. The 1-week estimate nudges slightly higher, reflecting a small positive drift assumption consistent with whatever underlying trend was present in the data at the time of forecasting. The 1-month estimate continues that gradual upward drift, landing around 748, which represents only a modest departure from the near-term levels \u2014 suggesting I viewed the series as relatively trendless or slowly trending rather than subject to strong directional forces.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which is the natural consequence of compounding uncertainty over time. At 1 day, the interval is fairly tight (roughly \u00b138 around the point estimate), reflecting high serial correlation at short horizons \u2014 tomorrow tends to look a lot like today. By one week, the interval widens to roughly \u00b184, incorporating the possibility of meaningful weekly variation, news events, or regime shifts. At one month, the interval spans about \u00b1170, acknowledging that over four weeks, a wide range of cumulative shocks could accumulate. These widths were likely calibrated using historical volatility or variance estimates from the underlying series.\n\nSeveral specific risks could push outcomes outside the stated intervals in either direction. On the upside, a sudden positive shock \u2014 such as a strong policy announcement, demand surge, or supply disruption in the relevant market \u2014 could drive values well above 919 at the monthly horizon. On the downside, a sharp negative catalyst, broader macro deterioration, or a mean-reversion from any recent elevated levels could push values below 577. Additionally, structural breaks \u2014 where the data-generating process changes fundamentally \u2014 are by definition poorly captured by historical volatility estimates and represent the most dangerous source of tail risk that my stated intervals likely underweight.",
+  "status": "collected",
+  "error": null
+}

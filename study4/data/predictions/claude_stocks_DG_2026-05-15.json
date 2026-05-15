@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-15",
+  "timestamp": "2026-05-15T21:13:07.927950Z",
+  "domain": "stocks",
+  "item": "DG",
+  "item_label": "Dollar General",
+  "unit": "USD",
+  "current_value": 102.37999725341797,
+  "context": "Current closing price of Dollar General (DG): $102.38 USD as of 2026-05-15.",
+  "prompt_text": "Today is 2026-05-15.\n\nCurrent closing price of Dollar General (DG): $102.38 USD as of 2026-05-15.\n\nPredict the closing price of Dollar General at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-16\n  1-week target date: 2026-05-22\n  1-month target date: 2026-06-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 102.80,\n    \"90_ci\": [99.50, 106.10]\n  },\n  \"1w\": {\n    \"point_estimate\": 103.50,\n    \"90_ci\": [96.00, 111.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 105.00,\n    \"90_ci\": [88.00, 122.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 102.8,
+      "90_ci": [
+        99.5,
+        106.1
+      ]
+    },
+    "1w": {
+      "point_estimate": 103.5,
+      "90_ci": [
+        96.0,
+        111.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 105.0,
+      "90_ci": [
+        88.0,
+        122.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 102.8,\n    \"90_ci\": [\n      99.5,\n      106.1\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 103.5,\n    \"90_ci\": [\n      96.0,\n      111.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 105.0,\n    \"90_ci\": [\n      88.0,\n      122.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume is a current price near $102\u2013103, with each successive horizon incorporating a small positive bias consistent with long-run equity risk premium expectations. At the one-day horizon, the estimate of $102.8 essentially assumes mean reversion and continuity from recent trading, with very little directional conviction baked in beyond slight positive carry. At one week, $103.5 reflects the same gentle drift assumption while acknowledging that a week is long enough for meaningful news flow to accumulate. At one month, $105.0 incorporates a slightly more pronounced drift, consistent with historical average monthly equity returns in the low single-digit annualized range, though this is a soft prior rather than a strong fundamental call.\n\nThe confidence interval widths grow appropriately with horizon, reflecting the square-root-of-time scaling of uncertainty typical in financial price processes. At one day, realized volatility for a broad index or individual equity in this price range would suggest roughly a 1\u20132% daily move covers most of the distribution, giving a fairly tight band. By one week, the interval widens to capture the compounding of daily uncertainty, and by one month the band spans roughly plus or minus 16% from center, which is consistent with annualized volatility somewhere in the 30\u201340% range \u2014 elevated relative to calm markets but reasonable if there is any macro uncertainty present.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macro shocks such as an unexpected central bank policy shift, a geopolitical escalation, or a significant earnings surprise if this is an individual name. A Federal Reserve surprise \u2014 either a hawkish pivot or emergency cut \u2014 could gap prices well beyond the one-month interval in either direction. Liquidity events, credit stress in related sectors, or a broader risk-off episode triggered by something currently off the radar (a sovereign default, a financial institution failure) represent tail risks that the intervals do not fully capture by construction.\n\nIt is also worth noting that my intervals assume something close to a lognormal diffusion process with stationary volatility, which is a known oversimplification. Volatility clustering means that if current realized volatility is already elevated, the true intervals should be wider, and if markets are unusually calm, they might be slightly narrower. Regime changes \u2014 such as a move from a low-volatility environment to a high-volatility one triggered by an exogenous shock \u2014 are precisely the events that cause empirical coverage of stated confidence intervals to fall short of their nominal levels.",
+  "status": "collected",
+  "error": null
+}

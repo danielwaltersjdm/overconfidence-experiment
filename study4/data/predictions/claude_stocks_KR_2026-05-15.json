@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-15",
+  "timestamp": "2026-05-15T20:35:09.797543Z",
+  "domain": "stocks",
+  "item": "KR",
+  "item_label": "Kroger",
+  "unit": "USD",
+  "current_value": 66.0199966430664,
+  "context": "Current closing price of Kroger (KR): $66.02 USD as of 2026-05-15.",
+  "prompt_text": "Today is 2026-05-15.\n\nCurrent closing price of Kroger (KR): $66.02 USD as of 2026-05-15.\n\nPredict the closing price of Kroger at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-16\n  1-week target date: 2026-05-22\n  1-month target date: 2026-06-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 66.20,\n    \"90_ci\": [64.80, 67.60]\n  },\n  \"1w\": {\n    \"point_estimate\": 66.50,\n    \"90_ci\": [63.50, 69.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 67.00,\n    \"90_ci\": [61.00, 73.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 66.2,
+      "90_ci": [
+        64.8,
+        67.6
+      ]
+    },
+    "1w": {
+      "point_estimate": 66.5,
+      "90_ci": [
+        63.5,
+        69.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 67.0,
+      "90_ci": [
+        61.0,
+        73.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 66.2,\n    \"90_ci\": [\n      64.8,\n      67.6\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 66.5,\n    \"90_ci\": [\n      63.5,\n      69.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 67.0,\n    \"90_ci\": [\n      61.0,\n      73.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from a current level near 66.2, with the 1-day estimate essentially anchored to the present price, the 1-week estimate nudging slightly higher to 66.5, and the 1-month estimate reaching 67.0. This gentle positive slope likely reflects a baseline assumption of mild bullish momentum or mean-reversion dynamics in the underlying asset, combined with a slight carry or trend component. The 1-day estimate is nearly identical to spot because over very short horizons, the best predictor of tomorrow's price is usually today's price, and any directional signal is too weak to shift the estimate meaningfully. Over the week and month, I am incorporating a small positive drift that could stem from fundamental support, recent momentum, or a broader market environment that slightly favors the upside.\n\nThe confidence interval widths widen substantially as the horizon extends, which is the natural consequence of uncertainty compounding over time. At one day, the 90% interval spans only 1.4 units (64.8 to 67.6), reflecting that daily volatility in this asset is relatively contained and most of the near-term price action is predictable within a narrow band. By one week, the interval expands to 6 units (63.5 to 69.5), incorporating the possibility of a moderate trend reversal, a data release, or a shift in sentiment. At one month, the 12-unit interval (61.0 to 73.0) reflects much greater structural uncertainty, including policy changes, macroeconomic surprises, and the general difficulty of forecasting prices over multi-week horizons where regime shifts become plausible.\n\nSpecific risks that could push outcomes outside these stated intervals include tail events such as a sudden geopolitical shock, an unexpected central bank decision, or a sharp liquidity event that causes rapid repricing. On the downside, a deterioration in risk sentiment or a fundamental negative catalyst could drive the price well below 61.0 over the month. On the upside, a strong positive surprise \u2014 such as better-than-expected economic data or a policy announcement favoring the asset \u2014 could push above 73.0. These intervals are calibrated to capture 90% of likely outcomes but by construction leave 10% probability for outcomes more extreme than modeled.\n\nIt is also worth noting that model risk itself is a source of uncertainty not fully captured in the intervals. If the assumed volatility regime or drift rate is misspecified \u2014 for instance, if the asset is entering a higher-volatility period \u2014 all three intervals could be too narrow. Similarly, if correlations with macro variables shift unexpectedly, the point estimates themselves could be biased in ways that are difficult to detect in real time. Users of this forecast should",
+  "status": "collected",
+  "error": null
+}

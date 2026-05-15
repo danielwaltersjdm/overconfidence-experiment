@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-15",
+  "timestamp": "2026-05-15T19:45:26.114504Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 32.650001525878906,
+  "context": "Current closing price of Chipotle (CMG): $32.65 USD as of 2026-05-15.",
+  "prompt_text": "Today is 2026-05-15.\n\nCurrent closing price of Chipotle (CMG): $32.65 USD as of 2026-05-15.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-16\n  1-week target date: 2026-05-22\n  1-month target date: 2026-06-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate Chipotle's future closing prices. Let me think through this carefully.\n\n**Current price:** $32.65 (as of 2026-05-15)\n\n**Context considerations:**\n- CMG has undergone a 50-for-1 stock split in June 2024, so $32.65 represents post-split pricing (pre-split would have been ~$1,632)\n- At $32.65, this seems reasonable for post-split CMG\n- Typical daily volatility for CMG: ~1.5-2% (post-split, same relative volatility)\n- Weekly volatility: ~3-4%\n- Monthly volatility: ~6-9%\n\n**Volatility estimates (annualized ~25-30% for CMG historically):**\n- Daily \u03c3 \u2248 25%/\u221a252 \u2248 1.57% \u2192 ~$0.51\n- Weekly \u03c3 \u2248 25%/\u221a52 \u2248 3.47% \u2192 ~$1.13\n- Monthly \u03c3 \u2248 25%/\u221a12 \u2248 7.22% \u2192 ~$2.36\n\n**Point estimates:**\n- I'll use slight upward drift (small positive drift assumption)\n- 1-day: ~$32.65 (essentially flat)\n- 1-week: ~$32.80\n- 1-month: ~$33.10\n\n**90% CI calculations (\u00b11.645\u03c3):**\n- 1-day: \u00b11.645 \u00d7 $0.51 \u2248 \u00b1$0.84 \u2192 [$31.81, $33.49]\n- 1-week: \u00b11.645 \u00d7 $1.13 \u2248 \u00b1$1.86 \u2192 [$30.94, $34.66]\n- 1-month: \u00b11.645 \u00d7 $2.36 \u2248 \u00b1$3.88 \u2192 [$29.22, $36.98]\n\nI'll widen these slightly to account for fat tails and unknown events:\n\n{\n  \"1d\": {\n    \"point_estimate\": 32.65,\n    \"90_ci\": [31.65, 33.70]\n  },\n  \"1w\": {\n    \"point_estimate\": 32.80,\n    \"90_ci\": [30.50, 35.20]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.10,\n    \"90_ci\": [28.50, 38.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 32.65,
+      "90_ci": [
+        31.65,
+        33.7
+      ]
+    },
+    "1w": {
+      "point_estimate": 32.8,
+      "90_ci": [
+        30.5,
+        35.2
+      ]
+    },
+    "1m": {
+      "point_estimate": 33.1,
+      "90_ci": [
+        28.5,
+        38.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 32.65,\n    \"90_ci\": [\n      31.65,\n      33.7\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 32.8,\n    \"90_ci\": [\n      30.5,\n      35.2\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.1,\n    \"90_ci\": [\n      28.5,\n      38.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly bullish baseline across all three horizons, anchored to what I'd assume was a recent price level around $32.50\u2013$32.65. At the one-day horizon, the estimate of $32.65 essentially implies near-flat movement, consistent with mean-reversion tendencies in most assets over very short windows and an absence of imminent catalysts. At one week, I nudged the estimate slightly higher to $32.80, reflecting a mild positive drift assumption \u2014 typical of equity or commodity assets with modest upward secular trends \u2014 while acknowledging that a single week still provides little room for macro themes to fully play out. At one month, the $33.10 estimate incorporates a slightly larger drift, consistent with a trend-following posture, but still conservative enough to reflect uncertainty about near-term headwinds.\n\nConfidence interval widths were set to reflect the well-known scaling of uncertainty with time. At one day, the $31.65\u2013$33.70 range corresponds to roughly \u00b11.5% around the point estimate, which is appropriate for a single session where liquidity and normal volatility dominate. At one week, the interval widens to approximately \u00b17%, capturing the possibility of meaningful news flow, earnings surprises, or macro data releases. At one month, the range of $28.50\u2013$38.00 reflects nearly \u00b114% in either direction, acknowledging that over four weeks a wide variety of macro, sector, and idiosyncratic developments can materially reprice the asset.\n\nSeveral specific risks could push outcomes beyond my stated intervals. On the downside, a sudden deterioration in risk sentiment \u2014 triggered by an unexpected central bank policy shift, a geopolitical shock, or a significant liquidity event \u2014 could drive prices well below $28.50 at the one-month horizon. Conversely, a surprise positive catalyst such as a major earnings beat, a merger announcement, or a sharp reversal in a competing headwind like dollar strength or interest rates could push prices beyond $38.00. My intervals assume relatively normal market functioning and no fat-tail macro dislocations, which is a meaningful assumption to caveat.\n\nFinally, I want to be transparent that without knowing the specific asset in question, my estimates were necessarily generic and driven by statistical priors rather than fundamental analysis. If this asset has elevated idiosyncratic risk \u2014 for instance, a binary regulatory decision or an earnings report within the window \u2014 then even the one-week interval would likely be too narrow. The estimates are best understood as a reasonable baseline under ordinary conditions, not a prediction tailored to the asset's specific situation.",
+  "status": "collected",
+  "error": null
+}

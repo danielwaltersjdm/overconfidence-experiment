@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-15",
+  "timestamp": "2026-05-15T21:00:53.611154Z",
+  "domain": "stocks",
+  "item": "DOW",
+  "item_label": "Dow Inc",
+  "unit": "USD",
+  "current_value": 38.75,
+  "context": "Current closing price of Dow Inc (DOW): $38.75 USD as of 2026-05-15.",
+  "prompt_text": "Today is 2026-05-15.\n\nCurrent closing price of Dow Inc (DOW): $38.75 USD as of 2026-05-15.\n\nPredict the closing price of Dow Inc at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-16\n  1-week target date: 2026-05-22\n  1-month target date: 2026-06-14\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 38.90,\n    \"90_ci\": [37.50, 40.30]\n  },\n  \"1w\": {\n    \"point_estimate\": 39.10,\n    \"90_ci\": [36.50, 41.70]\n  },\n  \"1m\": {\n    \"point_estimate\": 39.50,\n    \"90_ci\": [34.00, 45.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 38.9,
+      "90_ci": [
+        37.5,
+        40.3
+      ]
+    },
+    "1w": {
+      "point_estimate": 39.1,
+      "90_ci": [
+        36.5,
+        41.7
+      ]
+    },
+    "1m": {
+      "point_estimate": 39.5,
+      "90_ci": [
+        34.0,
+        45.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 38.9,\n    \"90_ci\": [\n      37.5,\n      40.3\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 39.1,\n    \"90_ci\": [\n      36.5,\n      41.7\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 39.5,\n    \"90_ci\": [\n      34.0,\n      45.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable baseline with a modest upward drift over time. At the one-day horizon, the estimate of 38.9 is anchored primarily to recent observed values and short-term momentum, assuming no significant structural break or surprise event. The slight increase to 39.1 at one week and 39.5 at one month reflects a gentle mean-reversion or trend component suggesting the series has a mild positive drift from its current level. These increments are small and deliberate, acknowledging that over longer horizons, underlying fundamentals or gradual trend forces tend to pull values slightly higher, though not dramatically so.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a standard feature of forecasting under uncertainty. At one day, the 90% interval of roughly 37.5 to 40.3 spans about 2.8 units, reflecting that short-term volatility is relatively constrained and most variation can be attributed to day-to-day noise. At one week, the interval expands to about 5.2 units, incorporating the compounding of daily uncertainty and the possibility of short-lived but meaningful shocks. By one month, the interval reaches roughly 11 units, reflecting the accumulation of uncertainty over many periods, potential regime changes, and the difficulty of predicting macroeconomic or contextual shifts that might influence the underlying quantity being forecast.\n\nSpecific risks that could push outcomes outside these stated intervals include sudden structural breaks such as a policy change, an unexpected announcement, or an external shock that rapidly shifts the level of the series in a way that recent data would not have anticipated. On the downside, a sharp deterioration in conditions could push the one-month realization well below 34, while an unusually strong positive catalyst could push it above 45. These tail risks are by definition not fully captured in a 90% interval and represent scenarios where the historical patterns governing the forecast simply cease to apply in the near term.\n\nIt is also worth noting that model uncertainty itself contributes to potential surprises. The forecast assumes a degree of stationarity or smooth trend in the underlying data-generating process. If the true process is more volatile or prone to sudden jumps than recent history suggests, even the one-day interval could prove too narrow. Conversely, if conditions are unusually calm, the realized values could cluster tightly around the point estimates across all horizons, making the intervals appear conservative in hindsight.",
+  "status": "collected",
+  "error": null
+}
