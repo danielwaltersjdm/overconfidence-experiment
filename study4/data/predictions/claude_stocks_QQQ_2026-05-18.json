@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-18",
+  "timestamp": "2026-05-18T20:02:50.295650Z",
+  "domain": "stocks",
+  "item": "QQQ",
+  "item_label": "Invesco QQQ ETF",
+  "unit": "USD",
+  "current_value": 705.8800048828125,
+  "context": "Current closing price of Invesco QQQ ETF (QQQ): $705.88 USD as of 2026-05-18.",
+  "prompt_text": "Today is 2026-05-18.\n\nCurrent closing price of Invesco QQQ ETF (QQQ): $705.88 USD as of 2026-05-18.\n\nPredict the closing price of Invesco QQQ ETF at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-19\n  1-week target date: 2026-05-25\n  1-month target date: 2026-06-17\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 708.50,\n    \"90_ci\": [692.00, 725.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 712.00,\n    \"90_ci\": [678.00, 746.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 718.00,\n    \"90_ci\": [650.00, 786.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 708.5,
+      "90_ci": [
+        692.0,
+        725.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 712.0,
+      "90_ci": [
+        678.0,
+        746.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 718.0,
+      "90_ci": [
+        650.0,
+        786.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 708.5,\n    \"90_ci\": [\n      692.0,\n      725.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 712.0,\n    \"90_ci\": [\n      678.0,\n      746.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 718.0,\n    \"90_ci\": [\n      650.0,\n      786.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across horizons, anchored to what I assumed was a recent trading level near 708\u2013710 for the underlying asset. At the one-day horizon, the estimate of 708.5 essentially assumes mean reversion and continuity from the prior close, with very little directional conviction. At one week, I nudged the estimate slightly higher to 712, reflecting a mild positive trend bias that is common in equity or commodity markets over short windows when no strong reversal signal is present. At one month, the estimate of 718 continues that gentle upward drift, consistent with a long-run positive drift assumption built into most asset pricing frameworks, though the conviction behind that number is considerably weaker than at shorter horizons.\n\nThe confidence interval widths widen significantly as the horizon extends, which reflects the standard square-root-of-time scaling of uncertainty in financial markets. At one day, the 90% interval spans roughly 33 points, which corresponds to a relatively tight band consistent with typical daily volatility for a moderately volatile asset. By one week, the interval widens to 68 points, and at one month it reaches 136 points \u2014 roughly doubling at each step in line with volatility scaling. These widths were also informed by an assumption of moderate realized volatility, somewhere in the range of 15\u201325% annualized, which is typical for many equity indices or individual stocks.\n\nSpecific risks that could push outcomes outside these intervals include macro shocks such as unexpected central bank policy decisions, geopolitical escalations, or significant earnings surprises if this is an individual equity. A sudden liquidity event or broader market selloff could easily breach the lower bound of the one-month interval, while a strong risk-on catalyst \u2014 such as a positive inflation surprise or policy easing \u2014 could push prices above the upper bound. Volatility clustering is also a concern: if realized volatility spikes sharply from current levels, the intervals at all horizons would be too narrow, and tail outcomes become materially more probable than the 5% implied by each side of the stated confidence intervals.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-18",
+  "timestamp": "2026-05-18T19:52:02.968636Z",
+  "domain": "stocks",
+  "item": "REGN",
+  "item_label": "Regeneron",
+  "unit": "USD",
+  "current_value": 631.239990234375,
+  "context": "Current closing price of Regeneron (REGN): $631.24 USD as of 2026-05-18.",
+  "prompt_text": "Today is 2026-05-18.\n\nCurrent closing price of Regeneron (REGN): $631.24 USD as of 2026-05-18.\n\nPredict the closing price of Regeneron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-19\n  1-week target date: 2026-05-25\n  1-month target date: 2026-06-17\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 634,\n    \"90_ci\": [612, 656]\n  },\n  \"1w\": {\n    \"point_estimate\": 638,\n    \"90_ci\": [595, 681]\n  },\n  \"1m\": {\n    \"point_estimate\": 645,\n    \"90_ci\": [560, 730]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 634,
+      "90_ci": [
+        612,
+        656
+      ]
+    },
+    "1w": {
+      "point_estimate": 638,
+      "90_ci": [
+        595,
+        681
+      ]
+    },
+    "1m": {
+      "point_estimate": 645,
+      "90_ci": [
+        560,
+        730
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 634,\n    \"90_ci\": [\n      612,\n      656\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 638,\n    \"90_ci\": [\n      595,\n      681\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 645,\n    \"90_ci\": [\n      560,\n      730\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a view that the underlying metric is relatively stable with a mild upward drift over time. At the one-day horizon, I anchored closely to what appeared to be the recent observed level, with the 634 estimate representing little more than continuation of the immediate trend. For the one-week horizon, I nudged the estimate slightly higher to 638, reflecting a modest positive drift assumption while acknowledging that weekly fluctuations tend to average out toward a gentle upward trajectory. The one-month estimate of 645 extends that same logic further, assuming that whatever structural forces are pushing the series gradually higher continue to operate without major disruption.\n\nThe confidence interval widths reflect my assumptions about volatility at each time scale. At one day, the interval is tight \u2014 just 44 units wide \u2014 because short-term variation is constrained and there is relatively little time for surprises to accumulate. By one week, the interval widens to 86 units, incorporating the compounding of daily uncertainties and the possibility of a meaningful but not extreme swing. At one month, the interval opens to 170 units, reflecting genuine uncertainty about whether the underlying trend will hold, whether volatility will cluster, and whether the general drift assumption is even correct over that horizon. The widening is roughly consistent with a square-root-of-time scaling of uncertainty, which is a reasonable baseline absent specific knowledge of mean reversion or momentum dynamics.\n\nSeveral specific risks could push outcomes outside these intervals. On the upside, a sudden acceleration in whatever is driving the underlying series \u2014 a demand shock, a policy change, or a structural break in behavior \u2014 could push the one-month realization well above 730. On the downside, a reversal or correction, particularly if the recent level represented an overshoot, could drag the series below 560. The one-day interval is the most vulnerable to being violated by a single large discrete event \u2014 an announcement, a data release, or a liquidity-driven jump \u2014 that my model does not explicitly price in.\n\nMore broadly, my forecast implicitly assumes that the data-generating process remains stable across the forecast horizon. If there is a regime change \u2014 a shift in the trend rate, a structural break, or an external shock \u2014 all three intervals could be simultaneously wrong in the same direction. The one-month interval is wide enough to absorb moderate surprises but not a fundamental change in the underlying dynamics.",
+  "status": "collected",
+  "error": null
+}
