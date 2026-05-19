@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-19",
+  "timestamp": "2026-05-19T18:32:32.131041Z",
+  "domain": "stocks",
+  "item": "UNH",
+  "item_label": "UnitedHealth",
+  "unit": "USD",
+  "current_value": 392.6600036621094,
+  "context": "Current closing price of UnitedHealth (UNH): $392.66 USD as of 2026-05-19.",
+  "prompt_text": "Today is 2026-05-19.\n\nCurrent closing price of UnitedHealth (UNH): $392.66 USD as of 2026-05-19.\n\nPredict the closing price of UnitedHealth at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-20\n  1-week target date: 2026-05-26\n  1-month target date: 2026-06-18\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future UNH prices given the current price of $392.66.\n\nKey context I should consider:\n- UNH has been under significant pressure in 2025-2026 due to the killing of CEO Brian Thompson in December 2024, subsequent scrutiny of health insurers, rising medical costs, and regulatory/legal challenges\n- The stock was trading much higher (around $500-600) before these events\n- At $392.66, it has already fallen substantially\n- Recent volatility has been elevated for this stock\n- Typical daily volatility for UNH: historically ~1.5-2%, but currently likely higher given the circumstances\n\nFor a stock with elevated volatility (~2% daily), I'll estimate:\n- 1-day: ~2% daily vol \u2192 ~$8 typical move\n- 1-week: ~5 trading days \u2192 ~$18 typical move  \n- 1-month: ~22 trading days \u2192 ~$37 typical move\n\nFor confidence intervals (90% = ~1.645 sigma):\n- 1-day: \u00b11.645 \u00d7 $8 \u2248 \u00b1$13\n- 1-week: \u00b11.645 \u00d7 $18 \u2248 \u00b1$30\n- 1-month: \u00b11.645 \u00d7 $37 \u2248 \u00b1$61\n\nGiven the ongoing negative sentiment and headwinds, I'll apply a slight downward bias to point estimates, but largely stay near current price for shorter horizons.\n\n{\n  \"1d\": {\n    \"point_estimate\": 391.00,\n    \"90_ci\": [370.00, 412.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 388.00,\n    \"90_ci\": [355.00, 422.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 385.00,\n    \"90_ci\": [320.00, 450.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 391.0,
+      "90_ci": [
+        370.0,
+        412.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 388.0,
+      "90_ci": [
+        355.0,
+        422.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 385.0,
+      "90_ci": [
+        320.0,
+        450.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 391.0,\n    \"90_ci\": [\n      370.0,\n      412.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 388.0,\n    \"90_ci\": [\n      355.0,\n      422.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 385.0,\n    \"90_ci\": [\n      320.0,\n      450.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild downward drift from what I'd assume was a recent observed level near 392\u2013393, settling at 391 for the 1-day horizon, 388 for the 1-week horizon, and 385 for the 1-month horizon. This gentle declining trajectory captures a modest mean-reversion tendency or slight bearish tilt I assessed in the underlying asset at the time of the forecast. The 1-day estimate is anchored closely to the last observed price, with only marginal adjustment, while the 1-week and 1-month estimates drift slightly lower, reflecting either a modest negative momentum signal or a view that near-term catalysts were more likely to pressure prices than support them. In the absence of strong directional conviction, these estimates essentially represent a near-flat outlook with a small negative lean.\n\nThe confidence interval widths were driven primarily by the natural expansion of uncertainty over time. At the 1-day horizon, the 90% CI spans roughly 42 points (370\u2013412), which reflects normal intraday and overnight volatility for the asset in question. By one week, the interval widens to 67 points (355\u2013422), incorporating the compounding of daily volatility and the possibility of scheduled macro events or earnings announcements within that window. At one month, the interval expands to 130 points (320\u2013450), reflecting the much broader range of fundamental and technical developments that could unfold over four weeks. These widths were calibrated based on historical realized volatility and the general regime of uncertainty at the time.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macro shocks such as an unexpected central bank policy shift, a geopolitical escalation, or a significant surprise in economic data releases like CPI or employment figures. On the upside, stronger-than-expected earnings, a dovish pivot, or a short-squeeze dynamic could drive prices well above 450 at the monthly horizon. On the downside, a broader risk-off episode, liquidity stress, or negative fundamental news specific to the asset could push prices below 320. Tail events by definition are underweighted in any confidence interval, so these scenarios represent genuine blind spots in the forecast.",
+  "status": "collected",
+  "error": null
+}
