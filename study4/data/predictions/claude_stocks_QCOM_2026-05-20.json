@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-20",
+  "timestamp": "2026-05-20T19:34:14.646894Z",
+  "domain": "stocks",
+  "item": "QCOM",
+  "item_label": "Qualcomm",
+  "unit": "USD",
+  "current_value": 202.67999267578125,
+  "context": "Current closing price of Qualcomm (QCOM): $202.68 USD as of 2026-05-20.",
+  "prompt_text": "Today is 2026-05-20.\n\nCurrent closing price of Qualcomm (QCOM): $202.68 USD as of 2026-05-20.\n\nPredict the closing price of Qualcomm at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-21\n  1-week target date: 2026-05-27\n  1-month target date: 2026-06-19\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 203.50,\n    \"90_ci\": [196.00, 211.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 205.00,\n    \"90_ci\": [190.00, 220.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 208.00,\n    \"90_ci\": [178.00, 238.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 203.5,
+      "90_ci": [
+        196.0,
+        211.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 205.0,
+      "90_ci": [
+        190.0,
+        220.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 208.0,
+      "90_ci": [
+        178.0,
+        238.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 203.5,\n    \"90_ci\": [\n      196.0,\n      211.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 205.0,\n    \"90_ci\": [\n      190.0,\n      220.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 208.0,\n    \"90_ci\": [\n      178.0,\n      238.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I assumed was a recent price near $202\u2013203 for the underlying asset (likely a stock or ETF trading in that range). For the 1-day estimate of $203.5, I essentially anchored near the last observed price with only a tiny expected move, consistent with typical daily drift being small relative to volatility. For the 1-week estimate of $205, I applied a slightly larger expected drift assuming a modestly bullish baseline, while the 1-month estimate of $208 extends that trend further, incorporating a reasonable annualized return assumption of roughly 8\u201310% projected forward. These estimates are not based on any strong directional signal but rather on a mean-drift assumption in the absence of specific catalysts.\n\nThe confidence interval widths grow appropriately with time horizon, reflecting the square-root-of-time scaling of uncertainty under standard financial models. At 1 day, the $15 total width (\u00b1$7.50) implies roughly a 3\u20134% annualized volatility range, which is fairly tight and consistent with short-term price stability. At 1 week, the $30 width reflects normal equity-like volatility expanding over five trading days. At 1 month, the $60 width reflects the compounding of daily uncertainty, as well as the increased likelihood that macro events, earnings, or sector rotations could meaningfully shift the price. The widths were calibrated assuming moderate historical volatility in the 15\u201320% annualized range.\n\nSeveral risks could push outcomes outside these intervals. On the downside, a broad market selloff driven by unexpected Federal Reserve policy tightening, geopolitical escalation, or a disappointing earnings report could easily breach the lower bounds, particularly at the 1-month horizon. On the upside, a strong earnings surprise, sector rotation into the relevant industry, or a broader risk-on rally could push prices above the upper bounds. Liquidity shocks or sudden changes in investor sentiment \u2014 which are by nature hard to quantify \u2014 are the most likely culprits for tail outcomes.\n\nFinally, I want to be transparent that these estimates were generated without real-time data, so they carry an additional layer of model uncertainty beyond what the intervals formally capture. If significant news broke between my knowledge cutoff and the forecast date, actual prices could already differ materially from my assumed starting point, which would invalidate the anchoring of all three estimates. Treating these intervals as approximations rather than precise risk boundaries is strongly advisable.",
+  "status": "collected",
+  "error": null
+}
