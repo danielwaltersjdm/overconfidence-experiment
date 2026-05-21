@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-21",
+  "timestamp": "2026-05-21T18:40:14.810802Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 89.81500244140625,
+  "context": "Current closing price of Netflix (NFLX): $89.82 USD as of 2026-05-21.",
+  "prompt_text": "Today is 2026-05-21.\n\nCurrent closing price of Netflix (NFLX): $89.82 USD as of 2026-05-21.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-22\n  1-week target date: 2026-05-28\n  1-month target date: 2026-06-20\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about Netflix's stock price. The current price is $89.82 as of 2026-05-21.\n\nWait - this price seems very low for Netflix. As of my knowledge cutoff, Netflix was trading around $600-900+ range. A price of $89.82 could suggest a stock split occurred, or this is an unusual situation. I'll take the current price at face value and work from it.\n\nLet me think about volatility:\n- Netflix historically has ~30-40% annualized volatility\n- Daily volatility: ~1.5-2.5%\n- Weekly volatility: ~3-5%\n- Monthly volatility: ~8-12%\n\nUsing $89.82 as base:\n\n**1-day (2026-05-22):**\n- Daily move ~1.5-2%\n- Point estimate: ~$89.82 (slight drift up)\n- 90% CI: roughly \u00b12.5% \u2192 [87.57, 92.07]\n\n**1-week (2026-05-28):**\n- Weekly move ~3-5%\n- Point estimate: slight upward drift\n- 90% CI: roughly \u00b15% \u2192 [85.33, 94.31]\n\n**1-month (2026-06-20):**\n- Monthly move ~8-12%\n- Point estimate: slight upward drift\n- 90% CI: roughly \u00b110-12% \u2192 [79.04, 100.60]\n\n{\n  \"1d\": {\n    \"point_estimate\": 90.10,\n    \"90_ci\": [87.50, 92.70]\n  },\n  \"1w\": {\n    \"point_estimate\": 90.80,\n    \"90_ci\": [85.20, 96.40]\n  },\n  \"1m\": {\n    \"point_estimate\": 91.50,\n    \"90_ci\": [79.50, 103.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 90.1,
+      "90_ci": [
+        87.5,
+        92.7
+      ]
+    },
+    "1w": {
+      "point_estimate": 90.8,
+      "90_ci": [
+        85.2,
+        96.4
+      ]
+    },
+    "1m": {
+      "point_estimate": 91.5,
+      "90_ci": [
+        79.5,
+        103.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 90.1,\n    \"90_ci\": [\n      87.5,\n      92.7\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 90.8,\n    \"90_ci\": [\n      85.2,\n      96.4\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 91.5,\n    \"90_ci\": [\n      79.5,\n      103.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three horizons, starting near 90.1 for the one-day forecast and rising gradually to 91.5 at one month. This gentle positive slope was driven by an assumption of mean-reverting momentum in whatever underlying asset or index this represents, combined with a slight structural bias toward growth over longer windows. The one-day estimate stays close to the last observed value because very short-term price processes tend to be dominated by inertia \u2014 large moves in a single session are relatively rare absent a specific catalyst. As the horizon extends to a week and then a month, I incorporated a small expected drift component that nudges the estimate upward, reflecting typical trend continuation in the absence of contrary signals.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which is a straightforward consequence of uncertainty compounding over time. At one day, the 90% interval spans roughly 5.2 units, reflecting relatively tight bounds consistent with normal daily volatility. By one week, that range widens to about 11.2 units as intraday noise accumulates across multiple sessions and the possibility of regime shifts or news-driven moves grows. At one month, the interval spans 24 units, capturing the much broader distribution of outcomes that can result from multi-week economic developments, earnings releases, policy decisions, or sentiment shifts. I calibrated these widths using a rough approximation of realized volatility scaled by the square root of time, which is a standard approach under assumptions of roughly log-normal price behavior.\n\nSeveral specific risks could push realized outcomes outside even these wider bounds. On the downside, an unexpected macroeconomic shock \u2014 a surprise central bank move, a geopolitical escalation, or a significant financial stress event \u2014 could produce a sharp drawdown well below the lower bound of the one-month interval. Liquidity crises or correlated sell-offs can create fat-tailed outcomes that square-root-of-time scaling systematically underestimates. On the upside, a strong positive catalyst such as better-than-expected economic data, a policy pivot, or a short-squeeze dynamic could push prices well above the upper bound. The stated intervals should be understood as reflecting a reasonably normal operating environment; they are not designed to capture tail scenarios with probabilities below roughly 5%.",
+  "status": "collected",
+  "error": null
+}
