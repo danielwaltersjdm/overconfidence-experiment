@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-22",
+  "timestamp": "2026-05-22T21:35:46.728419Z",
+  "domain": "stocks",
+  "item": "MSCI",
+  "item_label": "MSCI",
+  "unit": "USD",
+  "current_value": 588.5499877929688,
+  "context": "Current closing price of MSCI (MSCI): $588.55 USD as of 2026-05-22.",
+  "prompt_text": "Today is 2026-05-22.\n\nCurrent closing price of MSCI (MSCI): $588.55 USD as of 2026-05-22.\n\nPredict the closing price of MSCI at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-23\n  1-week target date: 2026-05-29\n  1-month target date: 2026-06-21\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 591,\n    \"90_ci\": [574, 608]\n  },\n  \"1w\": {\n    \"point_estimate\": 594,\n    \"90_ci\": [562, 626]\n  },\n  \"1m\": {\n    \"point_estimate\": 600,\n    \"90_ci\": [540, 660]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 591,
+      "90_ci": [
+        574,
+        608
+      ]
+    },
+    "1w": {
+      "point_estimate": 594,
+      "90_ci": [
+        562,
+        626
+      ]
+    },
+    "1m": {
+      "point_estimate": 600,
+      "90_ci": [
+        540,
+        660
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 591,\n    \"90_ci\": [\n      574,\n      608\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 594,\n    \"90_ci\": [\n      562,\n      626\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 600,\n    \"90_ci\": [\n      540,\n      660\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term baseline with modest upward drift over longer horizons. For the 1-day estimate of 591, I was anchoring closely to recent observed values, assuming mean-reverting behavior and minimal new information arriving overnight. The 1-week estimate of 594 incorporates a slight positive drift assumption, reflecting whatever underlying trend or momentum was present in the data at the time of forecasting. The 1-month estimate of 600 extends that drift further while also pulling toward a longer-run central tendency, essentially blending trend extrapolation with reversion to a medium-term mean. The relatively small step-ups across horizons suggest I viewed the series as fairly stable with only gentle directional pressure.\n\nThe confidence interval widths expand systematically across horizons, which reflects standard uncertainty accumulation over time. At 1 day, the interval of 574\u2013608 is tight because short-run volatility is constrained by the autocorrelation structure of the series \u2014 tomorrow is highly predictable given today. At 1 week, the interval widens to 562\u2013626 as multiple days of unpredictable shocks can compound. At 1 month, the interval of 540\u2013660 reflects roughly four weeks of accumulated variance, where structural shifts, regime changes, or sustained directional moves become increasingly plausible. The width also embeds model uncertainty \u2014 I may not have perfectly characterized the volatility process.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden structural breaks in whatever underlying process drives the series, such as a policy change, external shock, or data revision that fundamentally shifts the level. On the upside, a momentum acceleration or positive feedback dynamic could carry values well above 660 over the month. On the downside, a sharp mean-reversion event or negative shock could breach 540. Additionally, if the series has fat-tailed behavior that I underweighted \u2014 common in financial or macroeconomic data \u2014 extreme realizations are more likely than my Gaussian-style intervals suggest, meaning the true 90% interval should arguably be wider than stated.",
+  "status": "collected",
+  "error": null
+}
