@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-25",
+  "timestamp": "2026-05-25T21:10:32.178090Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 31.6200008392334,
+  "context": "Current closing price of Tractor Supply (TSCO): $31.62 USD as of 2026-05-25.",
+  "prompt_text": "Today is 2026-05-25.\n\nCurrent closing price of Tractor Supply (TSCO): $31.62 USD as of 2026-05-25.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-26\n  1-week target date: 2026-06-01\n  1-month target date: 2026-06-24\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about this. TSCO is currently at $31.62, which seems unusually low for Tractor Supply \u2014 historically TSCO has traded in the $200-$280 range. This could indicate a stock split has occurred, or there's something unusual about this price.\n\nAssuming this $31.62 is the accurate current price (perhaps post-split or adjusted), I'll work from this baseline.\n\nFor a stock at this price level, typical daily volatility for TSCO-like stocks would be around 1-2% daily. Let me estimate:\n\n**1-day:** Small random walk. Point estimate ~$31.70, with ~1.5% daily vol giving roughly \u00b1$0.47 for 90% CI (about 1.645 sigma).\n\n**1-week:** ~5 trading days, vol scales by \u221a5 \u2248 2.24x. So ~3.4% range for 90% CI.\n\n**1-month:** ~21 trading days, vol scales by \u221a21 \u2248 4.58x. So ~7% range for 90% CI.\n\nGiven current market uncertainty (tariffs, macro environment), I'll widen intervals slightly and keep point estimates roughly flat with slight upward drift.\n\n{\n  \"1d\": {\n    \"point_estimate\": 31.70,\n    \"90_ci\": [31.15, 32.25]\n  },\n  \"1w\": {\n    \"point_estimate\": 31.85,\n    \"90_ci\": [30.55, 33.15]\n  },\n  \"1m\": {\n    \"point_estimate\": 32.20,\n    \"90_ci\": [28.80, 35.60]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 31.7,
+      "90_ci": [
+        31.15,
+        32.25
+      ]
+    },
+    "1w": {
+      "point_estimate": 31.85,
+      "90_ci": [
+        30.55,
+        33.15
+      ]
+    },
+    "1m": {
+      "point_estimate": 32.2,
+      "90_ci": [
+        28.8,
+        35.6
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 31.7,\n    \"90_ci\": [\n      31.15,\n      32.25\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 31.85,\n    \"90_ci\": [\n      30.55,\n      33.15\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 32.2,\n    \"90_ci\": [\n      28.8,\n      35.6\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I assessed as the current price level near $31.70. At the one-day horizon, I expected very little movement, essentially anchoring near the prevailing price with only minor intraday noise factored in. At the one-week horizon, I nudged the estimate slightly higher to $31.85, reflecting a weak positive drift assumption consistent with a mildly bullish near-term bias, perhaps driven by sector momentum or broader market tone at the time of the forecast. At the one-month horizon, I projected $32.20, continuing that gradual drift upward while acknowledging that a month is enough time for more fundamental repricing to occur. None of these estimates represent a strong directional conviction \u2014 they are closer to a random walk with a small positive drift applied.\n\nThe confidence interval widths expand significantly as the horizon lengthens, which is consistent with standard uncertainty scaling over time. At one day, the interval is quite tight at roughly plus or minus $0.55, reflecting the relatively low realized volatility typical for a single session in a mid-cap or large-cap equity. By one week, that uncertainty roughly doubles to about plus or minus $1.30, and by one month it widens to plus or minus $3.40, incorporating the compounding of daily uncertainty, potential earnings releases, macro data, and shifts in market sentiment. The widths also implicitly capture liquidity conditions and the possibility of gap moves that don't follow smooth diffusion.\n\nSpecific risks that could push outcomes outside these intervals include an unexpected earnings announcement or guidance revision, which could easily gap the stock five to ten percent in either direction in a single session. Macro shocks \u2014 a surprise Federal Reserve decision, a significant geopolitical event, or a sharp move in broader equity indices \u2014 could similarly overwhelm my stated ranges, particularly at the one-month horizon. Sector-specific news, such as regulatory action, a competitor announcement, or a large institutional trade, could also produce outsized moves. On the upside, a takeover rumor or short squeeze scenario could push the price well above $35.60. On the downside, a broader market selloff or company-specific negative catalyst could push it well below $28.80.\n\nIn summary, these forecasts should be interpreted as central tendency estimates with uncertainty that grows nonlinearly with time. The intervals capture typical volatility regimes but are not designed to account for tail events like earnings surprises or macro dislocations, which carry meaningful probability over a one-month window and represent the most credible sources of interval violation.",
+  "status": "collected",
+  "error": null
+}
