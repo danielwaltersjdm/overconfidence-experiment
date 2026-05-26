@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-26",
+  "timestamp": "2026-05-26T21:04:02.476514Z",
+  "domain": "stocks",
+  "item": "FDX",
+  "item_label": "FedEx",
+  "unit": "USD",
+  "current_value": 400.0,
+  "context": "Current closing price of FedEx (FDX): $400.00 USD as of 2026-05-26.",
+  "prompt_text": "Today is 2026-05-26.\n\nCurrent closing price of FedEx (FDX): $400.00 USD as of 2026-05-26.\n\nPredict the closing price of FedEx at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-27\n  1-week target date: 2026-06-02\n  1-month target date: 2026-06-25\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 401,\n    \"90_ci\": [388, 414]\n  },\n  \"1w\": {\n    \"point_estimate\": 403,\n    \"90_ci\": [380, 426]\n  },\n  \"1m\": {\n    \"point_estimate\": 408,\n    \"90_ci\": [360, 456]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 401,
+      "90_ci": [
+        388,
+        414
+      ]
+    },
+    "1w": {
+      "point_estimate": 403,
+      "90_ci": [
+        380,
+        426
+      ]
+    },
+    "1m": {
+      "point_estimate": 408,
+      "90_ci": [
+        360,
+        456
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 401,\n    \"90_ci\": [\n      388,\n      414\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 403,\n    \"90_ci\": [\n      380,\n      426\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 408,\n    \"90_ci\": [\n      360,\n      456\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what appears to be a baseline near 400, with the trajectory shaped by mean-reversion tendencies typical of financial or economic time series. At the one-day horizon, the estimate of 401 essentially anchors close to the current level, reflecting that short-term momentum tends to persist weakly and that most of the information driving tomorrow's value is already embedded in today's reading. At the one-week horizon, I nudged the estimate slightly higher to 403, acknowledging a mild positive drift assumption while recognizing that weekly moves are dominated by noise rather than trend. At the one-month horizon, the estimate of 408 reflects a compounding of that same modest drift, but the key driver here is less about conviction in direction and more about the expected value sitting above the current level due to an assumed slight positive drift embedded in the underlying process.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a straightforward consequence of uncertainty compounding over time. At one day, the range of 388 to 414 reflects relatively tight bounds because most of the variance in daily returns is modest and short-term volatility is reasonably estimable. By one week, the interval expands to 380 to 426 because intraweek surprises accumulate and regime shifts can begin to matter. At one month, the range of 360 to 456 is considerably wider, capturing the possibility of sustained directional moves, volatility clustering, and the growing influence of macro or structural factors that are difficult to predict.\n\nSpecific risks that could push outcomes outside these stated intervals include sudden macroeconomic shocks such as unexpected central bank policy shifts, geopolitical disruptions, or major data surprises that could cause sharp repricing well beyond normal volatility bounds. On the upside, a strong risk-on sentiment shift or better-than-expected fundamental data could drive the series above 456 within a month. On the downside, a financial stability event, liquidity crunch, or negative policy surprise could push the series below 360. The one-day interval is most vulnerable to single large-event surprises like scheduled announcements or unexpected news, where the distribution of outcomes has fat tails that a symmetric confidence interval may understate.\n\nIt is also worth noting that these estimates carry model uncertainty on top of the statistical uncertainty already reflected in the intervals. If the underlying data-generating process has shifted regime recently, all three horizons could be systematically biased in ways that the historical-calibration approach cannot detect in real time. This structural uncertainty is perhaps the most important caveat for the monthly horizon in particular.",
+  "status": "collected",
+  "error": null
+}

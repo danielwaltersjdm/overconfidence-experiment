@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-26",
+  "timestamp": "2026-05-26T19:14:51.514159Z",
+  "domain": "stocks",
+  "item": "AMD",
+  "item_label": "AMD",
+  "unit": "USD",
+  "current_value": 506.0,
+  "context": "Current closing price of AMD (AMD): $506.00 USD as of 2026-05-26.",
+  "prompt_text": "Today is 2026-05-26.\n\nCurrent closing price of AMD (AMD): $506.00 USD as of 2026-05-26.\n\nPredict the closing price of AMD at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-27\n  1-week target date: 2026-06-02\n  1-month target date: 2026-06-25\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 508,\n    \"90_ci\": [488, 528]\n  },\n  \"1w\": {\n    \"point_estimate\": 512,\n    \"90_ci\": [475, 550]\n  },\n  \"1m\": {\n    \"point_estimate\": 520,\n    \"90_ci\": [440, 600]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 508,
+      "90_ci": [
+        488,
+        528
+      ]
+    },
+    "1w": {
+      "point_estimate": 512,
+      "90_ci": [
+        475,
+        550
+      ]
+    },
+    "1m": {
+      "point_estimate": 520,
+      "90_ci": [
+        440,
+        600
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 508,\n    \"90_ci\": [\n      488,\n      528\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 512,\n    \"90_ci\": [\n      475,\n      550\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 520,\n    \"90_ci\": [\n      440,\n      600\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a near-term baseline around 505\u2013510, with each horizon nudging slightly higher to account for a typical positive drift assumption baked into equity or index forecasting. The 1-day estimate of 508 essentially anchors close to the prevailing level, assuming no major catalysts and mean-reverting intraday dynamics. The 1-week estimate of 512 incorporates a small positive expected return consistent with historical weekly drift, while the 1-month estimate of 520 extrapolates that trend further, implying roughly a 2\u20133% annualized drift assumption. These estimates are relatively conservative and don't embed strong directional conviction \u2014 they're closer to a random walk with slight upward bias than a fundamental thesis.\n\nThe confidence interval widths were calibrated to historical realized volatility at each time horizon, scaling roughly with the square root of time as one would expect under standard diffusion assumptions. The 1-day interval is tight at roughly \u00b120 points because short-horizon price moves are relatively contained in the absence of scheduled high-impact events. By one week, the interval widens to \u00b137 points to reflect the accumulation of daily noise and the possibility of a mid-week macro surprise. The 1-month interval at \u00b180 points accounts for a full cycle of potential macro data releases, central bank communications, earnings, and geopolitical developments that could meaningfully shift sentiment.\n\nSeveral specific risks could push outcomes well outside these intervals. On the downside, a surprise hawkish policy shift from the Federal Reserve, a significant credit event, or an escalation in geopolitical conflict could easily breach the lower bounds, particularly at the 1-month horizon. On the upside, a stronger-than-expected economic data print, a de-escalation of trade or geopolitical tensions, or an unexpected dovish pivot could drive prices above the upper bounds. The 1-month interval in particular should be treated with humility \u2014 80-point swings in either direction represent roughly the stated 90% confidence, meaning there's still a meaningful 10% probability of outcomes beyond that range.\n\nIt's worth being transparent that without knowing the exact instrument, date, and market context at the time of the original forecast, this explanation is necessarily somewhat generic. The reasoning above represents the most plausible logic behind those specific numbers, but real-world forecasting at these horizons carries substantial model uncertainty beyond what any confidence interval cleanly captures.",
+  "status": "collected",
+  "error": null
+}

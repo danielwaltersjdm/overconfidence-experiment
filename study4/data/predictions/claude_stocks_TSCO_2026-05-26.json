@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-26",
+  "timestamp": "2026-05-26T22:01:42.360505Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 29.799999237060547,
+  "context": "Current closing price of Tractor Supply (TSCO): $29.80 USD as of 2026-05-26.",
+  "prompt_text": "Today is 2026-05-26.\n\nCurrent closing price of Tractor Supply (TSCO): $29.80 USD as of 2026-05-26.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-27\n  1-week target date: 2026-06-02\n  1-month target date: 2026-06-25\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to think carefully about this. The current price is $29.80, which seems extremely low for Tractor Supply (TSCO). Historically, TSCO has traded in the $200-$280 range. A price of $29.80 would imply either a massive crash or a stock split.\n\nLet me consider: if TSCO did a ~8:1 or 10:1 stock split, or if this reflects some corporate action, I should take the current price as given and forecast from $29.80.\n\nAssuming $29.80 is the correct current price (perhaps after a stock split or significant market event), I'll forecast from this level.\n\nFor a stock like TSCO (retail, relatively stable, farm/rural supply), typical daily volatility is around 1-2%. Given uncertainty about what caused this price level:\n\n- Daily volatility: ~1.5% \u2192 ~$0.45\n- Weekly volatility: ~1.5% \u00d7 \u221a5 \u2248 ~$1.00\n- Monthly volatility: ~1.5% \u00d7 \u221a22 \u2248 ~$2.10\n\nPoint estimates: slight upward drift assumption (small positive expected return).\n\n1-day: $29.85, CI: [$28.50, $31.20] (wider due to uncertainty)\n1-week: $29.95, CI: [$27.80, $32.20]\n1-month: $30.20, CI: [$26.00, $34.50]\n\nI'll widen intervals to account for model uncertainty and the unusual price level.\n\n{\n  \"1d\": {\n    \"point_estimate\": 29.85,\n    \"90_ci\": [28.45, 31.30]\n  },\n  \"1w\": {\n    \"point_estimate\": 29.95,\n    \"90_ci\": [27.60, 32.40]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.30,\n    \"90_ci\": [25.80, 35.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 29.85,
+      "90_ci": [
+        28.45,
+        31.3
+      ]
+    },
+    "1w": {
+      "point_estimate": 29.95,
+      "90_ci": [
+        27.6,
+        32.4
+      ]
+    },
+    "1m": {
+      "point_estimate": 30.3,
+      "90_ci": [
+        25.8,
+        35.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 29.85,\n    \"90_ci\": [\n      28.45,\n      31.3\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 29.95,\n    \"90_ci\": [\n      27.6,\n      32.4\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.3,\n    \"90_ci\": [\n      25.8,\n      35.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I would assume is a current price near $29.85, with the 1-day estimate essentially anchored to the present level given the very short horizon. Over one week, I nudged the estimate slightly higher to $29.95, reflecting a weak mean-reversion or slight positive drift assumption consistent with many equity or commodity instruments in a relatively stable environment. By one month, the estimate moves to $30.30, implying a small but positive expected return, which could reflect an assumption of modest fundamental support, a slight upward trend in recent price action, or simply a baseline drift built into the forecast. None of these shifts are dramatic, suggesting I viewed the near-term backdrop as relatively neutral with a mild bullish tilt.\n\nThe confidence interval widths widen substantially as the horizon extends, which is the natural consequence of uncertainty compounding over time. At one day, the 90% interval spans roughly $2.85, reflecting normal intraday and overnight volatility. By one week, it expands to about $4.80, incorporating the possibility of multiple trading sessions bringing new information. At one month, the interval spans roughly $9.20, capturing the reality that over 20+ trading days, macroeconomic releases, sector-specific news, earnings, and broader market sentiment can shift prices considerably. These widths were calibrated based on typical realized volatility for the asset class in question, though I do not have full context on the specific instrument.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macro shocks such as an unexpected central bank policy shift, a geopolitical escalation, or a surprise inflation reading that dramatically reprices risk assets. On the upside, a strong earnings beat, a positive analyst catalyst, or a broader risk-on rally driven by favorable economic data could push prices well above the upper bound of any of these intervals. Liquidity events, such as a short squeeze or forced institutional selling, could also produce extreme moves that my probabilistic model would assign very low probability to but cannot rule out entirely.\n\nFinally, it is worth acknowledging that my intervals, while labeled 90% confidence intervals, carry their own model uncertainty. If the underlying volatility regime shifts \u2014 for instance, if a period of unusually low volatility gives way to elevated turbulence \u2014 the true coverage of these intervals could be meaningfully lower. Model misspecification, particularly around tail behavior and correlation with broader market moves, represents a structural risk that means real-world outcomes may fall outside these bounds more frequently than the stated confidence level implies.",
+  "status": "collected",
+  "error": null
+}

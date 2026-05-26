@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-26",
+  "timestamp": "2026-05-26T20:29:15.887889Z",
+  "domain": "stocks",
+  "item": "KLAC",
+  "item_label": "KLA Corp",
+  "unit": "USD",
+  "current_value": 2011.3900146484375,
+  "context": "Current closing price of KLA Corp (KLAC): $2011.39 USD as of 2026-05-26.",
+  "prompt_text": "Today is 2026-05-26.\n\nCurrent closing price of KLA Corp (KLAC): $2011.39 USD as of 2026-05-26.\n\nPredict the closing price of KLA Corp at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-27\n  1-week target date: 2026-06-02\n  1-month target date: 2026-06-25\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 2021,\n    \"90_ci\": [1951, 2091]\n  },\n  \"1w\": {\n    \"point_estimate\": 2035,\n    \"90_ci\": [1891, 2179]\n  },\n  \"1m\": {\n    \"point_estimate\": 2060,\n    \"90_ci\": [1750, 2370]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 2021,
+      "90_ci": [
+        1951,
+        2091
+      ]
+    },
+    "1w": {
+      "point_estimate": 2035,
+      "90_ci": [
+        1891,
+        2179
+      ]
+    },
+    "1m": {
+      "point_estimate": 2060,
+      "90_ci": [
+        1750,
+        2370
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 2021,\n    \"90_ci\": [\n      1951,\n      2091\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 2035,\n    \"90_ci\": [\n      1891,\n      2179\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 2060,\n    \"90_ci\": [\n      1750,\n      2370\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-sloping trajectory from a baseline around 2020, with each successive horizon incorporating a small positive drift. For the one-day estimate, I anchored near the prevailing level and applied minimal adjustment, as short-term mean reversion tends to dominate. For the one-week estimate, I factored in a slight trend continuation, likely reflecting a backdrop of stable or gradually improving macro conditions at the time. The one-month estimate extends that drift further, reaching roughly 2060, consistent with a slow grind higher that many medium-term models suggest when volatility is moderate and no major catalyst is imminent.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which reflects the compounding of daily uncertainty over time. At one day, the 70-point spread is relatively tight, consistent with typical intraday-to-next-day realized volatility in equity index territory. By one week, the spread widens to roughly 290 points, and at one month it reaches 620 points, reflecting the well-known square-root-of-time scaling of uncertainty plus additional uncertainty about regime changes, earnings cycles, or macro surprises that become more probable over longer windows.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden geopolitical shocks, an unexpected central bank policy pivot, or a credit event in a systemically important institution \u2014 any of which could produce gap moves that exceed the tails I specified. On the upside, a surprise resolution of a major geopolitical conflict, a stronger-than-expected economic data release, or a significant policy stimulus announcement could push prices well above the upper bound of the one-month interval.\n\nIt is also worth acknowledging that my intervals were constructed with implicit assumptions about a roughly normal distribution of returns and relatively stable volatility. If realized volatility were to spike \u2014 as it does in crisis episodes \u2014 the true distribution would have much fatter tails than my intervals suggest, meaning the stated 90% confidence intervals would undercover actual outcomes more often than intended. These tail events are structurally difficult to capture in point-in-time probabilistic forecasts.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-26",
+  "timestamp": "2026-05-26T21:31:20.158300Z",
+  "domain": "stocks",
+  "item": "SRE",
+  "item_label": "Sempra",
+  "unit": "USD",
+  "current_value": 91.55000305175781,
+  "context": "Current closing price of Sempra (SRE): $91.55 USD as of 2026-05-26.",
+  "prompt_text": "Today is 2026-05-26.\n\nCurrent closing price of Sempra (SRE): $91.55 USD as of 2026-05-26.\n\nPredict the closing price of Sempra at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-27\n  1-week target date: 2026-06-02\n  1-month target date: 2026-06-25\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 91.70,\n    \"90_ci\": [89.50, 93.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 92.00,\n    \"90_ci\": [87.50, 96.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 92.50,\n    \"90_ci\": [84.00, 101.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 91.7,
+      "90_ci": [
+        89.5,
+        93.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 92.0,
+      "90_ci": [
+        87.5,
+        96.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 92.5,
+      "90_ci": [
+        84.0,
+        101.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 91.7,\n    \"90_ci\": [\n      89.5,\n      93.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 92.0,\n    \"90_ci\": [\n      87.5,\n      96.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 92.5,\n    \"90_ci\": [\n      84.0,\n      101.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three horizons, starting near 91.7 for the one-day forecast and gradually rising to 92.5 at one month. This trajectory likely reflects a baseline assumption of mean-reverting behavior around a recent central tendency, combined with a slight positive bias from prevailing momentum or fundamental support. At the one-day horizon, the estimate is anchored heavily by the most recent observed price or level, with very little room for structural change. As the horizon extends to one week and one month, I allowed for a small drift upward, reflecting either a modest trend component or an assumption that near-term catalysts were modestly constructive at the time of the forecast.\n\nThe confidence interval widths widen considerably as the horizon extends, which is the expected behavior under most reasonable stochastic models. At one day, the 90% interval spans roughly 4.4 units, consistent with typical short-run volatility. By one week that expands to 9 units, and by one month it reaches 17 units, reflecting the square-root-of-time scaling of uncertainty under diffusion-like dynamics. The primary sources of uncertainty I was accounting for include realized volatility in the underlying series, potential for regime shifts, and the compounding of forecast errors over longer horizons. Liquidity conditions and the possibility of gap moves or discontinuous jumps also contributed to wider tails at longer horizons.\n\nThere are several specific risks that could push outcomes outside the stated intervals. On the downside, an unexpected macroeconomic shock, a sudden tightening of financial conditions, or a negative policy surprise could easily breach the lower bounds, particularly at the one-month horizon where the interval bottom sits at 84.0. On the upside, a strong positive catalyst such as a better-than-expected data release, a dovish policy pivot, or renewed risk appetite could push the series above 101.0. These tail events are by definition assigned low probability within the 90% intervals but are not negligible. The one-day interval is most vulnerable to overnight news or gap openings that the short-run volatility estimate may understate.\n\nIt is also worth noting that the intervals assume a relatively stationary volatility environment. If volatility itself is elevated or rising at the time of the forecast, the actual distribution of outcomes could have fatter tails than the stated intervals suggest. Correlation breaks, liquidity crises, or geopolitical shocks are examples of events that tend to invalidate volatility assumptions and render stated confidence intervals too narrow. Conversely, if conditions are unusually calm, the true distribution might be tighter than stated, meaning the intervals would be conservatively wide.",
+  "status": "collected",
+  "error": null
+}
