@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-27",
+  "timestamp": "2026-05-27T21:36:44.989529Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 30.670000076293945,
+  "context": "Current closing price of Tractor Supply (TSCO): $30.67 USD as of 2026-05-27.",
+  "prompt_text": "Today is 2026-05-27.\n\nCurrent closing price of Tractor Supply (TSCO): $30.67 USD as of 2026-05-27.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-28\n  1-week target date: 2026-06-03\n  1-month target date: 2026-06-26\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about this. The current price of $30.67 for TSCO seems extremely low \u2014 TSCO (Tractor Supply Company) has historically traded in the $200-$270 range. This $30.67 price is likely either a data error, a post-split price, or reflects some dramatic event.\n\nLet me consider possibilities:\n1. A stock split could explain this (e.g., 8:1 or 9:1 split bringing ~$245 down to ~$30)\n2. Some dramatic negative event\n\nIf I take the current price at face value ($30.67), I should predict future prices based on this as the current reality, applying normal stock volatility.\n\nFor a stock at ~$30, typical daily volatility might be around 1-2%, weekly around 3-5%, monthly around 7-12%.\n\nAssumptions:\n- Taking $30.67 as given current price\n- No specific news to suggest strong directional movement\n- Applying standard equity volatility\n\nDaily: ~1.5% typical move \u2192 ~$0.46 range\nWeekly: ~3-4% typical move\nMonthly: ~7-10% typical move\n\nPoint estimates near current price with slight upward drift:\n\n1-day: ~$30.70, CI roughly \u00b1$1.50 (5% each tail)\n1-week: ~$30.85, CI roughly \u00b1$2.50\n1-month: ~$31.20, CI roughly \u00b1$4.00\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.70,\n    \"90_ci\": [29.20, 32.20]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.85,\n    \"90_ci\": [28.00, 33.70]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.20,\n    \"90_ci\": [26.50, 35.90]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 30.7,
+      "90_ci": [
+        29.2,
+        32.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 30.85,
+      "90_ci": [
+        28.0,
+        33.7
+      ]
+    },
+    "1m": {
+      "point_estimate": 31.2,
+      "90_ci": [
+        26.5,
+        35.9
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.7,\n    \"90_ci\": [\n      29.2,\n      32.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.85,\n    \"90_ci\": [\n      28.0,\n      33.7\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.2,\n    \"90_ci\": [\n      26.5,\n      35.9\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume is a current price near $30.50\u2013$30.70, with the 1-day estimate of $30.70 essentially anchored to near-term price momentum and mean reversion tendencies. For the 1-week estimate of $30.85, I incorporated a slight positive drift consistent with a low-volatility asset that may have mild bullish momentum or a carry component. The 1-month estimate of $31.20 extends this drift further while remaining conservative, reflecting the assumption that the underlying asset has relatively stable fundamentals with no major catalyst in the near term. These point estimates essentially assume continuity \u2014 that recent price behavior is a reasonable guide to the near future, with a gentle upward bias.\n\nThe confidence interval widths widen progressively across horizons in a manner consistent with standard diffusion-style uncertainty scaling, where uncertainty grows roughly with the square root of time. The 1-day interval of roughly \u00b11.5 points reflects intraday and overnight volatility that is relatively contained. The 1-week interval widens to about \u00b12.85 points to account for multiple trading sessions and potential news flow. The 1-month interval of roughly \u00b14.7 points incorporates a full cycle of economic data releases, earnings, or macro developments that could shift sentiment materially. The widths also reflect underlying implied or realized volatility of the asset, which I estimated to be moderate rather than either very low or elevated.\n\nSpecific risks that could push outcomes outside these intervals include sudden macroeconomic shocks such as an unexpected central bank policy shift, a geopolitical escalation, or a significant data surprise \u2014 any of which could move the asset by several percent in a short window. On the upside, a risk-on rally driven by positive earnings surprises or dovish central bank communication could push prices well above $35.90 within a month. On the downside, a broader market selloff, a liquidity crunch, or sector-specific negative news could break below $26.50 at the 1-month horizon. These tail events are by definition low probability but are real and not fully captured in the stated intervals, which represent the 90% confidence band rather than the full distribution of possible outcomes.",
+  "status": "collected",
+  "error": null
+}

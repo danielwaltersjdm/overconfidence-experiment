@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-27",
+  "timestamp": "2026-05-27T19:01:17.148975Z",
+  "domain": "stocks",
+  "item": "MRK",
+  "item_label": "Merck",
+  "unit": "USD",
+  "current_value": 120.83499908447266,
+  "context": "Current closing price of Merck (MRK): $120.83 USD as of 2026-05-27.",
+  "prompt_text": "Today is 2026-05-27.\n\nCurrent closing price of Merck (MRK): $120.83 USD as of 2026-05-27.\n\nPredict the closing price of Merck at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-28\n  1-week target date: 2026-06-03\n  1-month target date: 2026-06-26\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 121.50,\n    \"90_ci\": [118.50, 124.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 122.00,\n    \"90_ci\": [115.00, 129.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 123.00,\n    \"90_ci\": [109.00, 137.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 121.5,
+      "90_ci": [
+        118.5,
+        124.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 122.0,
+      "90_ci": [
+        115.0,
+        129.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 123.0,
+      "90_ci": [
+        109.0,
+        137.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 121.5,\n    \"90_ci\": [\n      118.5,\n      124.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 122.0,\n    \"90_ci\": [\n      115.0,\n      129.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 123.0,\n    \"90_ci\": [\n      109.0,\n      137.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what appears to be a current price around 121, with each successive horizon nudging slightly higher. At the one-day horizon, the estimate of 121.5 assumes mean reversion dominates and intraday noise averages out, leaving the asset roughly where it started with a small positive drift embedded. At the one-week horizon, 122.0 reflects that same drift compounding slightly, while acknowledging that short-term momentum often fades. The one-month estimate of 123.0 captures a continued but gentle upward trend, consistent with the idea that over longer horizons, fundamental drift tends to reassert itself while short-term volatility cancels out in expectation.\n\nThe confidence interval widths grow predictably with time horizon, reflecting the square-root-of-time scaling typical of financial uncertainty. At one day, the 90% interval of roughly plus or minus 3 points is tight because there is limited time for new information to arrive and compound. By one week, the interval widens to plus or minus 7 points, incorporating the possibility of macroeconomic data releases, earnings surprises, or sentiment shifts. At one month, the interval opens to plus or minus 14 points, reflecting the full range of outcomes that can accumulate over approximately 20 trading sessions, including potential regime changes in volatility.\n\nThe primary sources of uncertainty across all horizons include broader market sentiment shifts, central bank policy signals, and any idiosyncratic news specific to the underlying asset or sector. Liquidity conditions also matter, as thin markets can amplify moves beyond what fundamentals would suggest. I assigned roughly symmetric uncertainty around each point estimate, though in practice financial returns tend to exhibit slight negative skew and fat tails, meaning the downside tail deserves slightly more weight than the symmetric intervals imply.\n\nSpecific risks that could push outcomes outside my stated intervals include a sudden macroeconomic shock such as an unexpected inflation print, a geopolitical escalation, or a credit event in a correlated market. On the upside, a surprise policy pivot toward accommodation or a strong fundamental catalyst could drive prices well above 137 over a month. Liquidity crises or flash crashes remain low-probability but high-impact events that my intervals do not fully capture, as standard distributional assumptions underweight the probability of moves exceeding three or four standard deviations.",
+  "status": "collected",
+  "error": null
+}

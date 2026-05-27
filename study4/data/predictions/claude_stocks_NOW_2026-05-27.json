@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-27",
+  "timestamp": "2026-05-27T19:20:09.472057Z",
+  "domain": "stocks",
+  "item": "NOW",
+  "item_label": "ServiceNow",
+  "unit": "USD",
+  "current_value": 102.80999755859375,
+  "context": "Current closing price of ServiceNow (NOW): $102.81 USD as of 2026-05-27.",
+  "prompt_text": "Today is 2026-05-27.\n\nCurrent closing price of ServiceNow (NOW): $102.81 USD as of 2026-05-27.\n\nPredict the closing price of ServiceNow at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-28\n  1-week target date: 2026-06-03\n  1-month target date: 2026-06-26\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future prices for ServiceNow (NOW) from a current price of $102.81.\n\nWait - $102.81 seems extremely low for ServiceNow, which has historically traded in the $700-$1000+ range. This appears to be either a stock split or incorrect data. However, I'll work with the given current price of $102.81 as the baseline.\n\nAssuming this is the actual current price (perhaps post-split or adjusted), I'll apply typical volatility parameters for NOW:\n- Daily volatility: ~1.5-2% (NOW is a high-beta tech stock)\n- Using ~1.8% daily vol\n\nFor the estimates:\n- 1-day: minimal drift, ~1.8% daily vol \u2192 CI roughly \u00b13% (1.645 sigma)\n- 1-week: ~5 trading days, vol scales by \u221a5 \u2248 4% \u2192 CI roughly \u00b16.5%\n- 1-month: ~22 trading days, vol scales by \u221a22 \u2248 8.4% \u2192 CI roughly \u00b114%\n\nPoint estimates assume slight upward drift (modest bullish bias for tech in near term):\n- 1d: $103.30\n- 1w: $104.50\n- 1m: $105.50\n\nConfidence intervals:\n- 1d: $102.81 \u00b1 ~3% \u2192 [$99.8, $105.9]\n- 1w: $102.81 \u00b1 ~6.5% \u2192 [$96.1, $110.9]\n- 1m: $102.81 \u00b1 ~14% \u2192 [$88.5, $119.5]\n\n{\n  \"1d\": {\n    \"point_estimate\": 103.30,\n    \"90_ci\": [99.80, 105.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 104.50,\n    \"90_ci\": [96.10, 110.90]\n  },\n  \"1m\": {\n    \"point_estimate\": 105.50,\n    \"90_ci\": [88.50, 119.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 103.3,
+      "90_ci": [
+        99.8,
+        105.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 104.5,
+      "90_ci": [
+        96.1,
+        110.9
+      ]
+    },
+    "1m": {
+      "point_estimate": 105.5,
+      "90_ci": [
+        88.5,
+        119.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 103.3,\n    \"90_ci\": [\n      99.8,\n      105.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 104.5,\n    \"90_ci\": [\n      96.1,\n      110.9\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 105.5,\n    \"90_ci\": [\n      88.5,\n      119.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a current price near 103, with each successive horizon projecting slightly higher values. At the one-day horizon, the estimate of 103.3 essentially assumes mean reversion and continuity \u2014 very little tends to change overnight absent a major catalyst, so the forecast is anchored heavily to the prevailing price level with only a small positive drift baked in. At one week, I shifted to 104.5, incorporating a mild bullish bias that could stem from broader market momentum, carry dynamics, or a trending macro environment at the time. At one month, the 105.5 estimate continues that gradual drift, reflecting the assumption that whatever fundamental forces were in play \u2014 whether equity momentum, risk appetite, or macroeconomic tailwinds \u2014 would persist modestly over the medium term without a sharp reversal.\n\nThe confidence interval widths widen considerably across horizons, which reflects the compounding of uncertainty over time. At one day, realized volatility tends to be fairly constrained, so the 90% interval of roughly 6 points feels appropriate for a moderately volatile asset. By one week, the interval nearly doubles in width to about 14\u201315 points, capturing the possibility of macro data surprises, central bank communications, or shifts in risk sentiment. At one month, the interval spans roughly 31 points, reflecting the full range of plausible macro regimes that could materialize \u2014 from a soft-landing rally to a growth scare selloff.\n\nSeveral specific risks could push outcomes outside my stated intervals. On the upside, an unexpectedly strong risk rally driven by dovish central bank pivots, strong earnings, or geopolitical de-escalation could push the asset well above 119.5 at the one-month horizon. On the downside, a sudden credit event, a hawkish policy shock, a renewed inflation spike, or deteriorating growth data could easily breach the lower bound of 88.5. Liquidity events \u2014 such as forced deleveraging in crowded positions \u2014 are particularly dangerous because they can generate moves that dwarf normal volatility distributions.\n\nIt's also worth acknowledging that my forecast implicitly assumes the asset is trading in a relatively normal market regime. If the underlying is an equity index, currency pair, or commodity near a technical inflection point or ahead of a binary event like an election or central bank decision, the tails would need to be substantially fatter. My stated intervals should be treated as baseline scenarios under roughly normal conditions, not worst-case stress scenarios.",
+  "status": "collected",
+  "error": null
+}
