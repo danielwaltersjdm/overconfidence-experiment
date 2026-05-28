@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-28",
+  "timestamp": "2026-05-28T20:54:45.642926Z",
+  "domain": "stocks",
+  "item": "SPY",
+  "item_label": "SPDR S&P 500 ETF",
+  "unit": "USD",
+  "current_value": 754.5999755859375,
+  "context": "Current closing price of SPDR S&P 500 ETF (SPY): $754.60 USD as of 2026-05-28.",
+  "prompt_text": "Today is 2026-05-28.\n\nCurrent closing price of SPDR S&P 500 ETF (SPY): $754.60 USD as of 2026-05-28.\n\nPredict the closing price of SPDR S&P 500 ETF at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-29\n  1-week target date: 2026-06-04\n  1-month target date: 2026-06-27\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 756.50,\n    \"90_ci\": [740.00, 773.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 759.00,\n    \"90_ci\": [728.00, 790.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 765.00,\n    \"90_ci\": [700.00, 830.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 756.5,
+      "90_ci": [
+        740.0,
+        773.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 759.0,
+      "90_ci": [
+        728.0,
+        790.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 765.0,
+      "90_ci": [
+        700.0,
+        830.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 756.5,\n    \"90_ci\": [\n      740.0,\n      773.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 759.0,\n    \"90_ci\": [\n      728.0,\n      790.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 765.0,\n    \"90_ci\": [\n      700.0,\n      830.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-drifting baseline from whatever the current observed price or index level is near 756\u2013757. For the one-day horizon, I anchored closely to the most recent observation, assuming mean-reverting intraday dynamics with only a small directional drift. The one-week estimate nudges slightly higher to 759, reflecting a gentle positive trend assumption but acknowledging that weekly moves tend to average out noise. The one-month estimate of 765 extends that same modest upward drift further, consistent with a low but positive expected return environment where the underlying asset or index grinds higher absent major catalysts.\n\nThe confidence interval widths were calibrated to reflect typical realized volatility at each horizon. At one day, the 90% interval spans roughly 33 points (740 to 773), which corresponds to daily volatility that is meaningful but bounded. At one week, the interval widens to 62 points (728 to 790), roughly scaling with the square root of time as standard volatility models would suggest. At one month, the interval expands to 130 points (700 to 830), capturing the compounding uncertainty over roughly 20 trading days. These widths implicitly assume relatively stable market conditions without regime changes or structural breaks in volatility.\n\nSeveral risks could push outcomes well outside these intervals. On the downside, a sudden macro shock \u2014 such as an unexpected central bank policy shift, a geopolitical escalation, or a significant liquidity event \u2014 could easily push prices below 700 within a month. Credit stress or a flash-crash type event could breach even the one-day lower bound. On the upside, a strong positive surprise in economic data, a dovish policy pivot, or a short-squeeze dynamic in a thinly traded market could push prices well above 830 over the monthly horizon.\n\nIt's worth noting that these forecasts carry meaningful model uncertainty on top of market uncertainty. If the underlying asset has experienced a structural change in its volatility regime \u2014 for instance, if implied volatility has recently spiked or collapsed \u2014 my intervals may be too narrow or too wide, respectively. The point estimates themselves assume rough stationarity in trend, and any persistent directional momentum or mean-reversion dynamic that I've underweighted could cause systematic bias in the forecasts across all three horizons.",
+  "status": "collected",
+  "error": null
+}
