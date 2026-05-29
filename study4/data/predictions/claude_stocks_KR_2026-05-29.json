@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-29",
+  "timestamp": "2026-05-29T21:41:55.266084Z",
+  "domain": "stocks",
+  "item": "KR",
+  "item_label": "Kroger",
+  "unit": "USD",
+  "current_value": 62.150001525878906,
+  "context": "Current closing price of Kroger (KR): $62.15 USD as of 2026-05-29.",
+  "prompt_text": "Today is 2026-05-29.\n\nCurrent closing price of Kroger (KR): $62.15 USD as of 2026-05-29.\n\nPredict the closing price of Kroger at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-30\n  1-week target date: 2026-06-05\n  1-month target date: 2026-06-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 62.30,\n    \"90_ci\": [60.80, 63.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 62.50,\n    \"90_ci\": [59.50, 65.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 63.00,\n    \"90_ci\": [57.00, 69.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 62.3,
+      "90_ci": [
+        60.8,
+        63.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 62.5,
+      "90_ci": [
+        59.5,
+        65.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 63.0,
+      "90_ci": [
+        57.0,
+        69.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 62.3,\n    \"90_ci\": [\n      60.8,\n      63.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 62.5,\n    \"90_ci\": [\n      59.5,\n      65.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 63.0,\n    \"90_ci\": [\n      57.0,\n      69.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near 62.3 and rising gradually to 63.0 over a month. This pattern is consistent with a baseline assumption of mean-reverting or slowly trending behavior in the underlying variable, where near-term momentum carries forward but with diminishing conviction the further out we look. The 1-day estimate is anchored most heavily by recent observed levels and short-term continuity \u2014 the assumption that whatever is driving the current reading will persist through tomorrow. The 1-week and 1-month estimates incorporate a slight positive drift, perhaps reflecting a mild structural trend or seasonal tendency, but the incremental change is small enough to suggest I see no strong directional catalyst on the horizon.\n\nThe confidence interval widths expand considerably as the horizon lengthens, which is the expected behavior under most reasonable models of uncertainty. At one day, the 90% interval spans only 3 units, reflecting high autocorrelation and predictability over short periods \u2014 daily noise is real but bounded. By one week, the interval widens to 6 units, accounting for the accumulation of daily shocks and the possibility that short-term drivers reverse or amplify. At one month, the interval reaches 12 units, reflecting the compounding of weekly uncertainties, the possibility of regime shifts, and the reduced reliability of any single explanatory factor over longer horizons.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden structural breaks \u2014 policy announcements, macroeconomic shocks, or unexpected data releases \u2014 that could rapidly shift the underlying dynamics by more than the intervals accommodate. On the upside, a strong positive catalyst arriving in the first week could compound and push the one-month outcome well above 69. On the downside, a negative shock or reversal of current momentum could easily breach the lower bound of 57 if conditions deteriorate meaningfully.\n\nIt's also worth acknowledging model uncertainty as a meta-risk. These intervals assume a reasonably stable data-generating process, but if the variable in question is subject to fat-tailed distributions or structural non-stationarity, the true 90% interval could be substantially wider than stated. In practice, probabilistic forecasts like these tend to be overconfident, particularly at the monthly horizon, and consumers of these estimates should treat the outer bounds as illustrative rather than exhaustive of the risk space.",
+  "status": "collected",
+  "error": null
+}

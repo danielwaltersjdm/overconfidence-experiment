@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-29",
+  "timestamp": "2026-05-29T21:45:49.192355Z",
+  "domain": "stocks",
+  "item": "EA",
+  "item_label": "Electronic Arts",
+  "unit": "USD",
+  "current_value": 201.72000122070312,
+  "context": "Current closing price of Electronic Arts (EA): $201.72 USD as of 2026-05-29.",
+  "prompt_text": "Today is 2026-05-29.\n\nCurrent closing price of Electronic Arts (EA): $201.72 USD as of 2026-05-29.\n\nPredict the closing price of Electronic Arts at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-30\n  1-week target date: 2026-06-05\n  1-month target date: 2026-06-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 202.50,\n    \"90_ci\": [197.00, 208.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 203.50,\n    \"90_ci\": [193.00, 214.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 205.00,\n    \"90_ci\": [183.00, 228.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 202.5,
+      "90_ci": [
+        197.0,
+        208.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 203.5,
+      "90_ci": [
+        193.0,
+        214.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 205.0,
+      "90_ci": [
+        183.0,
+        228.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 202.5,\n    \"90_ci\": [\n      197.0,\n      208.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 203.5,\n    \"90_ci\": [\n      193.0,\n      214.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 205.0,\n    \"90_ci\": [\n      183.0,\n      228.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift from what I assumed was a current price near $202, with the 1-day estimate essentially anchored to the prevailing price level given how little new information typically moves a security in a single session. The 1-week and 1-month estimates nudge slightly higher, reflecting a baseline assumption of modest positive drift consistent with historical equity risk premia and no strong near-term bearish catalyst embedded in my prior. The incremental increases are intentionally small because I was not incorporating a strong directional view \u2014 rather, the estimates represent a kind of mean-anchored projection assuming roughly normal market conditions.\n\nThe confidence interval widths widen significantly as the horizon extends, which is the natural consequence of uncertainty compounding over time. At the 1-day horizon, the interval is relatively tight because intraday and overnight volatility for a single security is bounded in most environments \u2014 roughly plus or minus 2-3% captures the vast majority of daily moves. By one week, the range opens to reflect the accumulation of daily variance, macroeconomic data releases, and idiosyncratic news. At one month, the interval spans roughly 22% from low to high, reflecting earnings announcements, Fed communications, sector rotation, and the general noisiness of equity prices over a four-week window.\n\nSpecific risks that could push outcomes outside these intervals include tail events such as a surprise earnings miss or guidance cut that could send the stock down 15-25% in a single session, easily breaching the lower bound at any horizon. On the upside, a buyout rumor, activist investor disclosure, or a broader market melt-up driven by an unexpected dovish Fed pivot could push prices well above the upper bounds. Macro shocks \u2014 a credit event, geopolitical escalation, or a sudden liquidity crisis \u2014 represent left-tail risks that my intervals likely underweight given that I calibrated around a relatively benign baseline scenario rather than explicitly stress-testing for fat-tail events.",
+  "status": "collected",
+  "error": null
+}

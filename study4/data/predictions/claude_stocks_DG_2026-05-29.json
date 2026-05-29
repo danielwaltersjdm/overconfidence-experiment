@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-29",
+  "timestamp": "2026-05-29T22:22:12.369977Z",
+  "domain": "stocks",
+  "item": "DG",
+  "item_label": "Dollar General",
+  "unit": "USD",
+  "current_value": 110.61000061035156,
+  "context": "Current closing price of Dollar General (DG): $110.61 USD as of 2026-05-29.",
+  "prompt_text": "Today is 2026-05-29.\n\nCurrent closing price of Dollar General (DG): $110.61 USD as of 2026-05-29.\n\nPredict the closing price of Dollar General at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-30\n  1-week target date: 2026-06-05\n  1-month target date: 2026-06-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 111.20,\n    \"90_ci\": [107.50, 114.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 112.00,\n    \"90_ci\": [104.00, 120.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 113.50,\n    \"90_ci\": [96.00, 131.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 111.2,
+      "90_ci": [
+        107.5,
+        114.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 112.0,
+      "90_ci": [
+        104.0,
+        120.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 113.5,
+      "90_ci": [
+        96.0,
+        131.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 111.2,\n    \"90_ci\": [\n      107.5,\n      114.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 112.0,\n    \"90_ci\": [\n      104.0,\n      120.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 113.5,\n    \"90_ci\": [\n      96.0,\n      131.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three horizons, starting near 111.2 for the one-day forecast and rising gradually to 113.5 at one month. This gentle upward slope likely reflects an assumption of a mild positive trend or drift in the underlying asset or indicator, combined with mean-reversion tendencies that prevent dramatic moves in the short run. The one-day estimate is anchored heavily by the most recent observed value, with only a small expected change based on recent momentum or fundamental factors. As the horizon extends to one week and one month, the point estimates incorporate a slightly more optimistic drift, perhaps reflecting expectations of improving conditions or a continuation of a gradual uptrend observed in the data leading up to the forecast.\n\nThe confidence interval widths grow substantially as the horizon extends, which is a standard feature of forecasting under uncertainty. At one day, the 90% interval spans roughly 7.4 units, reflecting relatively low short-term volatility since most information relevant to tomorrow is already embedded in today's price or reading. By one week, the interval widens to 16 units, and by one month it reaches 35 units, capturing the compounding effect of daily uncertainties and the increasing probability of structural shifts or unexpected shocks materializing over longer periods. This pattern is consistent with a random-walk-like process where variance scales with time, and where regime changes or macro developments become increasingly plausible over longer windows.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden deterioration in macroeconomic conditions, a policy shock such as an unexpected rate decision, or a liquidity event could cause the value to fall well below the lower bounds at any horizon. On the upside, a positive surprise \u2014 such as stronger-than-expected economic data, a geopolitical resolution, or a sudden surge in demand \u2014 could push outcomes above the upper bounds. The one-month interval is particularly vulnerable to tail events since it encompasses many scheduled data releases, central bank meetings, and earnings announcements, any of which could individually or collectively produce outcomes far outside the stated range.\n\nIt is also worth acknowledging model uncertainty itself as a source of risk. The intervals assume a relatively stable volatility regime, and if volatility were to spike \u2014 as it does during financial stress periods \u2014 realized outcomes could land outside the 90% bands more frequently than the model implies. Correlation breakdowns, flash crashes, or sudden changes in market microstructure are examples of risks that are difficult to parameterize in standard forecasting frameworks and could result in fat-tailed realizations that my stated confidence intervals underrepresent.",
+  "status": "collected",
+  "error": null
+}

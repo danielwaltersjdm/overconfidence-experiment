@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-29",
+  "timestamp": "2026-05-29T19:36:31.547721Z",
+  "domain": "stocks",
+  "item": "KO",
+  "item_label": "Coca-Cola",
+  "unit": "USD",
+  "current_value": 79.51000213623047,
+  "context": "Current closing price of Coca-Cola (KO): $79.51 USD as of 2026-05-29.",
+  "prompt_text": "Today is 2026-05-29.\n\nCurrent closing price of Coca-Cola (KO): $79.51 USD as of 2026-05-29.\n\nPredict the closing price of Coca-Cola at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-30\n  1-week target date: 2026-06-05\n  1-month target date: 2026-06-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 79.65,\n    \"90_ci\": [78.20, 81.10]\n  },\n  \"1w\": {\n    \"point_estimate\": 79.90,\n    \"90_ci\": [77.00, 82.80]\n  },\n  \"1m\": {\n    \"point_estimate\": 80.50,\n    \"90_ci\": [74.50, 86.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 79.65,
+      "90_ci": [
+        78.2,
+        81.1
+      ]
+    },
+    "1w": {
+      "point_estimate": 79.9,
+      "90_ci": [
+        77.0,
+        82.8
+      ]
+    },
+    "1m": {
+      "point_estimate": 80.5,
+      "90_ci": [
+        74.5,
+        86.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 79.65,\n    \"90_ci\": [\n      78.2,\n      81.1\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 79.9,\n    \"90_ci\": [\n      77.0,\n      82.8\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 80.5,\n    \"90_ci\": [\n      74.5,\n      86.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift from what I'd assume was a recent closing price near $79.65, with the 1-day estimate essentially anchored to current price given the very short horizon and limited expected movement. For the 1-week estimate I nudged the price slightly higher to $79.90, reflecting a modest positive drift assumption consistent with broad equity market tendencies over short windows. The 1-month estimate of $80.50 continues that gentle upward trajectory, incorporating a small equity risk premium over the period while remaining close to the starting point, as a single month is too short for fundamental repricing to dominate over noise.\n\nThe confidence interval widths were driven primarily by realized volatility assumptions at each horizon. For the 1-day window, a tight range of roughly $78.20 to $81.10 reflects typical daily price movement for a moderately liquid equity or ETF, scaling with something like 1\u20131.5% daily volatility. The 1-week interval widens to about $77 to $82.80, scaling uncertainty by the square root of time as one would in a basic diffusion framework. The 1-month interval of $74.50 to $86.50 is considerably wider, reflecting both the accumulation of daily volatility over roughly 21 trading days and the increased probability that macro or idiosyncratic news could shift the price regime materially over that span.\n\nSpecific risks that could push outcomes outside my stated intervals include unexpected macroeconomic data releases such as a surprise inflation print or central bank policy shift, which could trigger a broad risk-off or risk-on move exceeding the historical volatility I implicitly assumed. A company-specific event \u2014 earnings surprise, regulatory action, analyst downgrade, or an M&A announcement \u2014 could easily gap the price well outside the 1-month range in either direction. Liquidity events or broader market dislocations, such as a credit event or geopolitical shock, could also compress or expand prices beyond what a normal volatility model would anticipate.\n\nIt is also worth acknowledging that my intervals assume something close to log-normal returns with roughly stationary volatility, which is a simplification. In practice, volatility clusters and fat tails mean that extreme moves are more likely than a Gaussian framework implies. If the underlying asset had recently experienced elevated volatility or was in a sector undergoing structural change, my intervals may be systematically too narrow, and the true 90% confidence interval could be meaningfully wider, particularly at the 1-month horizon.",
+  "status": "collected",
+  "error": null
+}

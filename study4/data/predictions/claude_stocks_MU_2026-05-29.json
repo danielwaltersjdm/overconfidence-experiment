@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-29",
+  "timestamp": "2026-05-29T20:34:59.052491Z",
+  "domain": "stocks",
+  "item": "MU",
+  "item_label": "Micron",
+  "unit": "USD",
+  "current_value": 971.0,
+  "context": "Current closing price of Micron (MU): $971.00 USD as of 2026-05-29.",
+  "prompt_text": "Today is 2026-05-29.\n\nCurrent closing price of Micron (MU): $971.00 USD as of 2026-05-29.\n\nPredict the closing price of Micron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-30\n  1-week target date: 2026-06-05\n  1-month target date: 2026-06-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to provide price estimates for Micron (MU) at three horizons, starting from $971.00 on 2026-05-29.\n\nLet me reason through this carefully:\n\n**Current context:**\n- MU at $971.00 is quite high compared to historical prices (MU was around $80-130 range in 2024-2025). This suggests either a stock price that has surged dramatically, or possibly no reverse split occurred. I'll take the current price as given.\n\n**Volatility estimation:**\n- MU is a semiconductor stock with high volatility\n- Typical daily volatility for MU: ~2-3%\n- At $971, daily vol ~2.5% = ~$24/day\n\n**1-day horizon (2026-05-30):**\n- Expected move: minimal drift, ~\u00b12.5%\n- Point estimate: ~$975 (slight upward drift)\n- 90% CI: roughly \u00b11.65 * daily_vol = \u00b11.65 * $24 \u2248 \u00b1$40\n- CI: [$935, $1,015]\n\n**1-week horizon (2026-06-05):**\n- ~5 trading days\n- Weekly vol: 2.5% * sqrt(5) \u2248 5.6% = ~$54\n- 90% CI: \u00b11.65 * $54 \u2248 \u00b1$89\n- Point estimate: ~$978\n- CI: [$889, $1,067]\n\n**1-month horizon (2026-06-28):**\n- ~22 trading days\n- Monthly vol: 2.5% * sqrt(22) \u2248 11.7% = ~$114\n- 90% CI: \u00b11.65 * $114 \u2248 \u00b1$188\n- Point estimate: ~$985 (slight upward drift for memory/AI tailwinds)\n- CI: [$797, $1,173]\n\n{\n  \"1d\": {\n    \"point_estimate\": 975,\n    \"90_ci\": [933, 1017]\n  },\n  \"1w\": {\n    \"point_estimate\": 978,\n    \"90_ci\": [885, 1071]\n  },\n  \"1m\": {\n    \"point_estimate\": 988,\n    \"90_ci\": [795, 1181]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 975,
+      "90_ci": [
+        933,
+        1017
+      ]
+    },
+    "1w": {
+      "point_estimate": 978,
+      "90_ci": [
+        885,
+        1071
+      ]
+    },
+    "1m": {
+      "point_estimate": 988,
+      "90_ci": [
+        795,
+        1181
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 975,\n    \"90_ci\": [\n      933,\n      1017\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 978,\n    \"90_ci\": [\n      885,\n      1071\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 988,\n    \"90_ci\": [\n      795,\n      1181\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with only modest drift over longer horizons. At the 1-day horizon, the estimate of 975 likely anchored closely to the most recent observed value, assuming mean-reverting behavior and limited new information arriving overnight. At the 1-week horizon, the slight uptick to 978 reflects a marginal positive drift assumption, perhaps based on a mild underlying trend or momentum signal, while acknowledging that a week allows for more price discovery and repositioning. The 1-month estimate of 988 continues that gentle upward drift, suggesting I expected the series to gradually appreciate but without strong conviction in a directional move \u2014 more of a baseline continuation than a strong trend forecast.\n\nThe confidence interval widths widen substantially as the horizon extends, which is consistent with standard uncertainty scaling over time. At 1 day, the 90% CI spans roughly 84 units, reflecting typical short-term volatility. By 1 week that span grows to about 186 units, and by 1 month it reaches roughly 386 units. This scaling likely reflects historical volatility estimates compounded across time, possibly using something close to a square-root-of-time rule. Additional uncertainty at longer horizons also incorporates the possibility of regime changes, shifting macro conditions, or liquidity events that are irrelevant at intraday scales but meaningful over weeks.\n\nThere are several specific risks that could push outcomes well outside these stated intervals. On the downside, a sudden macro shock \u2014 such as an unexpected central bank policy shift, a credit event, or a geopolitical escalation \u2014 could drive the value sharply below the lower bound of even the 1-month interval. On the upside, a strong risk-on catalyst, a short squeeze, or a positive data surprise could push the value significantly above 1,181. The intervals also implicitly assume liquidity conditions remain normal; a flash crash or disorderly market could produce intraday moves that violate even the 1-day bounds. Finally, if the underlying series has fat-tailed return distributions \u2014 which many financial and macro series do \u2014 the stated 90% intervals may be systematically too narrow, underrepresenting the true probability of extreme outcomes.",
+  "status": "collected",
+  "error": null
+}

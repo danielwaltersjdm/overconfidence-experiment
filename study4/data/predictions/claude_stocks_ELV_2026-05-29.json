@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-05-29",
+  "timestamp": "2026-05-29T20:15:45.924739Z",
+  "domain": "stocks",
+  "item": "ELV",
+  "item_label": "Elevance Health",
+  "unit": "USD",
+  "current_value": 393.19000244140625,
+  "context": "Current closing price of Elevance Health (ELV): $393.19 USD as of 2026-05-29.",
+  "prompt_text": "Today is 2026-05-29.\n\nCurrent closing price of Elevance Health (ELV): $393.19 USD as of 2026-05-29.\n\nPredict the closing price of Elevance Health at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-05-30\n  1-week target date: 2026-06-05\n  1-month target date: 2026-06-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 395,\n    \"90_ci\": [378, 412]\n  },\n  \"1w\": {\n    \"point_estimate\": 398,\n    \"90_ci\": [368, 428]\n  },\n  \"1m\": {\n    \"point_estimate\": 405,\n    \"90_ci\": [345, 465]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 395,
+      "90_ci": [
+        378,
+        412
+      ]
+    },
+    "1w": {
+      "point_estimate": 398,
+      "90_ci": [
+        368,
+        428
+      ]
+    },
+    "1m": {
+      "point_estimate": 405,
+      "90_ci": [
+        345,
+        465
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 395,\n    \"90_ci\": [\n      378,\n      412\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 398,\n    \"90_ci\": [\n      368,\n      428\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 405,\n    \"90_ci\": [\n      345,\n      465\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assess as a current baseline around 393\u2013395, with the 1-day estimate essentially anchoring near the present level given that markets tend to mean-revert over very short horizons and large overnight moves are the exception rather than the rule. The 1-week estimate of 398 incorporates a small positive drift assumption consistent with the long-run upward bias in equity markets, while the 1-month estimate of 405 extends that drift further out. These estimates implicitly assume no major macro surprises and a continuation of the prevailing market regime, with the S&P 500 trading in a range broadly consistent with current valuations and monetary policy expectations.\n\nThe confidence interval widths widen considerably as the horizon extends, which reflects the square-root-of-time scaling of uncertainty that characterizes financial returns. At 1 day, realized volatility in the S&P 500 ETF (SPY) is typically in the range of 0.8\u20131.2% on a daily basis, which translates to a relatively tight band. By one week, five days of compounding uncertainty push the interval out to roughly plus or minus 15 points, and by one month the interval spans 120 points, reflecting both the accumulation of daily volatility and the possibility of regime shifts within the month. I also incorporated slightly fatter tails than a pure normal distribution would suggest, given that equity markets exhibit well-documented skewness and kurtosis.\n\nSeveral specific risks could push outcomes outside my stated intervals. On the downside, a surprise Federal Reserve policy shift, a significant deterioration in economic data such as a sharp jobs miss or inflation spike, or an escalation in geopolitical tensions could easily drive SPY below 378 even within a single week. Credit stress events or a liquidity shock, while lower probability, could produce moves of 5\u201310% in days. On the upside, a stronger-than-expected earnings season, a dovish Fed pivot, or a resolution of a major geopolitical overhang could push prices well above 428 on the weekly horizon. The 90% confidence intervals are intentionally calibrated to exclude these tail scenarios, meaning roughly one in ten outcomes should fall outside the stated range by construction.\n\nFinally, I want to flag model uncertainty as a meta-risk. My estimates are conditioned on historical volatility patterns and a benign base case, but structural breaks \u2014 such as a change in market microstructure, a sovereign debt event, or an unexpected policy discontinuity \u2014 are not well-captured by backward-looking volatility estimates. In practice, the true uncertainty at the one-month horizon is likely even wider than my interval suggests, because the distribution of macro outcomes is itself uncertain rather than drawn from a",
+  "status": "collected",
+  "error": null
+}
