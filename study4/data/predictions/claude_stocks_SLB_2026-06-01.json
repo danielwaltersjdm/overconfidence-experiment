@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-01",
+  "timestamp": "2026-06-01T22:47:59.264469Z",
+  "domain": "stocks",
+  "item": "SLB",
+  "item_label": "Schlumberger",
+  "unit": "USD",
+  "current_value": 54.75,
+  "context": "Current closing price of Schlumberger (SLB): $54.75 USD as of 2026-06-01.",
+  "prompt_text": "Today is 2026-06-01.\n\nCurrent closing price of Schlumberger (SLB): $54.75 USD as of 2026-06-01.\n\nPredict the closing price of Schlumberger at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-02\n  1-week target date: 2026-06-08\n  1-month target date: 2026-07-01\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 54.90,\n    \"90_ci\": [53.20, 56.60]\n  },\n  \"1w\": {\n    \"point_estimate\": 55.10,\n    \"90_ci\": [51.50, 58.70]\n  },\n  \"1m\": {\n    \"point_estimate\": 55.50,\n    \"90_ci\": [47.00, 64.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 54.9,
+      "90_ci": [
+        53.2,
+        56.6
+      ]
+    },
+    "1w": {
+      "point_estimate": 55.1,
+      "90_ci": [
+        51.5,
+        58.7
+      ]
+    },
+    "1m": {
+      "point_estimate": 55.5,
+      "90_ci": [
+        47.0,
+        64.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 54.9,\n    \"90_ci\": [\n      53.2,\n      56.6\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 55.1,\n    \"90_ci\": [\n      51.5,\n      58.7\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 55.5,\n    \"90_ci\": [\n      47.0,\n      64.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates across all three horizons are clustered tightly around 55, reflecting an assumption of mean-reversion toward a recent baseline level. At the one-day horizon, the estimate of 54.9 is essentially anchored to the current observed value, with minimal expected drift over such a short period. The slight upward drift in the one-week (55.1) and one-month (55.5) estimates reflects a modest positive trend assumption, perhaps based on a recent gradual upward trajectory or a slight structural bias in the underlying series. The overall stability across horizons suggests I viewed the series as relatively stationary or slowly trending, without strong directional conviction.\n\nThe confidence interval widths widen appropriately as the horizon extends, which is the standard behavior under most time-series uncertainty models. At one day, the 90% CI spans only 3.4 units (53.2 to 56.6), reflecting that most short-term noise is modest and predictable. By one week, the range opens to 7.2 units, incorporating intraweek volatility and the compounding of daily uncertainties. At one month, the interval spans 17 units (47.0 to 64.0), reflecting the substantial accumulated uncertainty over roughly 20+ trading or calendar days. These widths were likely calibrated based on historical volatility of the series, scaled by the square root of time or a similar diffusion-based heuristic.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden structural breaks in the underlying variable \u2014 for example, a policy announcement, macroeconomic shock, or market regime change that causes a discrete jump rather than a smooth diffusion process. Fat-tailed distributions are a persistent concern: the intervals implicitly assume something close to normal or log-normal behavior, but real-world series often exhibit sudden jumps or volatility clustering that can push outcomes well beyond the 5th or 95th percentile boundaries I described.\n\nAdditionally, if the series has any seasonal component, cyclical mean-reversion dynamics, or is influenced by external scheduled events (like earnings releases, economic data prints, or geopolitical developments), those could create asymmetric risks not captured in the symmetric confidence intervals I provided. A sustained trend rather than mean-reversion \u2014 if the series was in a strong directional move \u2014 could also render my relatively stable point estimates systematically biased in one direction over the one-month horizon.",
+  "status": "collected",
+  "error": null
+}

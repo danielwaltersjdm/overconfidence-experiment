@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-01",
+  "timestamp": "2026-06-01T21:44:48.840399Z",
+  "domain": "stocks",
+  "item": "UNP",
+  "item_label": "Union Pacific",
+  "unit": "USD",
+  "current_value": 263.5,
+  "context": "Current closing price of Union Pacific (UNP): $263.50 USD as of 2026-06-01.",
+  "prompt_text": "Today is 2026-06-01.\n\nCurrent closing price of Union Pacific (UNP): $263.50 USD as of 2026-06-01.\n\nPredict the closing price of Union Pacific at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-02\n  1-week target date: 2026-06-08\n  1-month target date: 2026-07-01\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 264.20,\n    \"90_ci\": [259.50, 268.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 265.00,\n    \"90_ci\": [255.00, 275.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 267.00,\n    \"90_ci\": [245.00, 289.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 264.2,
+      "90_ci": [
+        259.5,
+        268.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 265.0,
+      "90_ci": [
+        255.0,
+        275.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 267.0,
+      "90_ci": [
+        245.0,
+        289.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 264.2,\n    \"90_ci\": [\n      259.5,\n      268.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 265.0,\n    \"90_ci\": [\n      255.0,\n      275.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 267.0,\n    \"90_ci\": [\n      245.0,\n      289.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assess as a current price level around $264, with the trajectory staying relatively flat but slightly positive over time. At the one-day horizon, the estimate of $264.2 essentially reflects mean reversion and inertia \u2014 short-term price movements in liquid assets tend to be dominated by noise around the prevailing level, so I anchored close to the current price with only marginal drift. At one week, I nudged the estimate slightly higher to $265, reflecting a mild positive drift assumption consistent with long-run equity risk premium expectations, while acknowledging that a week is still short enough that the starting point dominates. At one month, the $267 estimate continues that gentle upward trend, reflecting the compounding of a small expected return over roughly 20 trading days, consistent with historical average monthly gains in broad equity or bond markets depending on the underlying instrument.\n\nThe confidence interval widths grow substantially as the horizon extends, which reflects the square-root-of-time scaling of uncertainty that characterizes random walk processes. At one day, the 90% interval of roughly plus or minus $4.7 is tight because daily volatility in a liquid instrument tends to be modest in absolute terms. At one week, the interval widens to plus or minus $10, and at one month it expands further to plus or minus $22, roughly consistent with annualized volatility in the 15\u201320% range applied to progressively longer horizons. These widths are also informed by the possibility that realized volatility could be higher than recent historical averages if market conditions shift.\n\nThe key sources of uncertainty beyond simple volatility scaling include macroeconomic data surprises, central bank communications, and geopolitical developments. Any unexpected shift in Federal Reserve policy expectations \u2014 for instance, a hotter-than-expected inflation print or a surprisingly strong jobs report \u2014 could push prices meaningfully outside the stated ranges, especially at the one-week and one-month horizons. Liquidity conditions and broader risk sentiment shifts, such as a sudden flight to safety or a sharp equity selloff, could also produce tail moves that exceed these intervals.\n\nSpecific tail risks that could push outcomes outside my stated intervals include a major geopolitical escalation, a financial stability event such as a large institutional failure, or a sudden repricing of credit risk in sovereign or corporate markets. On the upside, an unexpected dovish pivot or a resolution of an ongoing geopolitical conflict could produce a sharp rally beyond the upper bound. These events are individually low probability but collectively meaningful, and they represent the classic fat-tail risk that symmetric confidence intervals based on normal volatility assumptions tend to understate.",
+  "status": "collected",
+  "error": null
+}
