@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-02",
+  "timestamp": "2026-06-02T18:40:20.593612Z",
+  "domain": "stocks",
+  "item": "ABT",
+  "item_label": "Abbott Labs",
+  "unit": "USD",
+  "current_value": 86.62999725341797,
+  "context": "Current closing price of Abbott Labs (ABT): $86.63 USD as of 2026-06-02.",
+  "prompt_text": "Today is 2026-06-02.\n\nCurrent closing price of Abbott Labs (ABT): $86.63 USD as of 2026-06-02.\n\nPredict the closing price of Abbott Labs at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-03\n  1-week target date: 2026-06-09\n  1-month target date: 2026-07-02\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 87.10,\n    \"90_ci\": [84.50, 89.70]\n  },\n  \"1w\": {\n    \"point_estimate\": 87.50,\n    \"90_ci\": [83.00, 92.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 88.50,\n    \"90_ci\": [79.00, 98.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 87.1,
+      "90_ci": [
+        84.5,
+        89.7
+      ]
+    },
+    "1w": {
+      "point_estimate": 87.5,
+      "90_ci": [
+        83.0,
+        92.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 88.5,
+      "90_ci": [
+        79.0,
+        98.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 87.1,\n    \"90_ci\": [\n      84.5,\n      89.7\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 87.5,\n    \"90_ci\": [\n      83.0,\n      92.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 88.5,\n    \"90_ci\": [\n      79.0,\n      98.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift across horizons, starting near 87.1 for the one-day forecast and rising gradually to 88.5 at one month. The near-term estimate is anchored heavily by recent price momentum and the last observed level, with very little expected mean reversion over such a short window. As the horizon extends to one week and one month, I incorporated a slight positive drift assumption consistent with longer-run trends, while also recognizing that any sustained directional move becomes harder to predict with precision. The gradual step-up in the point estimates is modest and deliberate \u2014 it reflects a bias toward continuation rather than reversal, but not an aggressive trending assumption.\n\nThe confidence interval widths widen substantially as the horizon extends, which reflects the compounding of uncertainty over time. At one day, the 90% interval is relatively tight at roughly plus or minus 2.6 points because intraday and overnight volatility tends to be well-bounded under normal market conditions. By one week, realized volatility over five trading days introduces meaningfully more dispersion, pushing the interval to roughly plus or minus 4.5 points. At one month, the interval widens to nearly plus or minus 9.5 points, reflecting not just price volatility but also the possibility of regime shifts, macro surprises, or liquidity disruptions that are unlikely in a single day but plausible over 20-plus trading days. The asymmetry in the monthly interval is slight but intentional, acknowledging that sharp downside moves tend to be faster and larger than equivalent upside moves.\n\nThere are several specific risks that could push outcomes outside my stated intervals. On the downside, an unexpected macro shock \u2014 such as a sudden tightening in financial conditions, a geopolitical escalation, or a large institutional deleveraging event \u2014 could produce a rapid decline well below the lower bound of even the monthly interval. On the upside, a strong positive catalyst like better-than-expected economic data or a policy pivot could accelerate the drift and breach the upper bound. Liquidity conditions are also worth flagging: in thin markets, bid-ask spreads widen and price moves can become dislocated from fundamentals in ways that are difficult to model. Finally, if there is a structural break in the underlying data-generating process \u2014 for instance, a change in the instrument's composition or a market microstructure change \u2014 all of my intervals could be systematically miscalibrated in ways I cannot anticipate from historical patterns alone.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-02",
+  "timestamp": "2026-06-02T18:56:44.584298Z",
+  "domain": "stocks",
+  "item": "SPGI",
+  "item_label": "S&P Global",
+  "unit": "USD",
+  "current_value": 415.4150085449219,
+  "context": "Current closing price of S&P Global (SPGI): $415.42 USD as of 2026-06-02.",
+  "prompt_text": "Today is 2026-06-02.\n\nCurrent closing price of S&P Global (SPGI): $415.42 USD as of 2026-06-02.\n\nPredict the closing price of S&P Global at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-03\n  1-week target date: 2026-06-09\n  1-month target date: 2026-07-02\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 416.50,\n    \"90_ci\": [406.50, 426.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 418.00,\n    \"90_ci\": [400.00, 436.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 422.00,\n    \"90_ci\": [385.00, 460.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 416.5,
+      "90_ci": [
+        406.5,
+        426.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 418.0,
+      "90_ci": [
+        400.0,
+        436.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 422.0,
+      "90_ci": [
+        385.0,
+        460.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 416.5,\n    \"90_ci\": [\n      406.5,\n      426.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 418.0,\n    \"90_ci\": [\n      400.0,\n      436.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 422.0,\n    \"90_ci\": [\n      385.0,\n      460.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd estimate as a recent price level around $415\u2013416 for the underlying asset (likely SPY or a similar broad equity index given the price range). At the one-day horizon, I anchored closely to the prevailing price with only minimal expected movement, as daily returns for large-cap equity indices tend to be small in absolute terms. For the one-week estimate, I nudged the forecast slightly higher to reflect the general long-run positive drift in equities, while acknowledging that a week is still a short enough window that mean reversion and noise dominate. The one-month estimate of $422 reflects a similar drift assumption \u2014 roughly 1\u20132% expected appreciation over a month \u2014 consistent with historical annualized returns in the 10\u201315% range discounted to a monthly horizon.\n\nThe confidence interval widths grow systematically with the forecast horizon, which is consistent with the square-root-of-time scaling of uncertainty under a random walk model. At one day, a $10 range (\u00b1$5) corresponds to roughly a 1.2% band, which is plausible given typical daily volatility of 0.8\u20131.2% for major indices. By one week, the band widens to $36, and by one month to $75, reflecting accumulated uncertainty as the time window expands. I also factored in that implied volatility in equity markets tends to embed a slight risk premium, so the intervals are slightly wider than a pure historical volatility estimate might suggest.\n\nThere are several specific risks that could push outcomes well outside these intervals. On the downside, a sudden deterioration in macroeconomic data \u2014 such as a sharp inflation surprise, an unexpected Federal Reserve policy shift, or a credit event in the banking or sovereign debt space \u2014 could easily push prices 5\u201310% below the lower bound, particularly over the one-month horizon. Geopolitical escalation or a liquidity shock could produce even more extreme moves. On the upside, a strong jobs report, a dovish pivot in Fed communication, or a resolution of a major geopolitical flashpoint could drive prices above the upper bound. Earnings season surprises and changes in market positioning can also create non-linear moves that my intervals, being built around a roughly normal return distribution, would underweight at the tails.\n\nFinally, it is worth acknowledging that my estimates carry model uncertainty on top of market uncertainty. I am working without real-time price data, so my anchor level may itself be off by several dollars, which would shift all estimates accordingly. The intervals should be interpreted as approximate and centered on my best guess of the current price rather than as a formally calibrated output from a live pricing model.",
+  "status": "collected",
+  "error": null
+}

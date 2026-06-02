@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-02",
+  "timestamp": "2026-06-02T17:59:49.041917Z",
+  "domain": "stocks",
+  "item": "MSFT",
+  "item_label": "Microsoft",
+  "unit": "USD",
+  "current_value": 442.9200134277344,
+  "context": "Current closing price of Microsoft (MSFT): $442.92 USD as of 2026-06-02.",
+  "prompt_text": "Today is 2026-06-02.\n\nCurrent closing price of Microsoft (MSFT): $442.92 USD as of 2026-06-02.\n\nPredict the closing price of Microsoft at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-03\n  1-week target date: 2026-06-09\n  1-month target date: 2026-07-02\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 444.50,\n    \"90_ci\": [432.00, 457.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 447.00,\n    \"90_ci\": [422.00, 472.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 452.00,\n    \"90_ci\": [400.00, 505.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 444.5,
+      "90_ci": [
+        432.0,
+        457.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 447.0,
+      "90_ci": [
+        422.0,
+        472.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 452.0,
+      "90_ci": [
+        400.0,
+        505.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 444.5,\n    \"90_ci\": [\n      432.0,\n      457.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 447.0,\n    \"90_ci\": [\n      422.0,\n      472.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 452.0,\n    \"90_ci\": [\n      400.0,\n      505.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates were anchored to what appears to be a current price near 443\u2013445, with modest upward drift built in at each horizon. For the one-day estimate of 444.5, I was essentially projecting very little movement from the prevailing level, assuming normal market conditions with no imminent catalysts. At one week (447), I incorporated a slight positive bias reflecting the general tendency of equity markets to drift upward over short horizons, while acknowledging that a week is long enough for meaningful mean-reversion or momentum continuation. At one month (452), the further upward drift reflects a longer runway for compounding that baseline equity risk premium, though the wider interval reflects my genuine uncertainty about where conditions might stand four weeks out.\n\nThe confidence interval widths expand predictably as the horizon lengthens, and they were calibrated using typical realized volatility for an asset in this price range \u2014 likely an equity index ETF or similar instrument. At one day, the roughly 25-point wide interval reflects intraday and overnight volatility that tends to be fairly contained under normal conditions. By one week, the interval stretches to 50 points to capture the possibility of a multi-day trending move or a sharp reversal. At one month, the 105-point interval acknowledges that over four weeks, macroeconomic data releases, Federal Reserve communications, earnings surprises, and geopolitical developments can cumulatively shift prices substantially.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden deterioration in economic data \u2014 a weak jobs report, a credit event, or an unexpected escalation in geopolitical tensions \u2014 could produce a sharp sell-off that breaks below the lower bounds, particularly at the weekly and monthly horizons. A liquidity crunch or technical breakdown at key support levels could amplify such moves. On the upside, a stronger-than-expected earnings season, a dovish pivot or surprise rate cut signal from the Federal Reserve, or a resolution of an ongoing geopolitical uncertainty could spark a rally exceeding the upper bounds.\n\nIt is also worth noting that my intervals carry inherent model risk. I am assuming a roughly lognormal return distribution with relatively stable volatility, but realized volatility is itself uncertain and can spike dramatically during stress events \u2014 a phenomenon known as volatility clustering. If implied volatility were to surge, the true distribution of outcomes would have fatter tails than my intervals suggest, meaning the probability of extreme outcomes would be meaningfully higher than the 10% I assigned to the combined tails. Anyone using these forecasts should treat the intervals as reasonable central tendencies rather than hard boundaries.",
+  "status": "collected",
+  "error": null
+}

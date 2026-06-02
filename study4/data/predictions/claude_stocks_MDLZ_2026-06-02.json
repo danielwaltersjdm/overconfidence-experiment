@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-02",
+  "timestamp": "2026-06-02T19:23:28.924899Z",
+  "domain": "stocks",
+  "item": "MDLZ",
+  "item_label": "Mondelez",
+  "unit": "USD",
+  "current_value": 61.2400016784668,
+  "context": "Current closing price of Mondelez (MDLZ): $61.24 USD as of 2026-06-02.",
+  "prompt_text": "Today is 2026-06-02.\n\nCurrent closing price of Mondelez (MDLZ): $61.24 USD as of 2026-06-02.\n\nPredict the closing price of Mondelez at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-03\n  1-week target date: 2026-06-09\n  1-month target date: 2026-07-02\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 61.35,\n    \"90_ci\": [59.80, 62.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 61.50,\n    \"90_ci\": [58.50, 64.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 62.00,\n    \"90_ci\": [55.50, 68.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 61.35,
+      "90_ci": [
+        59.8,
+        62.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 61.5,
+      "90_ci": [
+        58.5,
+        64.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 62.0,
+      "90_ci": [
+        55.5,
+        68.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 61.35,\n    \"90_ci\": [\n      59.8,\n      62.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 61.5,\n    \"90_ci\": [\n      58.5,\n      64.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 62.0,\n    \"90_ci\": [\n      55.5,\n      68.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I assumed was a current price near $61.35. At the one-day horizon, I essentially anchored to the prevailing price with minimal expected movement, since short-term price action for most liquid assets tends to mean-revert or drift only slightly. At the one-week horizon, I added a small positive bias, reflecting either a mild bullish trend assumption or a slight risk premium for holding. At the one-month horizon, I extended that drift further, arriving at $62.00, which represents only about a 1% gain from the starting point. This kind of subdued drift assumption is consistent with efficient market thinking, where large directional moves are hard to predict and the best default is a near-random walk with a small positive expected return.\n\nThe confidence interval widths were calibrated to typical realized volatility scaling with the square root of time. At one day, the interval is relatively tight at roughly plus or minus $1.55, reflecting that most assets don't move dramatically in a single session barring a major catalyst. At one week, the interval widens to roughly plus or minus $3.00, and at one month it expands further to plus or minus $6.50. These widths assume something in the range of moderate daily volatility, perhaps 1 to 1.5 percent per day, which is consistent with equities or commodity prices but would be too narrow for highly volatile assets like cryptocurrencies and too wide for very stable instruments like short-duration bonds.\n\nSeveral specific risks could push outcomes well outside these stated intervals. On the downside, a sudden macro shock \u2014 such as an unexpected central bank policy shift, a geopolitical escalation, or a negative earnings surprise if this is an equity \u2014 could easily breach the lower bound of the monthly interval. Liquidity events or forced selling in correlated markets can also cause cascading moves that exceed normal volatility assumptions. On the upside, a positive surprise like strong economic data, a merger announcement, or a short squeeze could rapidly push prices through the upper bound.\n\nIt's also worth acknowledging that my intervals are symmetric and assume roughly normal return distributions, which real-world price behavior often violates. Fat tails, skewness, and regime changes \u2014 such as a transition from a low-volatility to a high-volatility environment \u2014 mean that the true probability of extreme outcomes is higher than my stated 90% confidence intervals might imply. If the asset in question has known upcoming event risk, such as an earnings release, a regulatory decision, or a central bank meeting within the forecast window, the intervals should arguably be wider still to account for the jump risk those events introduce.",
+  "status": "collected",
+  "error": null
+}
