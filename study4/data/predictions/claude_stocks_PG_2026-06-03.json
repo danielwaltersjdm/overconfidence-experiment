@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-03",
+  "timestamp": "2026-06-03T20:17:17.925763Z",
+  "domain": "stocks",
+  "item": "PG",
+  "item_label": "Procter & Gamble",
+  "unit": "USD",
+  "current_value": 140.19000244140625,
+  "context": "Current closing price of Procter & Gamble (PG): $140.19 USD as of 2026-06-03.",
+  "prompt_text": "Today is 2026-06-03.\n\nCurrent closing price of Procter & Gamble (PG): $140.19 USD as of 2026-06-03.\n\nPredict the closing price of Procter & Gamble at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-04\n  1-week target date: 2026-06-10\n  1-month target date: 2026-07-03\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 140.50,\n    \"90_ci\": [137.80, 143.20]\n  },\n  \"1w\": {\n    \"point_estimate\": 141.00,\n    \"90_ci\": [135.50, 146.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 142.00,\n    \"90_ci\": [131.00, 153.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 140.5,
+      "90_ci": [
+        137.8,
+        143.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 141.0,
+      "90_ci": [
+        135.5,
+        146.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 142.0,
+      "90_ci": [
+        131.0,
+        153.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 140.5,\n    \"90_ci\": [\n      137.8,\n      143.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 141.0,\n    \"90_ci\": [\n      135.5,\n      146.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 142.0,\n    \"90_ci\": [\n      131.0,\n      153.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I assumed was a recent price level near $140, with each successive horizon carrying slightly higher expected values. At the one-day horizon, the estimate of $140.5 essentially assumes very little directional movement, just a small positive drift consistent with typical daily price behavior for a moderately volatile asset. At one week, I nudged the estimate to $141.0, reflecting a slight positive bias that could come from momentum or a benign macro backdrop. At one month, the $142.0 estimate continues that gentle upward slope, assuming no major regime change and roughly trend-consistent behavior over a four-week window.\n\nThe confidence interval widths expand as the horizon lengthens, which is a standard consequence of uncertainty compounding over time. At one day, the 90% interval spans roughly 5.4 units, reflecting typical intraday-to-overnight volatility. By one week, the interval widens to 11 units, incorporating the possibility of a meaningful news event, earnings surprise, or macro data release. At one month, the interval reaches 22 units, acknowledging that over four weeks, central bank decisions, geopolitical developments, or sector-specific shocks could meaningfully alter the trajectory. The widths were calibrated roughly proportionally to the square root of time, consistent with a random-walk-like volatility structure.\n\nThere are several specific risks that could push outcomes well outside these stated intervals. On the downside, a sudden risk-off episode triggered by deteriorating economic data, a financial stress event, or an unexpected policy tightening could push prices significantly below the lower bounds. Liquidity crunches or forced selling in correlated markets could amplify moves in ways that standard volatility assumptions underestimate.\n\nOn the upside, a strong positive catalyst \u2014 such as a better-than-expected earnings report, a dovish policy pivot, or a resolution of an ongoing geopolitical tension \u2014 could drive prices above the upper bound, particularly at the one-month horizon where there is more time for such events to materialize. Tail risks in both directions are inherently underrepresented in symmetric interval constructions, and investors should treat these intervals as central-tendency guides rather than hard boundaries.",
+  "status": "collected",
+  "error": null
+}

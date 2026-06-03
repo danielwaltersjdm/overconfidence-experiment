@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-03",
+  "timestamp": "2026-06-03T20:58:42.131721Z",
+  "domain": "stocks",
+  "item": "AMGN",
+  "item_label": "Amgen",
+  "unit": "USD",
+  "current_value": 338.2200012207031,
+  "context": "Current closing price of Amgen (AMGN): $338.22 USD as of 2026-06-03.",
+  "prompt_text": "Today is 2026-06-03.\n\nCurrent closing price of Amgen (AMGN): $338.22 USD as of 2026-06-03.\n\nPredict the closing price of Amgen at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-04\n  1-week target date: 2026-06-10\n  1-month target date: 2026-07-03\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 339.50,\n    \"90_ci\": [330.00, 349.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 341.00,\n    \"90_ci\": [322.00, 360.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 344.00,\n    \"90_ci\": [305.00, 383.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 339.5,
+      "90_ci": [
+        330.0,
+        349.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 341.0,
+      "90_ci": [
+        322.0,
+        360.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 344.0,
+      "90_ci": [
+        305.0,
+        383.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 339.5,\n    \"90_ci\": [\n      330.0,\n      349.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 341.0,\n    \"90_ci\": [\n      322.0,\n      360.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 344.0,\n    \"90_ci\": [\n      305.0,\n      383.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-drifting baseline from what I'd assume was a recent observed value near 338\u2013340. For the 1-day horizon, I anchored close to the last known level, adding only a small drift premium since overnight or single-session moves in most liquid instruments tend to revert toward recent ranges absent a clear catalyst. For the 1-week horizon, I allowed for slightly more drift, reflecting typical week-over-week momentum in whatever underlying this tracks, while acknowledging that a week is long enough for one or two meaningful data releases or sentiment shifts to nudge the level higher. For the 1-month horizon, I projected a continuation of the same mild positive trend, arriving at 344, which represents only about a 1\u20132% move from the starting point \u2014 consistent with a low-volatility, gradual-appreciation assumption rather than any strong directional conviction.\n\nThe confidence interval widths were calibrated to scale with the square root of time in a rough approximation of random-walk uncertainty, which is the standard statistical starting point. The 1-day interval of roughly \u00b19.5 points reflects normal daily volatility. The 1-week interval widens to about \u00b119 points, and the 1-month interval opens to about \u00b139 points, each reflecting the compounding of day-to-day uncertainty over longer horizons. I also factored in that longer horizons carry more macro regime uncertainty \u2014 meaning not just more of the same randomness, but the possibility that the underlying drift assumption itself changes.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic surprises such as an unexpected central bank policy shift, a significant inflation or employment data print, or a geopolitical shock. On the upside, a stronger-than-expected risk appetite rally or a policy pivot toward easing could push the 1-month outcome well above 383. On the downside, a credit event, a sharp equity selloff, or a sudden liquidity withdrawal could break below 305.\n\nIt's worth noting that my stated intervals carry inherent model risk: I assumed relatively stable volatility and no structural breaks, which is often violated in practice. Fat-tailed distributions in financial markets mean that roughly 10\u201315% of outcomes in reality fall outside what a Gaussian-based 90% interval would predict, so the true tail risk is likely somewhat larger than these numbers imply.",
+  "status": "collected",
+  "error": null
+}

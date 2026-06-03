@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-03",
+  "timestamp": "2026-06-03T22:00:48.899932Z",
+  "domain": "stocks",
+  "item": "PSA",
+  "item_label": "Public Storage",
+  "unit": "USD",
+  "current_value": 301.9700012207031,
+  "context": "Current closing price of Public Storage (PSA): $301.97 USD as of 2026-06-03.",
+  "prompt_text": "Today is 2026-06-03.\n\nCurrent closing price of Public Storage (PSA): $301.97 USD as of 2026-06-03.\n\nPredict the closing price of Public Storage at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-04\n  1-week target date: 2026-06-10\n  1-month target date: 2026-07-03\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll estimate PSA's future closing prices based on its current price of $301.97, typical volatility for REITs like PSA (historical daily volatility ~1-1.5%), and current market conditions.\n\nKey considerations:\n- PSA is a large-cap REIT with moderate volatility (~1.2% daily vol)\n- No specific catalyst information available, so assuming drift near zero\n- Daily vol ~1.2% \u2192 weekly vol ~2.7% \u2192 monthly vol ~5.5%\n- 90% CI uses ~1.645 standard deviations\n\nCalculations:\n- 1-day: \u00b11.645 \u00d7 1.2% \u00d7 $301.97 \u2248 \u00b1$5.96\n- 1-week: \u00b11.645 \u00d7 2.7% \u00d7 $301.97 \u2248 \u00b1$13.42\n- 1-month: \u00b11.645 \u00d7 5.5% \u00d7 $301.97 \u2248 \u00b1$27.30\n\n{\n  \"1d\": {\n    \"point_estimate\": 302.50,\n    \"90_ci\": [296.00, 309.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 303.00,\n    \"90_ci\": [288.50, 317.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 304.00,\n    \"90_ci\": [275.00, 333.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 302.5,
+      "90_ci": [
+        296.0,
+        309.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 303.0,
+      "90_ci": [
+        288.5,
+        317.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 304.0,
+      "90_ci": [
+        275.0,
+        333.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 302.5,\n    \"90_ci\": [\n      296.0,\n      309.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 303.0,\n    \"90_ci\": [\n      288.5,\n      317.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 304.0,\n    \"90_ci\": [\n      275.0,\n      333.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd infer was a current price near $302, with very little directional conviction. At the one-day horizon, the estimate of $302.5 essentially assumes mean-reversion and low overnight volatility, treating the next session as likely to close near where it opened with only a slight positive bias from typical equity drift. At the one-week horizon, I nudged the estimate marginally higher to $303, reflecting the historical tendency for equities to drift upward over short periods while acknowledging that a week is long enough for meaningful macro or earnings news to shift sentiment. The one-month estimate of $304 continues that shallow upward drift, consistent with a long-run expected return assumption of roughly 8\u201310% annualized, which translates to only a few dollars of expected appreciation over 30 days.\n\nThe confidence interval widths were driven primarily by realized and implied volatility assumptions appropriate for a broad equity index or large-cap instrument trading near $300. At one day, historical daily moves of roughly 1\u20131.5% justified a tight band of about \u00b1$6.50. Over one week, uncertainty compounds, and I widened the interval to roughly \u00b1$14.50, reflecting that five trading sessions can accumulate meaningful directional movement. Over one month, the interval stretches to roughly \u00b1$29, which corresponds to a monthly standard deviation of around 4\u20135%, consistent with annualized volatility in the 15\u201320% range for a typical equity index.\n\nSpecific risks that could push outcomes outside these intervals include surprise Federal Reserve communications or policy shifts, unexpected inflation or employment data releases, geopolitical escalation, or a significant earnings miss from a heavily-weighted constituent. Any of these could drive moves of 5\u201310% or more in a short period, blowing past even the one-month bounds. On the upside, a sudden resolution of macro uncertainty, a large liquidity injection, or an unexpectedly strong economic reading could trigger a sharp rally that exceeds the upper bound.\n\nFinally, I want to be transparent that these estimates carry substantial model uncertainty on top of the stated statistical uncertainty. I did not have access to real-time price data, options-implied volatility surfaces, or current macro conditions when generating these numbers, so the intervals should be treated as illustrative order-of-magnitude estimates rather than precision forecasts grounded in live market inputs.",
+  "status": "collected",
+  "error": null
+}
