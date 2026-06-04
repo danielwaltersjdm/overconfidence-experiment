@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-04",
+  "timestamp": "2026-06-04T17:46:49.597909Z",
+  "domain": "stocks",
+  "item": "CAT",
+  "item_label": "Caterpillar",
+  "unit": "USD",
+  "current_value": 938.8250122070312,
+  "context": "Current closing price of Caterpillar (CAT): $938.83 USD as of 2026-06-04.",
+  "prompt_text": "Today is 2026-06-04.\n\nCurrent closing price of Caterpillar (CAT): $938.83 USD as of 2026-06-04.\n\nPredict the closing price of Caterpillar at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-05\n  1-week target date: 2026-06-11\n  1-month target date: 2026-07-04\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 942,\n    \"90_ci\": [915, 969]\n  },\n  \"1w\": {\n    \"point_estimate\": 948,\n    \"90_ci\": [895, 1001]\n  },\n  \"1m\": {\n    \"point_estimate\": 960,\n    \"90_ci\": [840, 1080]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 942,
+      "90_ci": [
+        915,
+        969
+      ]
+    },
+    "1w": {
+      "point_estimate": 948,
+      "90_ci": [
+        895,
+        1001
+      ]
+    },
+    "1m": {
+      "point_estimate": 960,
+      "90_ci": [
+        840,
+        1080
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 942,\n    \"90_ci\": [\n      915,\n      969\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 948,\n    \"90_ci\": [\n      895,\n      1001\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 960,\n    \"90_ci\": [\n      840,\n      1080\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd treat as a baseline around 940, with each successive horizon incorporating a small positive trend assumption. At the one-day horizon, the estimate of 942 is essentially anchored to the prevailing level with minimal expected movement, reflecting mean-reversion tendencies common in financial or economic series over very short windows. The one-week estimate of 948 builds in a slight drift, acknowledging that if the underlying series has any momentum or trend, a week is long enough for it to accumulate meaningfully. The one-month estimate of 960 extends that logic further, assuming conditions remain broadly stable and the series continues a gradual upward path, though the increment is deliberately conservative rather than aggressive.\n\nThe confidence interval widths reflect the natural expansion of uncertainty over time. At one day, daily volatility is relatively contained, so the 90% interval spanning roughly 54 points captures normal short-term fluctuation. By one week, the interval widens to about 106 points, accounting for the compounding of daily variance and the possibility that new information or shocks emerge across multiple sessions. At one month, the interval of 240 points is considerably wider, reflecting that a full month introduces substantial exposure to macro events, data releases, policy shifts, and changes in sentiment that simply cannot be anticipated with precision from the current vantage point.\n\nSpecific risks that could push outcomes outside these stated intervals fall into two broad categories. On the downside, a sudden negative shock \u2014 such as an unexpected policy tightening, a geopolitical escalation, or a sharp deterioration in economic data \u2014 could drive the series well below the lower bound of 840 within a month. On the upside, a strong positive catalyst like better-than-expected fundamental data, a policy easing surprise, or a broad shift in risk appetite could push the series above 1080. These tail events are by definition assigned less than 10% combined probability in my framing, but they represent the scenarios where the forecast would be most visibly wrong, and they deserve explicit acknowledgment rather than being buried silently in the tails.",
+  "status": "collected",
+  "error": null
+}

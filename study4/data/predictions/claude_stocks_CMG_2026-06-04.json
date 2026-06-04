@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-04",
+  "timestamp": "2026-06-04T18:44:57.350167Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 28.38990020751953,
+  "context": "Current closing price of Chipotle (CMG): $28.39 USD as of 2026-06-04.",
+  "prompt_text": "Today is 2026-06-04.\n\nCurrent closing price of Chipotle (CMG): $28.39 USD as of 2026-06-04.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-05\n  1-week target date: 2026-06-11\n  1-month target date: 2026-07-04\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 28.55,\n    \"90_ci\": [27.10, 29.95]\n  },\n  \"1w\": {\n    \"point_estimate\": 28.80,\n    \"90_ci\": [26.00, 31.60]\n  },\n  \"1m\": {\n    \"point_estimate\": 29.50,\n    \"90_ci\": [23.50, 35.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 28.55,
+      "90_ci": [
+        27.1,
+        29.95
+      ]
+    },
+    "1w": {
+      "point_estimate": 28.8,
+      "90_ci": [
+        26.0,
+        31.6
+      ]
+    },
+    "1m": {
+      "point_estimate": 29.5,
+      "90_ci": [
+        23.5,
+        35.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 28.55,\n    \"90_ci\": [\n      27.1,\n      29.95\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 28.8,\n    \"90_ci\": [\n      26.0,\n      31.6\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 29.5,\n    \"90_ci\": [\n      23.5,\n      35.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I assumed was a current price around $28.50, with the 1-day estimate staying nearly flat given the short time horizon, the 1-week estimate nudging slightly higher to $28.80, and the 1-month estimate moving to $29.50. This gradual upward slope likely reflects a baseline assumption of modest positive drift consistent with either a growth equity or commodity asset trading in a relatively stable environment. Without knowing the exact asset, I anchored to typical mean-reversion dynamics near a recent trading range, assuming no major catalyst was imminent. The small day-over-day move acknowledges that most price information is already baked in at short horizons.\n\nThe confidence interval widths expand significantly across horizons in a way that reflects time-scaled uncertainty. At one day, the 90% CI spans roughly $2.85, which is consistent with typical daily volatility for a mid-priced equity or ETF. By one week, the interval widens to $5.60, and by one month it reaches $12.00 \u2014 roughly following a square-root-of-time scaling rule applied to an assumed daily volatility in the 1\u20132% range. The wider intervals also incorporate uncertainty about regime changes: a stock or asset that appears stable over one day may face earnings surprises, macro data releases, or sector rotation over the course of a month that are impossible to predict directionally but must be accounted for probabilistically.\n\nSeveral specific risks could push outcomes well outside the stated intervals. On the upside, an unexpected positive earnings report, M&A announcement, or broader market rally driven by favorable monetary policy news could easily push prices 15\u201320% above my 1-month estimate, breaking through the upper bound of $35.50. On the downside, a sharp risk-off episode \u2014 triggered by geopolitical events, a Federal Reserve surprise, or sector-specific bad news \u2014 could drive prices below $23.50 or even lower. Liquidity events or short squeezes in either direction represent tail risks that my normally-distributed CI structure inherently underweights.\n\nFinally, it's worth noting that without knowing the specific asset, sector, or prevailing market conditions at the time of the forecast, my estimates carry an additional layer of model uncertainty that isn't fully captured in the confidence intervals. If the asset is highly correlated with macro factors currently in flux \u2014 such as interest rate sensitivity or commodity prices \u2014 the true uncertainty is likely wider than stated, and the intervals should be treated as approximate guides rather than precise probabilistic commitments.",
+  "status": "collected",
+  "error": null
+}

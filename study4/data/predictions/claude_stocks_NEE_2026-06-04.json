@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-04",
+  "timestamp": "2026-06-04T17:59:25.535987Z",
+  "domain": "stocks",
+  "item": "NEE",
+  "item_label": "NextEra Energy",
+  "unit": "USD",
+  "current_value": 85.33999633789062,
+  "context": "Current closing price of NextEra Energy (NEE): $85.34 USD as of 2026-06-04.",
+  "prompt_text": "Today is 2026-06-04.\n\nCurrent closing price of NextEra Energy (NEE): $85.34 USD as of 2026-06-04.\n\nPredict the closing price of NextEra Energy at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-05\n  1-week target date: 2026-06-11\n  1-month target date: 2026-07-04\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 85.50,\n    \"90_ci\": [83.20, 87.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 85.80,\n    \"90_ci\": [81.50, 90.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 86.50,\n    \"90_ci\": [77.00, 96.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 85.5,
+      "90_ci": [
+        83.2,
+        87.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 85.8,
+      "90_ci": [
+        81.5,
+        90.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 86.5,
+      "90_ci": [
+        77.0,
+        96.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 85.5,\n    \"90_ci\": [\n      83.2,\n      87.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 85.8,\n    \"90_ci\": [\n      81.5,\n      90.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 86.5,\n    \"90_ci\": [\n      77.0,\n      96.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three horizons, anchored to what appears to be a current price or index level around 85\u201386. At the one-day horizon, the estimate of 85.5 is essentially a near-random-walk projection with a slight positive bias, likely reflecting recent momentum or a mean-reversion assumption toward a short-term trend. At one week, the estimate nudges up to 85.8, suggesting I expected continued but modest positive drift without a strong directional catalyst. At one month, the estimate rises to 86.5, incorporating a slightly larger expected return consistent with typical annualized drift assumptions for a financial asset, while acknowledging that over longer horizons, drift compounds even if slowly.\n\nThe confidence interval widths expand appropriately as the horizon lengthens, following the square-root-of-time scaling that characterizes diffusion-based uncertainty. At one day, the 90% CI spans roughly 4.6 units (83.2 to 87.8), reflecting tight short-term volatility. At one week, the interval widens to about 8.6 units, and by one month it stretches to roughly 19 units (77.0 to 96.0). These widths are driven primarily by assumed daily volatility in the asset, compounded over each horizon. Additional uncertainty sources include liquidity conditions, potential regime shifts, and the possibility that recent volatility is not representative of the near future.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic announcements such as central bank decisions, inflation surprises, or geopolitical events that trigger sharp repricing. At the one-month horizon in particular, the tails are fat enough to worry about, since a sustained trend reversal, a liquidity crisis, or a sector-specific shock could easily breach the 77 lower bound or the 96 upper bound. Structural breaks \u2014 where the volatility regime itself shifts \u2014 are not fully captured in a standard diffusion framework and represent a meaningful source of tail risk.\n\nFinally, it is worth noting that these estimates implicitly assume no major discontinuous events like a flash crash, a circuit-breaker halt, or an extraordinary corporate or policy announcement. If any such event materializes, the realized outcome could fall well outside even the 90% confidence intervals, since those intervals are calibrated around normal market conditions rather than stress scenarios. The one-month interval is the most vulnerable to this criticism, as a longer window simply provides more opportunity for low-probability, high-impact events to occur.",
+  "status": "collected",
+  "error": null
+}
