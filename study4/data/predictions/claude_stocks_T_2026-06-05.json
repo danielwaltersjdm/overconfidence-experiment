@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-05",
+  "timestamp": "2026-06-05T19:16:24.365708Z",
+  "domain": "stocks",
+  "item": "T",
+  "item_label": "AT&T",
+  "unit": "USD",
+  "current_value": 22.86989974975586,
+  "context": "Current closing price of AT&T (T): $22.87 USD as of 2026-06-05.",
+  "prompt_text": "Today is 2026-06-05.\n\nCurrent closing price of AT&T (T): $22.87 USD as of 2026-06-05.\n\nPredict the closing price of AT&T at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-06\n  1-week target date: 2026-06-12\n  1-month target date: 2026-07-05\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 22.90,\n    \"90_ci\": [22.50, 23.30]\n  },\n  \"1w\": {\n    \"point_estimate\": 22.95,\n    \"90_ci\": [22.10, 23.80]\n  },\n  \"1m\": {\n    \"point_estimate\": 23.10,\n    \"90_ci\": [21.00, 25.20]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 22.9,
+      "90_ci": [
+        22.5,
+        23.3
+      ]
+    },
+    "1w": {
+      "point_estimate": 22.95,
+      "90_ci": [
+        22.1,
+        23.8
+      ]
+    },
+    "1m": {
+      "point_estimate": 23.1,
+      "90_ci": [
+        21.0,
+        25.2
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 22.9,\n    \"90_ci\": [\n      22.5,\n      23.3\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 22.95,\n    \"90_ci\": [\n      22.1,\n      23.8\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 23.1,\n    \"90_ci\": [\n      21.0,\n      25.2\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across all three time horizons, starting near 22.9 and rising gradually to 23.1 over the month. This pattern suggests I was anchoring heavily on recent price levels and applying a slight positive drift assumption, likely based on prevailing trend momentum or a mild bullish bias in the underlying asset. At the one-day horizon, the estimate is essentially a continuation of the current level with minimal expected movement, while the one-week and one-month estimates incorporate a small compounding drift that reflects either fundamental growth expectations or mean-reversion dynamics pulling the price slightly higher from whatever recent consolidation may have occurred.\n\nThe confidence interval widths widen significantly as the horizon extends, which is a standard reflection of uncertainty compounding over time. At one day, the 90% interval spans only 0.8 units, consistent with typical short-term realized volatility for a relatively stable asset. By one week, the interval widens to 1.7 units, and by one month it reaches 4.2 units, roughly consistent with volatility scaling proportional to the square root of time. These widths imply an annualized volatility assumption somewhere in the range of 15\u201325%, which is plausible for a moderately volatile equity, index, or commodity. The interval construction also reflects my uncertainty about near-term catalysts and the possibility that momentum could either accelerate or reverse.\n\nSpecific risks that could push outcomes outside the stated intervals include macroeconomic surprises such as unexpected central bank decisions, inflation prints, or geopolitical shocks that tend to cause sharp, discontinuous moves. Earnings announcements, regulatory actions, or sector-specific news could also produce gap moves that would breach the one-day or one-week intervals relatively easily. Liquidity events or broader market dislocations \u2014 such as a sudden risk-off episode \u2014 could push the one-month outcome well below 21.0 or, in a strong rally scenario, above 25.2. These tail risks are by definition underweighted in a 90% confidence interval, and in practice fat-tailed return distributions mean the true probability of extreme outcomes is higher than a normal distribution assumption would suggest.",
+  "status": "collected",
+  "error": null
+}

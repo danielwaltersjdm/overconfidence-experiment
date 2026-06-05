@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-05",
+  "timestamp": "2026-06-05T19:11:48.351448Z",
+  "domain": "stocks",
+  "item": "GS",
+  "item_label": "Goldman Sachs",
+  "unit": "USD",
+  "current_value": 1042.27001953125,
+  "context": "Current closing price of Goldman Sachs (GS): $1042.27 USD as of 2026-06-05.",
+  "prompt_text": "Today is 2026-06-05.\n\nCurrent closing price of Goldman Sachs (GS): $1042.27 USD as of 2026-06-05.\n\nPredict the closing price of Goldman Sachs at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-06\n  1-week target date: 2026-06-12\n  1-month target date: 2026-07-05\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 1045.00,\n    \"90_ci\": [1021.00, 1069.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 1048.00,\n    \"90_ci\": [1000.00, 1096.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 1055.00,\n    \"90_ci\": [955.00, 1155.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1045.0,
+      "90_ci": [
+        1021.0,
+        1069.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 1048.0,
+      "90_ci": [
+        1000.0,
+        1096.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 1055.0,
+      "90_ci": [
+        955.0,
+        1155.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1045.0,\n    \"90_ci\": [\n      1021.0,\n      1069.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1048.0,\n    \"90_ci\": [\n      1000.0,\n      1096.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1055.0,\n    \"90_ci\": [\n      955.0,\n      1155.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable, mean-reverting assumption around what appears to be a baseline value near 1045. At the one-day horizon, I anchored closely to the last observed level, assuming minimal drift and typical intraday noise would keep the value near its current reading. For the one-week estimate, I nudged slightly higher to 1048, reflecting a mild positive drift assumption while acknowledging that a week is long enough for small directional trends to accumulate. The one-month estimate of 1055 continues that modest upward drift, though the incremental change is small relative to the uncertainty, meaning the point estimate itself carries little conviction beyond \"roughly stable with a slight upward lean.\"\n\nThe confidence interval widths were calibrated to reflect how uncertainty compounds over time. At one day, the 90% interval spans roughly 48 units, consistent with typical short-term volatility around a stable process. By one week, that interval widens to about 96 units, reflecting the accumulation of daily noise across five or more trading sessions. At one month, the interval reaches 200 units, accounting for the possibility of sustained directional moves, regime shifts, or external shocks that have time to materialize and compound. The widening is roughly proportional to the square root of time, a standard assumption for random-walk-like processes, though I applied some additional widening at the monthly horizon to account for fat tails.\n\nSpecific risks that could push outcomes outside these stated intervals include sudden macro shocks \u2014 an unexpected central bank decision, geopolitical escalation, or a significant data release \u2014 any of which could produce a move of two to three times the daily typical range in a single session, immediately blowing through the one-day bounds. Structural or liquidity events, such as a flash crash or a forced liquidation cascade, could also produce extreme tail outcomes not well-captured by the interval. On the upside, a sustained momentum regime or positive surprise could push the one-month estimate well above 1155. These intervals should be treated as reasonable central-case bounds rather than hard limits on possible outcomes.",
+  "status": "collected",
+  "error": null
+}
