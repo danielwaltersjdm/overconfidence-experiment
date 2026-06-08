@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-08",
+  "timestamp": "2026-06-08T19:04:55.693536Z",
+  "domain": "stocks",
+  "item": "WMT",
+  "item_label": "Walmart",
+  "unit": "USD",
+  "current_value": 119.94499969482422,
+  "context": "Current closing price of Walmart (WMT): $119.94 USD as of 2026-06-08.",
+  "prompt_text": "Today is 2026-06-08.\n\nCurrent closing price of Walmart (WMT): $119.94 USD as of 2026-06-08.\n\nPredict the closing price of Walmart at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-09\n  1-week target date: 2026-06-15\n  1-month target date: 2026-07-08\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 120.50,\n    \"90_ci\": [117.50, 123.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 121.00,\n    \"90_ci\": [115.00, 127.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 122.50,\n    \"90_ci\": [110.00, 135.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 120.5,
+      "90_ci": [
+        117.5,
+        123.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 121.0,
+      "90_ci": [
+        115.0,
+        127.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 122.5,
+      "90_ci": [
+        110.0,
+        135.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 120.5,\n    \"90_ci\": [\n      117.5,\n      123.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 121.0,\n    \"90_ci\": [\n      115.0,\n      127.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 122.5,\n    \"90_ci\": [\n      110.0,\n      135.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three time horizons, moving from 120.5 at one day to 122.5 at one month. This trajectory was driven primarily by an assumption of mean-reverting behavior anchored near recent observed levels, combined with a slight positive drift term consistent with longer-run trend momentum. At the one-day horizon, the estimate stays close to the last known price because there is limited time for new information to accumulate, and short-term price action tends to be dominated by microstructure noise rather than fundamental repricing. At the one-week and one-month horizons, I allowed for a small positive drift reflecting the assumption that underlying conditions are modestly constructive, though not strongly trending in either direction.\n\nThe confidence interval widths widen substantially as the horizon extends, going from a relatively tight six-point range at one day to a twenty-five-point range at one month. This expansion is a direct consequence of variance scaling with time \u2014 uncertainty compounds as more days are added, and each additional period introduces new opportunities for surprise. At the one-day level, the dominant sources of uncertainty are intraday volatility and any scheduled announcements that could cause a sharp but contained move. By one week, macro data releases, central bank communications, and shifting sentiment become more significant. By one month, structural factors such as earnings reports, geopolitical developments, and changes in liquidity conditions all contribute to the broader interval.\n\nThere are several specific risks that could push outcomes outside these stated intervals entirely. On the downside, an unexpected negative shock \u2014 such as a surprise policy tightening, a deterioration in credit conditions, or a broad risk-off episode \u2014 could easily breach the lower bound of the one-month interval. On the upside, a strongly positive catalyst like a better-than-expected macro print or a relief rally following resolved uncertainty could push prices above 135. Tail risks by definition are underweighted in symmetric interval construction, so any fat-tailed event, particularly those involving liquidity stress or correlated asset selloffs, represents the most credible source of interval violation.",
+  "status": "collected",
+  "error": null
+}

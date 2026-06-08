@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-08",
+  "timestamp": "2026-06-08T19:29:12.787538Z",
+  "domain": "stocks",
+  "item": "ISRG",
+  "item_label": "Intuitive Surgical",
+  "unit": "USD",
+  "current_value": 419.57000732421875,
+  "context": "Current closing price of Intuitive Surgical (ISRG): $419.57 USD as of 2026-06-08.",
+  "prompt_text": "Today is 2026-06-08.\n\nCurrent closing price of Intuitive Surgical (ISRG): $419.57 USD as of 2026-06-08.\n\nPredict the closing price of Intuitive Surgical at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-09\n  1-week target date: 2026-06-15\n  1-month target date: 2026-07-08\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 421.00,\n    \"90_ci\": [408.00, 434.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 423.00,\n    \"90_ci\": [400.00, 446.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 428.00,\n    \"90_ci\": [382.00, 475.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 421.0,
+      "90_ci": [
+        408.0,
+        434.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 423.0,
+      "90_ci": [
+        400.0,
+        446.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 428.0,
+      "90_ci": [
+        382.0,
+        475.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 421.0,\n    \"90_ci\": [\n      408.0,\n      434.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 423.0,\n    \"90_ci\": [\n      400.0,\n      446.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 428.0,\n    \"90_ci\": [\n      382.0,\n      475.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift assumption from what I'd take as a baseline price level around 420 for the underlying asset (likely SPY or a similar broad equity index given the price range). For the 1-day estimate of 421, I'm essentially assuming near-continuity with minor positive drift, consistent with typical daily expected returns in equity markets. The 1-week estimate of 423 and 1-month estimate of 428 follow the same logic, extrapolating a slow grind higher that reflects the long-run positive drift in equities while acknowledging that mean-reversion forces and near-term uncertainty make large moves unlikely on average.\n\nThe confidence interval widths expand appropriately across time horizons and reflect empirical volatility scaling. For a 1-day window, a range of roughly plus or minus 13 points captures typical daily volatility in SPY, which tends to run around 1\u20131.5% on average. The 1-week interval widens to about 46 points total, consistent with scaling daily volatility by the square root of roughly 5 trading days. The 1-month interval expands further to roughly 93 points total, reflecting about 21 trading days of uncertainty accumulation. These widths are also informed by the fact that implied volatility tends to be somewhat elevated relative to pure historical vol, adding a small premium to my uncertainty bands.\n\nSpecific risks that could push outcomes outside my stated intervals include a sudden macroeconomic shock such as a surprise inflation print, an unexpected Federal Reserve policy shift, or a geopolitical escalation that triggers a risk-off selloff beyond the lower bounds. On the upside, a surprise dovish pivot, stronger-than-expected earnings season, or a significant positive data surprise could push prices above the upper bounds. Liquidity events, flash crashes, or sudden credit market stress represent tail risks that are particularly difficult to price into symmetric confidence intervals.\n\nIt's worth noting that my intervals are calibrated around normal market conditions and assume no regime change during the forecast window. If volatility itself were to spike \u2014 as measured by a VIX surge above 30, for instance \u2014 the realized distribution of outcomes would likely have fatter tails than my stated intervals imply, meaning my confidence intervals would undercover true uncertainty in a stress scenario. This is a known limitation of volatility-scaled interval forecasts.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-08",
+  "timestamp": "2026-06-08T21:02:12.240750Z",
+  "domain": "stocks",
+  "item": "ZTS",
+  "item_label": "Zoetis",
+  "unit": "USD",
+  "current_value": 78.81999969482422,
+  "context": "Current closing price of Zoetis (ZTS): $78.82 USD as of 2026-06-08.",
+  "prompt_text": "Today is 2026-06-08.\n\nCurrent closing price of Zoetis (ZTS): $78.82 USD as of 2026-06-08.\n\nPredict the closing price of Zoetis at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-09\n  1-week target date: 2026-06-15\n  1-month target date: 2026-07-08\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 79.10,\n    \"90_ci\": [76.50, 81.70]\n  },\n  \"1w\": {\n    \"point_estimate\": 79.50,\n    \"90_ci\": [74.00, 85.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 80.50,\n    \"90_ci\": [69.00, 92.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 79.1,
+      "90_ci": [
+        76.5,
+        81.7
+      ]
+    },
+    "1w": {
+      "point_estimate": 79.5,
+      "90_ci": [
+        74.0,
+        85.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 80.5,
+      "90_ci": [
+        69.0,
+        92.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 79.1,\n    \"90_ci\": [\n      76.5,\n      81.7\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 79.5,\n    \"90_ci\": [\n      74.0,\n      85.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 80.5,\n    \"90_ci\": [\n      69.0,\n      92.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd infer as a current price level around $79, with the 1-day estimate staying nearly flat at $79.1, the 1-week estimate nudging slightly higher to $79.5, and the 1-month estimate reaching $80.5. This gentle upward bias likely reflects a baseline assumption of slight positive drift in whatever underlying asset this represents \u2014 consistent with equity or commodity markets that tend to trend mildly upward over time in the absence of strong contrary signals. The near-term estimates are anchored heavily to recent price levels since mean reversion and momentum effects dominate at short horizons, while the 1-month estimate allows for slightly more directional drift to accumulate.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a standard feature of forecasting under uncertainty. At 1 day, the 90% CI spans roughly 5.2 points (76.5 to 81.7), reflecting that daily price moves are relatively constrained by market microstructure and the anchoring effect of recent prices. By 1 week, the interval widens to about 11 points (74.0 to 85.0), and at 1 month it reaches 23 points (69.0 to 92.0). These widths are driven by the compounding of daily volatility over time, model uncertainty about the underlying trend, and the possibility that new information \u2014 macro data, earnings, geopolitical events \u2014 will materially shift the price regime before the horizon arrives.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macro shocks such as surprise central bank decisions, inflation data, or geopolitical escalations, any of which could produce a gap move that breaks through the 1-day bounds in a single session. At the 1-month horizon, a sustained trend reversal, a liquidity crisis, or a sector-specific shock could push the asset well below 69 or above 92. Structural breaks \u2014 where the volatility regime itself changes \u2014 are particularly dangerous for interval coverage because they invalidate the historical volatility assumptions used to construct the bounds.\n\nIt's also worth noting that my intervals assume relatively normal market conditions and do not fully account for fat-tailed distributions that real financial assets exhibit. In practice, the true probability of outcomes outside the stated 90% CI is likely somewhat higher than 10%, particularly at the 1-month horizon where model error accumulates and the range of plausible macro and micro scenarios is broadest.",
+  "status": "collected",
+  "error": null
+}
