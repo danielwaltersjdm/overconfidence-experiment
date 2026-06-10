@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-10",
+  "timestamp": "2026-06-10T22:01:43.874687Z",
+  "domain": "stocks",
+  "item": "GEHC",
+  "item_label": "GE HealthCare",
+  "unit": "USD",
+  "current_value": 63.7599983215332,
+  "context": "Current closing price of GE HealthCare (GEHC): $63.76 USD as of 2026-06-10.",
+  "prompt_text": "Today is 2026-06-10.\n\nCurrent closing price of GE HealthCare (GEHC): $63.76 USD as of 2026-06-10.\n\nPredict the closing price of GE HealthCare at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-11\n  1-week target date: 2026-06-17\n  1-month target date: 2026-07-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 64.10,\n    \"90_ci\": [61.80, 66.40]\n  },\n  \"1w\": {\n    \"point_estimate\": 64.50,\n    \"90_ci\": [60.20, 68.80]\n  },\n  \"1m\": {\n    \"point_estimate\": 65.50,\n    \"90_ci\": [56.00, 75.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 64.1,
+      "90_ci": [
+        61.8,
+        66.4
+      ]
+    },
+    "1w": {
+      "point_estimate": 64.5,
+      "90_ci": [
+        60.2,
+        68.8
+      ]
+    },
+    "1m": {
+      "point_estimate": 65.5,
+      "90_ci": [
+        56.0,
+        75.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 64.1,\n    \"90_ci\": [\n      61.8,\n      66.4\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 64.5,\n    \"90_ci\": [\n      60.2,\n      68.8\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 65.5,\n    \"90_ci\": [\n      56.0,\n      75.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume is a current price or index level near 64, with each successive horizon incorporating a small positive drift assumption. For the 1-day estimate of 64.1, I'm essentially anchoring very close to the current level since overnight moves in most financial instruments are small relative to the prevailing price. The 1-week estimate of 64.5 reflects a slightly larger expected drift, consistent with a weekly trend that's mildly bullish or mean-reverting toward some fundamental anchor. The 1-month estimate of 65.5 extends this logic further, assuming continued gradual appreciation while acknowledging that longer horizons allow more time for macro factors and momentum to compound into a modestly higher level.\n\nThe confidence interval widths grow systematically across horizons, which reflects the square-root-of-time scaling typical in volatility modeling. At 1 day, the 90% interval of roughly \u00b12.3 points is tight because daily realized volatility in most instruments is constrained unless there's a scheduled catalyst. At 1 week, the interval widens to \u00b14.3 points, capturing the possibility of several consecutive adverse or favorable sessions. At 1 month, the \u00b19.5 point range reflects the compounding uncertainty from macro data releases, central bank communications, geopolitical developments, and liquidity shifts that can accumulate over four weeks. The asymmetry in the intervals is modest, suggesting I'm not pricing in a strong skew toward either tail at this point.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden policy surprises such as unexpected rate decisions or regulatory changes, which can gap prices well beyond a single standard deviation move. Geopolitical shocks \u2014 military escalations, sanctions, or energy supply disruptions \u2014 can trigger rapid repricing that overwhelms any confidence interval calibrated on recent historical volatility. On the upside, stronger-than-expected economic data or a positive resolution of an ongoing uncertainty (trade negotiations, earnings beats, etc.) could push the 1-month outcome above 75. On the downside, a liquidity event, credit stress, or contagion from another asset class could easily breach the lower bound of 56.\n\nFinally, my intervals implicitly assume volatility conditions remain broadly similar to recent history. If realized volatility were to regime-shift \u2014 as it did during COVID or the 2022 rate shock \u2014 all three intervals would be far too narrow. Model risk is a genuine concern here: I have no access to real-time order flow, options market implied volatility, or the specific asset in question, which means my calibration is based on generic assumptions rather than instrument-specific dynamics. Readers should treat these intervals as indicative rather than precisely calibrated to current",
+  "status": "collected",
+  "error": null
+}

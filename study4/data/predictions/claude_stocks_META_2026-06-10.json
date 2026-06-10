@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-10",
+  "timestamp": "2026-06-10T19:16:52.169235Z",
+  "domain": "stocks",
+  "item": "META",
+  "item_label": "Meta Platforms",
+  "unit": "USD",
+  "current_value": 572.5800170898438,
+  "context": "Current closing price of Meta Platforms (META): $572.58 USD as of 2026-06-10.",
+  "prompt_text": "Today is 2026-06-10.\n\nCurrent closing price of Meta Platforms (META): $572.58 USD as of 2026-06-10.\n\nPredict the closing price of Meta Platforms at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-11\n  1-week target date: 2026-06-17\n  1-month target date: 2026-07-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 575,\n    \"90_ci\": [554, 596]\n  },\n  \"1w\": {\n    \"point_estimate\": 578,\n    \"90_ci\": [545, 612]\n  },\n  \"1m\": {\n    \"point_estimate\": 585,\n    \"90_ci\": [510, 660]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 575,
+      "90_ci": [
+        554,
+        596
+      ]
+    },
+    "1w": {
+      "point_estimate": 578,
+      "90_ci": [
+        545,
+        612
+      ]
+    },
+    "1m": {
+      "point_estimate": 585,
+      "90_ci": [
+        510,
+        660
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 575,\n    \"90_ci\": [\n      554,\n      596\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 578,\n    \"90_ci\": [\n      545,\n      612\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 585,\n    \"90_ci\": [\n      510,\n      660\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the 1-day estimate of 575, I was essentially anchoring to recent observed levels and assuming mean-reversion or continuation of the prevailing trend with minimal drift \u2014 the kind of short-term forecast that is dominated by the last known value. For the 1-week estimate of 578, I incorporated a small positive drift assumption, reflecting whatever underlying trend or structural factor was present in the data. By the 1-month horizon, the estimate of 585 represents a continuation of that modest drift compounded over roughly four weeks, suggesting I believed there was a mild but persistent upward bias in the series rather than a flat or declining expectation.\n\nThe widening of confidence intervals across horizons is driven by the standard statistical reality that uncertainty compounds over time. At 1 day, the 90% interval of roughly plus or minus 21 units reflects short-run volatility that is relatively constrained \u2014 daily fluctuations tend to be small relative to the level. At 1 week, the interval expands to roughly plus or minus 33 units, capturing multiple days of potential deviation accumulating. By 1 month, the interval of 510 to 660 \u2014 a spread of 150 units \u2014 reflects both the compounding of daily variance and the increasing possibility that structural conditions shift in ways not visible at the forecast origin. Seasonal patterns, policy changes, or shifts in underlying drivers all have more time to manifest over a month.\n\nSpecific risks on the upside at longer horizons could include demand shocks, supply disruptions, or positive news that accelerates the trend beyond what the baseline drift assumed. On the downside, a reversal of the prevailing trend, a negative macro shock, or mean-reversion from an elevated level could push outcomes toward or below the lower bound. Events that produce discontinuous jumps \u2014 regulatory announcements, geopolitical developments, or large institutional actions depending on the domain \u2014 could push the realized value outside even the 90% interval, which by construction is designed to be breached roughly 10% of the time.\n\nIt is worth noting that my stated intervals may be somewhat conservative or optimistic depending on how well-behaved the historical volatility of this series has been. If the series exhibits fat tails, jump diffusion, or regime-switching behavior, the 90% interval at one month in particular could understate true uncertainty. Conversely, if the series is highly mean-reverting, the longer-horizon intervals might be wider than necessary. The honest caveat is that these forecasts carry model risk in addition to the stated parametric uncertainty.",
+  "status": "collected",
+  "error": null
+}
