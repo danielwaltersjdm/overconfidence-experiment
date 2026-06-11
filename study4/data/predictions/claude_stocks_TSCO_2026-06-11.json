@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-11",
+  "timestamp": "2026-06-11T22:54:08.463860Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 31.260000228881836,
+  "context": "Current closing price of Tractor Supply (TSCO): $31.26 USD as of 2026-06-11.",
+  "prompt_text": "Today is 2026-06-11.\n\nCurrent closing price of Tractor Supply (TSCO): $31.26 USD as of 2026-06-11.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-12\n  1-week target date: 2026-06-18\n  1-month target date: 2026-07-11\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to make price predictions for TSCO. Let me think through this carefully.\n\nCurrent price: $31.26 as of 2026-06-11.\n\nFirst, let me note that $31.26 seems unusually low for TSCO - historically Tractor Supply has traded in the $200-$280 range. This could reflect a stock split, a significant decline, or some other factor. I'll take the current price as given and work from there.\n\n**Volatility estimation:**\n- TSCO is a mid-to-large cap retail stock\n- Typical daily volatility for such stocks: ~1.5-2% per day\n- At $31.26, daily vol \u2248 ~$0.47-0.63\n\n**1-day horizon (2026-06-12):**\n- Expected move: minimal drift\n- Daily std dev \u2248 ~1.5-2% = ~$0.47-0.63\n- 90% CI: roughly \u00b11.645 \u03c3 \u2248 \u00b1$0.78-1.03\n- Point estimate: slight drift up ~$31.35\n- CI: [$30.20, $32.50]\n\n**1-week horizon (2026-06-18):**\n- 5 trading days, std dev scales by \u221a5 \u2248 2.24\n- Weekly std dev \u2248 2.24 \u00d7 $0.55 \u2248 $1.23\n- 90% CI: \u00b11.645 \u00d7 $1.23 \u2248 \u00b1$2.02\n- Point estimate: ~$31.50\n- CI: [$28.80, $34.20]\n\n**1-month horizon (2026-07-11):**\n- ~21 trading days, std dev scales by \u221a21 \u2248 4.58\n- Monthly std dev \u2248 4.58 \u00d7 $0.55 \u2248 $2.52\n- 90% CI: \u00b11.645 \u00d7 $2.52 \u2248 \u00b1$4.14\n- Point estimate: ~$31.80\n- CI: [$26.50, $37.00]\n\nI'll widen intervals slightly to account for model uncertainty and fat tails.\n\n{\n  \"1d\": {\n    \"point_estimate\": 31.35,\n    \"90_ci\": [30.15, 32.55]\n  },\n  \"1w\": {\n    \"point_estimate\": 31.55,\n    \"90_ci\": [28.70, 34.40]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.90,\n    \"90_ci\": [26.00, 37.80]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 31.35,
+      "90_ci": [
+        30.15,
+        32.55
+      ]
+    },
+    "1w": {
+      "point_estimate": 31.55,
+      "90_ci": [
+        28.7,
+        34.4
+      ]
+    },
+    "1m": {
+      "point_estimate": 31.9,
+      "90_ci": [
+        26.0,
+        37.8
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 31.35,\n    \"90_ci\": [\n      30.15,\n      32.55\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 31.55,\n    \"90_ci\": [\n      28.7,\n      34.4\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.9,\n    \"90_ci\": [\n      26.0,\n      37.8\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from a current price level around $31.35, with each successive horizon incorporating a small positive bias. The 1-day estimate essentially anchors near the current price with minimal expected movement, as short-term price action for most assets tends to revert toward recent levels absent a clear catalyst. The 1-week estimate nudges slightly higher to $31.55, reflecting a modest continuation of any near-term trend or mean-reversion dynamic. The 1-month estimate at $31.90 incorporates a slightly larger drift, consistent with a gentle bullish lean over a longer horizon, possibly reflecting underlying fundamental momentum or a slight positive carry assumption baked into the base case.\n\nThe confidence interval widths grow substantially as the horizon extends, which is a natural reflection of uncertainty compounding over time. At 1 day, the $1.20 range on either side is relatively tight, consistent with typical daily volatility for a mid-priced asset. By 1 week, the interval widens to roughly \u00b1$2.85, and by 1 month it expands to \u00b1$5.90 around the point estimate. These widths were calibrated to reflect realized volatility patterns \u2014 incorporating both normal day-to-day price fluctuations and the possibility of moderate trending or mean-reverting behavior over longer periods.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic announcements such as unexpected inflation data, central bank policy surprises, or geopolitical events that trigger broad risk-off or risk-on moves. For the asset in question, any sector-specific news, earnings surprises, or liquidity shocks could create sharp discontinuous moves that overwhelm the statistical range I've described.\n\nOver the 1-month horizon in particular, the risk of a regime change is non-trivial. A sustained shift in market sentiment, a credit event, or an unexpected policy intervention could easily push the price well outside the $26\u2013$38 range. The stated intervals reflect roughly 90% confidence, meaning by construction there is a meaningful 10% probability of outcomes beyond those bounds, and fat-tailed events in financial markets make those tail scenarios more likely than a simple normal distribution would suggest.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-11",
+  "timestamp": "2026-06-11T21:04:23.787129Z",
+  "domain": "stocks",
+  "item": "MU",
+  "item_label": "Micron",
+  "unit": "USD",
+  "current_value": 995.8699951171875,
+  "context": "Current closing price of Micron (MU): $995.87 USD as of 2026-06-11.",
+  "prompt_text": "Today is 2026-06-11.\n\nCurrent closing price of Micron (MU): $995.87 USD as of 2026-06-11.\n\nPredict the closing price of Micron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-12\n  1-week target date: 2026-06-18\n  1-month target date: 2026-07-11\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to provide price predictions for Micron (MU) at three horizons. Let me reason through this carefully.\n\n**Current context:**\n- Date: 2026-06-11\n- Current price: $995.87 USD\n- This is notably high (~$996), suggesting MU has had significant appreciation (historically MU traded in the $80-130 range in 2024, so this implies either a stock that has appreciated enormously or some structural change like no stock split).\n\n**Key considerations:**\n- MU is a semiconductor/memory chip company, highly cyclical and volatile\n- At ~$996, this is a very high nominal price suggesting strong bull run in semis\n- Typical daily volatility for MU: ~2-3%\n- Weekly volatility: ~4-7%\n- Monthly volatility: ~8-15%\n\n**Estimating volatility-based intervals:**\n\nFor a stock at ~$996:\n- Daily 1-sigma move: ~$20-25 (2-2.5%)\n- Weekly 1-sigma move: ~$45-60 (4.5-6%)\n- Monthly 1-sigma move: ~$90-130 (9-13%)\n\n**90% CI = \u00b11.645 sigma**\n\n1-day:\n- 1-sigma: ~$22\n- 90% CI range: \u00b1$36\n- Point estimate: slight upward drift ~$998\n- CI: [$960, $1,036]\n\n1-week:\n- 1-sigma: ~$50\n- 90% CI range: \u00b1$82\n- Point estimate: ~$1,005\n- CI: [$920, $1,085]\n\n1-month:\n- 1-sigma: ~$110\n- 90% CI range: \u00b1$181\n- Point estimate: ~$1,010 (slight positive drift for semis)\n- CI: [$820, $1,190]\n\nI'll widen intervals slightly to account for tail risks (earnings, macro events, geopolitical factors affecting semis).\n\n{\n  \"1d\": {\n    \"point_estimate\": 998,\n    \"90_ci\": [955, 1040]\n  },\n  \"1w\": {\n    \"point_estimate\": 1005,\n    \"90_ci\": [910, 1095]\n  },\n  \"1m\": {\n    \"point_estimate\": 1015,\n    \"90_ci\": [820, 1200]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 998,
+      "90_ci": [
+        955,
+        1040
+      ]
+    },
+    "1w": {
+      "point_estimate": 1005,
+      "90_ci": [
+        910,
+        1095
+      ]
+    },
+    "1m": {
+      "point_estimate": 1015,
+      "90_ci": [
+        820,
+        1200
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 998,\n    \"90_ci\": [\n      955,\n      1040\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1005,\n    \"90_ci\": [\n      910,\n      1095\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1015,\n    \"90_ci\": [\n      820,\n      1200\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift from what I assume was a baseline around 995\u20131000, with the 1-day estimate of 998 essentially treating the current level as roughly stable over a very short horizon. For the 1-week estimate of 1005 and 1-month estimate of 1015, I applied a modest positive drift assumption consistent with a typical long-run trend in an asset or index of this magnitude \u2014 perhaps reflecting an underlying growth rate of roughly 1\u20132% per month. The estimates don't embed any strong directional conviction; they're anchored heavily to the current level with only a gentle upward tilt driven by baseline drift assumptions rather than any specific fundamental catalyst.\n\nThe confidence interval widths were driven primarily by realized volatility assumptions scaled to each time horizon. For the 1-day interval of roughly \u00b142 points, I was implicitly assuming a daily volatility in the range of 2\u20133%, which is modest but not unusual for a broadly tracked asset. As the horizon extends to one week and one month, the intervals widen in a roughly square-root-of-time fashion, reaching \u00b1190 points at one month. This reflects that uncertainty compounds over time even without any new information, and that short-run mean reversion, if any, is not strong enough to tighten longer-horizon intervals significantly. The asymmetry between upper and lower bounds is intentionally modest, suggesting I didn't assign strongly different probabilities to upside versus downside tails.\n\nSpecific risks that could push outcomes outside these intervals include sudden macroeconomic shocks \u2014 such as a surprise central bank decision, a geopolitical escalation, or an unexpected inflation or employment print \u2014 any of which could produce moves of 5\u201310% or more over a week, easily breaching the stated bounds. Liquidity crises or correlated deleveraging events tend to produce fat-tailed outcomes that standard volatility-scaling underestimates. On the upside, a strong positive catalyst like a major policy easing announcement or better-than-expected earnings could similarly push above the upper bound.\n\nFinally, it's worth acknowledging that these intervals are calibrated under a relatively benign base case and assume some degree of market continuity. Structural breaks \u2014 regime changes in volatility, market closures, or asset-specific idiosyncratic events \u2014 are not well captured by interval widths derived from recent historical volatility. The 1-month interval in particular should be treated with humility, as a 90% confidence interval spanning roughly 380 points may still be too narrow if the underlying asset is subject to trend reversals or if the broader macro environment shifts materially during that window.",
+  "status": "collected",
+  "error": null
+}
