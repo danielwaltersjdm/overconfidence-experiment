@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-12",
+  "timestamp": "2026-06-12T21:04:12.788002Z",
+  "domain": "stocks",
+  "item": "CDW",
+  "item_label": "CDW Corp",
+  "unit": "USD",
+  "current_value": 132.19000244140625,
+  "context": "Current closing price of CDW Corp (CDW): $132.19 USD as of 2026-06-12.",
+  "prompt_text": "Today is 2026-06-12.\n\nCurrent closing price of CDW Corp (CDW): $132.19 USD as of 2026-06-12.\n\nPredict the closing price of CDW Corp at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-13\n  1-week target date: 2026-06-19\n  1-month target date: 2026-07-12\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 132.80,\n    \"90_ci\": [128.50, 137.10]\n  },\n  \"1w\": {\n    \"point_estimate\": 133.50,\n    \"90_ci\": [125.00, 142.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 135.00,\n    \"90_ci\": [118.00, 152.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 132.8,
+      "90_ci": [
+        128.5,
+        137.1
+      ]
+    },
+    "1w": {
+      "point_estimate": 133.5,
+      "90_ci": [
+        125.0,
+        142.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 135.0,
+      "90_ci": [
+        118.0,
+        152.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 132.8,\n    \"90_ci\": [\n      128.5,\n      137.1\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 133.5,\n    \"90_ci\": [\n      125.0,\n      142.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 135.0,\n    \"90_ci\": [\n      118.0,\n      152.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a recent price around 132\u2013133, with the 1-day estimate of 132.8 anchored tightly to prevailing momentum and recent trading range. For the 1-week estimate of 133.5, I assumed a slight continuation of whatever near-term trend was in place, while acknowledging that weekly moves in most liquid assets tend to mean-revert somewhat. The 1-month estimate of 135.0 reflects a gentle positive drift assumption \u2014 roughly consistent with a low-single-digit annualized expected return for an equity or equity-like instrument \u2014 while recognizing that a month is long enough for macro developments to meaningfully shift the level.\n\nThe confidence interval widths were calibrated using typical realized volatility scaling. For a 1-day horizon, a relatively tight band of roughly \u00b14 points reflects normal intraday-to-daily price variation. For 1 week, the interval widens to roughly \u00b18\u20139 points, consistent with volatility scaling by the square root of time. At 1 month, the \u00b117-point band around the point estimate reflects the compounding of daily uncertainty over approximately 21 trading days. These widths assume no abnormal volatility regime and broadly normal market conditions.\n\nSeveral specific risks could push outcomes outside these intervals. On the upside, a surprise positive catalyst \u2014 such as a strong earnings release, unexpected policy easing by a central bank, or a geopolitical de-escalation \u2014 could drive prices well above 152 over a month. On the downside, a risk-off shock such as a credit event, an abrupt tightening in financial conditions, or a deterioration in macroeconomic data could easily breach the lower bound of 118. Liquidity crises or flash crashes, while rare, can temporarily push prices far outside any statistically derived interval.\n\nIt's also worth noting that my intervals assume a roughly symmetric distribution, which may not hold in practice. Equity-like assets often exhibit negative skew and fat tails, meaning the left tail risk is somewhat underrepresented by a symmetric confidence interval. If the underlying instrument has options markets, implied volatility surfaces would give a more precise and market-consistent calibration of tail risks than these estimates capture.",
+  "status": "collected",
+  "error": null
+}
