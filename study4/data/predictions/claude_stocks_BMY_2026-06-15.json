@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-15",
+  "timestamp": "2026-06-15T21:19:20.484066Z",
+  "domain": "stocks",
+  "item": "BMY",
+  "item_label": "Bristol-Myers Squibb",
+  "unit": "USD",
+  "current_value": 56.2400016784668,
+  "context": "Current closing price of Bristol-Myers Squibb (BMY): $56.24 USD as of 2026-06-15.",
+  "prompt_text": "Today is 2026-06-15.\n\nCurrent closing price of Bristol-Myers Squibb (BMY): $56.24 USD as of 2026-06-15.\n\nPredict the closing price of Bristol-Myers Squibb at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-16\n  1-week target date: 2026-06-22\n  1-month target date: 2026-07-15\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 56.35,\n    \"90_ci\": [54.90, 57.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 56.50,\n    \"90_ci\": [53.50, 59.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 57.00,\n    \"90_ci\": [50.50, 63.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 56.35,
+      "90_ci": [
+        54.9,
+        57.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 56.5,
+      "90_ci": [
+        53.5,
+        59.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 57.0,
+      "90_ci": [
+        50.5,
+        63.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 56.35,\n    \"90_ci\": [\n      54.9,\n      57.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 56.5,\n    \"90_ci\": [\n      53.5,\n      59.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 57.0,\n    \"90_ci\": [\n      50.5,\n      63.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflected a modest upward drift from what I assumed was a current price level near $56.35, with the 1-day estimate essentially anchored to the prevailing price given the short horizon and limited expected movement. For the 1-week estimate, I applied a slight positive bias, reflecting a general assumption of modest bullish momentum or mean-reverting behavior around a stable equilibrium. The 1-month estimate drifted slightly higher to $57.00, consistent with a low-drift random walk assumption where the expected value moves marginally upward over time, perhaps informed by a mild trend or carry-like effect in the underlying asset. These estimates were not aggressive \u2014 they essentially reflected a near-stationary process with a small positive drift component.\n\nConfidence interval widths were calibrated to typical realized volatility scaling with the square root of time. At the 1-day horizon, the interval is tight because intraday and overnight price moves for most liquid assets are constrained, and short-term mean reversion tends to dampen extreme outcomes. At the 1-week horizon, the interval widens to reflect accumulated uncertainty over five trading sessions, where macro data releases, sentiment shifts, or technical breakouts can compound. By 1 month, the interval spans roughly 13 points, acknowledging that a full calendar month introduces substantial uncertainty from earnings, central bank decisions, geopolitical developments, and broader market regime changes that are genuinely hard to foresee.\n\nSpecific risks that could push outcomes outside these stated intervals include a sudden macro shock \u2014 such as an unexpected central bank policy shift, a credit event, or a geopolitical escalation \u2014 that could gap the price well beyond the stated bounds in either direction. On the upside, a strong earnings surprise or risk-on sentiment surge could drive the price materially above $63.50 at the 1-month horizon. On the downside, a broad equity selloff, liquidity crisis, or negative sector-specific news could push prices well below $50.50. These tail scenarios are real but were assigned low probability within the 90% confidence interval construction, meaning roughly a 10% chance collectively of outcomes outside the stated range.\n\nIt is also worth acknowledging model uncertainty as a compounding factor. The intervals assume relatively stable volatility regimes and no structural breaks, but volatility itself can shift abruptly \u2014 if implied or realized volatility spikes, all three intervals would need to be substantially wider. Correlation breakdowns, where assets that typically hedge one another move in the same direction, can also amplify realized outcomes beyond what historical volatility-based intervals would suggest.",
+  "status": "collected",
+  "error": null
+}
