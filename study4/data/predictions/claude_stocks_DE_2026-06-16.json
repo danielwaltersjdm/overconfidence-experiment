@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-16",
+  "timestamp": "2026-06-16T21:09:05.217535Z",
+  "domain": "stocks",
+  "item": "DE",
+  "item_label": "Deere",
+  "unit": "USD",
+  "current_value": 585.2899780273438,
+  "context": "Current closing price of Deere (DE): $585.29 USD as of 2026-06-16.",
+  "prompt_text": "Today is 2026-06-16.\n\nCurrent closing price of Deere (DE): $585.29 USD as of 2026-06-16.\n\nPredict the closing price of Deere at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-17\n  1-week target date: 2026-06-23\n  1-month target date: 2026-07-16\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 587,\n    \"90_ci\": [572, 602]\n  },\n  \"1w\": {\n    \"point_estimate\": 590,\n    \"90_ci\": [562, 618]\n  },\n  \"1m\": {\n    \"point_estimate\": 595,\n    \"90_ci\": [540, 650]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 587,
+      "90_ci": [
+        572,
+        602
+      ]
+    },
+    "1w": {
+      "point_estimate": 590,
+      "90_ci": [
+        562,
+        618
+      ]
+    },
+    "1m": {
+      "point_estimate": 595,
+      "90_ci": [
+        540,
+        650
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 587,\n    \"90_ci\": [\n      572,\n      602\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 590,\n    \"90_ci\": [\n      562,\n      618\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 595,\n    \"90_ci\": [\n      540,\n      650\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the 1-day estimate of 587, I was anchoring heavily on the most recent observed value and assuming mean-reverting behavior over a very short window, with minimal directional bias. The 1-week estimate of 590 incorporates a slight positive drift assumption, reflecting whatever underlying trend was present in the data at the time of forecasting. The 1-month estimate of 595 extends that modest drift further, though I was cautious about projecting strong directional momentum given the relatively flat recent trajectory. In all three cases, the point estimates are close together, suggesting I did not anticipate a dramatic regime change in the near term.\n\nThe confidence interval widths reflect the natural scaling of uncertainty with time horizon. At 1 day, the 90% CI of 572\u2013602 is relatively tight because there is limited time for the process to deviate substantially from its current level. By 1 week, the interval widens to 562\u2013618, incorporating the compounding of daily volatility and the possibility of short-term shocks. At 1 month, the interval of 540\u2013650 is considerably wider, reflecting both the accumulation of stochastic variation and greater uncertainty about structural factors like trend shifts or external shocks that could materialize over a longer window. The asymmetry is modest, suggesting I did not see strong skew in the distribution at the time.\n\nSpecific risks that could push outcomes outside these intervals include sudden structural breaks in whatever underlying process is being measured, large exogenous shocks such as policy changes, macroeconomic surprises, or data revisions that would invalidate the stationarity or trend assumptions embedded in my estimates. On the upside, a stronger-than-expected acceleration in the underlying trend could push the 1-month realization above 650. On the downside, a reversal or negative shock could push it below 540. These tail events are precisely what the 10% excluded probability is meant to capture, but by definition I considered them relatively unlikely at the time of forecasting.",
+  "status": "collected",
+  "error": null
+}

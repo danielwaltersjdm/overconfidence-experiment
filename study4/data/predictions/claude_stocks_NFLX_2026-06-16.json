@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-16",
+  "timestamp": "2026-06-16T20:15:44.757419Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 78.72000122070312,
+  "context": "Current closing price of Netflix (NFLX): $78.72 USD as of 2026-06-16.",
+  "prompt_text": "Today is 2026-06-16.\n\nCurrent closing price of Netflix (NFLX): $78.72 USD as of 2026-06-16.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-17\n  1-week target date: 2026-06-23\n  1-month target date: 2026-07-16\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to provide price predictions for Netflix (NFLX) at three horizons, starting from $78.72 on 2026-06-16.\n\nLet me think carefully about this. The current price of $78.72 seems unusually low for Netflix - historically NFLX traded in the $500-700+ range in 2024-2025. This could reflect a stock split, or my training data may not fully capture events up to mid-2026. I'll take the current price as given and work from there.\n\n**Reasoning:**\n\n- **Daily volatility**: NFLX typically has annualized volatility of ~35-40%. Daily \u03c3 \u2248 35%/\u221a252 \u2248 2.2%, so ~$1.73/day.\n- **Weekly**: \u03c3_week \u2248 35%/\u221a52 \u2248 4.85%, so ~$3.82.\n- **Monthly**: \u03c3_month \u2248 35%/\u221a12 \u2248 10.1%, so ~$7.95.\n\n**Point estimates**: I'll use slight upward drift (modest bullish bias for a growth company), but essentially near current price adjusted for drift.\n\n- 1-day: ~$79.00 (minimal drift)\n- 1-week: ~$79.50 (small positive drift)\n- 1-month: ~$81.00 (moderate positive drift)\n\n**90% CI** uses ~1.645\u03c3 on each side:\n- 1-day: \u00b1$2.85 \u2192 [76.15, 81.85]\n- 1-week: \u00b1$6.28 \u2192 [73.22, 85.78]\n- 1-month: \u00b1$13.10 \u2192 [67.90, 94.10]\n\n{\n  \"1d\": {\n    \"point_estimate\": 79.00,\n    \"90_ci\": [76.15, 81.85]\n  },\n  \"1w\": {\n    \"point_estimate\": 79.50,\n    \"90_ci\": [73.20, 85.80]\n  },\n  \"1m\": {\n    \"point_estimate\": 81.00,\n    \"90_ci\": [67.90, 94.10]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 79.0,
+      "90_ci": [
+        76.15,
+        81.85
+      ]
+    },
+    "1w": {
+      "point_estimate": 79.5,
+      "90_ci": [
+        73.2,
+        85.8
+      ]
+    },
+    "1m": {
+      "point_estimate": 81.0,
+      "90_ci": [
+        67.9,
+        94.1
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 79.0,\n    \"90_ci\": [\n      76.15,\n      81.85\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 79.5,\n    \"90_ci\": [\n      73.2,\n      85.8\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 81.0,\n    \"90_ci\": [\n      67.9,\n      94.1\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-sloping trajectory starting near current market levels. At the one-day horizon, the estimate of 79.0 is essentially anchored to the most recent observed price, assuming overnight continuity and no major catalysts. The slight uptick to 79.5 at one week reflects a mild positive drift assumption consistent with near-term momentum and the absence of obvious near-term headwinds. The one-month estimate of 81.0 incorporates a somewhat larger drift, consistent with a baseline expectation of gradual appreciation driven by broader macro conditions, but the step-up is deliberately modest because mean-reversion pressures and event risk both accumulate over longer horizons.\n\nThe confidence interval widths grow systematically with time, which reflects the standard square-root-of-time scaling of uncertainty in financial markets. At one day, the 90% interval of roughly plus or minus 2.85 points is tight because intraday and overnight volatility is relatively contained under normal conditions. By one week, the interval widens to about plus or minus 6.3 points, incorporating the possibility of scheduled data releases, central bank communications, or geopolitical developments that could shift sentiment meaningfully. At one month, the interval expands to roughly plus or minus 13 points, reflecting the accumulation of multiple unknown shocks, potential trend changes, and the broader macro environment's ability to reprice the asset substantially.\n\nSpecific risks that could push outcomes outside these intervals include a sudden policy surprise from a major central bank, an unexpected geopolitical escalation, or a significant liquidity event in correlated markets that triggers outsized moves. On the upside, a strongly positive economic data surprise or a risk-on sentiment shift could push prices well above the upper bound of the one-month interval. On the downside, a sharp deterioration in growth expectations, a credit event, or a technical breakdown below key support levels could drive prices materially below the lower bound, particularly at the monthly horizon where tail risks have more time to materialize.\n\nIt is also worth noting that these intervals assume relatively stable volatility regimes. If realized volatility were to spike \u2014 for instance, due to a market structure event or an unexpected policy announcement \u2014 the true distribution of outcomes would be considerably fatter-tailed than my stated intervals imply. The intervals should therefore be read as conditional on a broadly normal market environment, and users should treat the tails as soft rather than hard boundaries.",
+  "status": "collected",
+  "error": null
+}
