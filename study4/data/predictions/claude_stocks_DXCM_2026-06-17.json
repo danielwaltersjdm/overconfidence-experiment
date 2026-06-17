@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-17",
+  "timestamp": "2026-06-17T20:58:51.447404Z",
+  "domain": "stocks",
+  "item": "DXCM",
+  "item_label": "DexCom",
+  "unit": "USD",
+  "current_value": 71.2300033569336,
+  "context": "Current closing price of DexCom (DXCM): $71.23 USD as of 2026-06-17.",
+  "prompt_text": "Today is 2026-06-17.\n\nCurrent closing price of DexCom (DXCM): $71.23 USD as of 2026-06-17.\n\nPredict the closing price of DexCom at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-18\n  1-week target date: 2026-06-24\n  1-month target date: 2026-07-17\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 71.50,\n    \"90_ci\": [68.50, 74.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 72.00,\n    \"90_ci\": [66.00, 78.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 73.00,\n    \"90_ci\": [61.00, 85.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 71.5,
+      "90_ci": [
+        68.5,
+        74.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 72.0,
+      "90_ci": [
+        66.0,
+        78.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 73.0,
+      "90_ci": [
+        61.0,
+        85.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 71.5,\n    \"90_ci\": [\n      68.5,\n      74.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 72.0,\n    \"90_ci\": [\n      66.0,\n      78.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 73.0,\n    \"90_ci\": [\n      61.0,\n      85.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume is a current price or value near 71\u201372, with gradual mean-reversion or trend continuation logic applied across horizons. At the one-day horizon, the estimate of 71.5 essentially anchors close to the prevailing level, reflecting the strong autocorrelation typical in most financial or economic series over short windows \u2014 large moves within a single session are possible but not the base case. At the one-week horizon, I nudged the estimate slightly higher to 72.0, incorporating a mild positive drift assumption while acknowledging that a week is long enough for sentiment shifts or new information to matter. At the one-month horizon, 73.0 reflects continued modest appreciation, consistent with a scenario where underlying fundamentals are stable and any short-term noise averages out.\n\nThe confidence interval widths widen substantially as the horizon extends, which is intentional and reflects the square-root-of-time scaling of uncertainty under standard diffusion assumptions. The one-day interval of roughly \u00b13 points captures typical daily volatility. By one week, the interval expands to \u00b16 points, and by one month it reaches \u00b112 points, reflecting accumulated uncertainty from compounding daily moves, potential regime shifts, and the increasing relevance of macro or structural factors that are harder to model over longer windows.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a positive surprise \u2014 such as a stronger-than-expected data release, a policy announcement, or a sentiment-driven momentum surge \u2014 could push the value well above 85 at the one-month horizon. On the downside, a sharp risk-off episode, geopolitical shock, or liquidity event could breach the lower bound of 61. These tail risks are by construction excluded from the 90% confidence interval, meaning there is a 10% combined probability mass assigned to outcomes outside the stated range.\n\nIt's worth noting that my forecasts assume relatively stable conditions and do not explicitly model jump risk or fat-tailed distributions, which means real-world outcomes may have heavier tails than my intervals imply. If the underlying series is an asset price subject to event-driven gaps \u2014 earnings, central bank decisions, geopolitical developments \u2014 the true distribution could be meaningfully wider than what I've stated, particularly at the one-month horizon.",
+  "status": "collected",
+  "error": null
+}

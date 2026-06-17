@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-17",
+  "timestamp": "2026-06-17T19:36:37.979849Z",
+  "domain": "stocks",
+  "item": "AMAT",
+  "item_label": "Applied Materials",
+  "unit": "USD",
+  "current_value": 600.7100219726562,
+  "context": "Current closing price of Applied Materials (AMAT): $600.71 USD as of 2026-06-17.",
+  "prompt_text": "Today is 2026-06-17.\n\nCurrent closing price of Applied Materials (AMAT): $600.71 USD as of 2026-06-17.\n\nPredict the closing price of Applied Materials at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-18\n  1-week target date: 2026-06-24\n  1-month target date: 2026-07-17\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 603,\n    \"90_ci\": [582, 624]\n  },\n  \"1w\": {\n    \"point_estimate\": 608,\n    \"90_ci\": [568, 648]\n  },\n  \"1m\": {\n    \"point_estimate\": 618,\n    \"90_ci\": [535, 700]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 603,
+      "90_ci": [
+        582,
+        624
+      ]
+    },
+    "1w": {
+      "point_estimate": 608,
+      "90_ci": [
+        568,
+        648
+      ]
+    },
+    "1m": {
+      "point_estimate": 618,
+      "90_ci": [
+        535,
+        700
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 603,\n    \"90_ci\": [\n      582,\n      624\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 608,\n    \"90_ci\": [\n      568,\n      648\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 618,\n    \"90_ci\": [\n      535,\n      700\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd presume was a baseline reading near 600, with each successive horizon incorporating a small positive trend assumption. For the 1-day estimate of 603, I was essentially anchoring close to the most recent observed value and assuming mean-reverting, low-volatility behavior over a very short window. The 1-week estimate of 608 incorporates a slightly larger drift, reflecting the assumption that whatever underlying trend was present would continue to accumulate over several days. The 1-month estimate of 618 extends that logic further, assuming the same directional bias compounds over a longer period, though the magnitude of the drift remains modest in absolute terms relative to the level of the series.\n\nThe confidence interval widths grow substantially across horizons, which reflects the standard statistical reality that uncertainty compounds over time. For the 1-day interval, I assumed relatively tight intraday or day-to-day variation, yielding a range of roughly plus or minus 21 units. By one week, the interval widens to plus or minus 40 units, and by one month it expands to roughly plus or minus 82 units. These widths were informed by typical volatility scaling \u2014 roughly proportional to the square root of time \u2014 combined with my uncertainty about the underlying process generating the data. Without knowing the specific series, I had to rely on generic assumptions about the ratio of signal to noise, which itself introduces model uncertainty on top of the process uncertainty.\n\nThe most significant risks that could push outcomes outside my stated intervals fall into two broad categories: structural breaks and event-driven shocks. If the underlying series is sensitive to discrete events \u2014 policy announcements, macroeconomic releases, geopolitical developments, or sudden changes in demand or supply \u2014 then the realized value could jump well outside the smooth drift I projected. My intervals assume roughly normal or near-normal residuals, which tend to underweight tail events. A sudden regime change or shock could easily push the 1-month outcome beyond 700 on the upside or below 535 on the downside, and the probability of such an event increases meaningfully over a 30-day horizon compared to a single day.\n\nFinally, I should acknowledge that without knowing the specific variable being forecast, my reasoning is necessarily generic. If this series exhibits strong mean reversion, my upward drift assumption could be too aggressive. If it has fat-tailed behavior or is highly autocorrelated in a nonlinear way, my confidence intervals could be far too narrow. The stated 90% intervals should be interpreted as conditional on the series behaving in a relatively well-behaved, stationary manner, which is an assumption that real-world data frequently violates over monthly horizons.",
+  "status": "collected",
+  "error": null
+}
