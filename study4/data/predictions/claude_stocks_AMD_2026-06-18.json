@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-18",
+  "timestamp": "2026-06-18T19:08:13.326501Z",
+  "domain": "stocks",
+  "item": "AMD",
+  "item_label": "AMD",
+  "unit": "USD",
+  "current_value": 530.875,
+  "context": "Current closing price of AMD (AMD): $530.88 USD as of 2026-06-18.",
+  "prompt_text": "Today is 2026-06-18.\n\nCurrent closing price of AMD (AMD): $530.88 USD as of 2026-06-18.\n\nPredict the closing price of AMD at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-19\n  1-week target date: 2026-06-25\n  1-month target date: 2026-07-18\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 533,\n    \"90_ci\": [510, 556]\n  },\n  \"1w\": {\n    \"point_estimate\": 538,\n    \"90_ci\": [495, 582]\n  },\n  \"1m\": {\n    \"point_estimate\": 545,\n    \"90_ci\": [455, 635]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 533,
+      "90_ci": [
+        510,
+        556
+      ]
+    },
+    "1w": {
+      "point_estimate": 538,
+      "90_ci": [
+        495,
+        582
+      ]
+    },
+    "1m": {
+      "point_estimate": 545,
+      "90_ci": [
+        455,
+        635
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 533,\n    \"90_ci\": [\n      510,\n      556\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 538,\n    \"90_ci\": [\n      495,\n      582\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 545,\n    \"90_ci\": [\n      455,\n      635\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term baseline with modest upward drift over longer horizons. For the 1-day estimate of 533, I was anchoring closely to recent observed values, assuming mean-reverting behavior and minimal overnight shock. The 1-week estimate of 538 incorporates a slight positive drift, reflecting either a modest trend or mean-reversion toward a slightly higher equilibrium level. The 1-month estimate of 545 extends that drift further, implying that whatever structural or seasonal forces are at play continue to nudge the value upward gradually, though the pace remains slow relative to the uncertainty that accumulates over that timeframe.\n\nThe widening of confidence intervals across horizons is the natural consequence of uncertainty compounding over time. At 1 day, the interval of roughly plus or minus 23 units reflects tight short-run predictability \u2014 intraday or overnight variance is relatively constrained. By 1 week, the interval expands to roughly plus or minus 44 units, capturing the possibility of meaningful week-to-week fluctuations driven by data releases, sentiment shifts, or demand changes. At 1 month, the interval nearly doubles again to plus or minus 90 units, reflecting that a full month introduces substantial exposure to regime changes, policy shifts, or unexpected external shocks that are genuinely difficult to foresee.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic shocks such as an unexpected central bank policy decision, a geopolitical disruption, or a significant data surprise that resets expectations sharply. On the upside, a demand surge or supply constraint not priced into current conditions could push values well above 635 at the 1-month horizon. On the downside, a sharp deterioration in economic conditions, a negative demand shock, or a sudden increase in supply could easily breach the lower bound of 455. These tail risks are the reason the stated intervals, while wide, still carry a residual 10% probability of being violated.\n\nIt is also worth acknowledging model uncertainty itself as a source of risk. The estimates implicitly assume that the recent statistical structure of this series remains roughly stable, but structural breaks \u2014 a change in the underlying data-generating process \u2014 are not well-captured within the intervals. If the series is subject to regime switches or if there are latent variables not accounted for, the true uncertainty could be materially larger than what the confidence intervals suggest.",
+  "status": "collected",
+  "error": null
+}

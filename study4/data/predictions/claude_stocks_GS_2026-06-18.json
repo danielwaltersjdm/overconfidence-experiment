@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-18",
+  "timestamp": "2026-06-18T19:27:31.394291Z",
+  "domain": "stocks",
+  "item": "GS",
+  "item_label": "Goldman Sachs",
+  "unit": "USD",
+  "current_value": 1102.3199462890625,
+  "context": "Current closing price of Goldman Sachs (GS): $1102.32 USD as of 2026-06-18.",
+  "prompt_text": "Today is 2026-06-18.\n\nCurrent closing price of Goldman Sachs (GS): $1102.32 USD as of 2026-06-18.\n\nPredict the closing price of Goldman Sachs at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-19\n  1-week target date: 2026-06-25\n  1-month target date: 2026-07-18\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 1105,\n    \"90_ci\": [1080, 1130]\n  },\n  \"1w\": {\n    \"point_estimate\": 1110,\n    \"90_ci\": [1055, 1165]\n  },\n  \"1m\": {\n    \"point_estimate\": 1118,\n    \"90_ci\": [1010, 1230]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1105,
+      "90_ci": [
+        1080,
+        1130
+      ]
+    },
+    "1w": {
+      "point_estimate": 1110,
+      "90_ci": [
+        1055,
+        1165
+      ]
+    },
+    "1m": {
+      "point_estimate": 1118,
+      "90_ci": [
+        1010,
+        1230
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1105,\n    \"90_ci\": [\n      1080,\n      1130\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1110,\n    \"90_ci\": [\n      1055,\n      1165\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1118,\n    \"90_ci\": [\n      1010,\n      1230\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a recent observed price near 1100, with each successive horizon incorporating a small positive drift assumption. For the 1-day estimate of 1105, I was essentially anchoring close to the last known price with minimal expected movement, reflecting the typical low daily volatility in whatever underlying asset this represents. The 1-week estimate of 1110 extends that slight positive bias, while the 1-month estimate of 1118 continues the trend but at a decelerating rate relative to time elapsed. These estimates imply a mild bullish lean, likely driven by an assumption of modest positive momentum or fundamental tailwinds, but they are not far from flat, acknowledging that mean reversion and uncertainty dominate at longer horizons.\n\nThe confidence interval widths expand naturally as the time horizon lengthens, reflecting the square-root-of-time scaling of uncertainty that characterizes most financial or commodity price processes. At one day, the 50-point range is tight because there is limited time for new information to arrive and move prices significantly. By one week, the 110-point range reflects the accumulation of multiple trading sessions worth of volatility and potential news. At one month, the 220-point range is wide enough to encompass a meaningful range of macro, fundamental, and sentiment-driven outcomes. The widths also implicitly assume some baseline volatility regime, and if that regime is misspecified, the intervals could be systematically too narrow or too wide.\n\nSpecific risks that could push outcomes outside these intervals include sudden macroeconomic shocks such as an unexpected central bank decision, geopolitical escalation, or a major data release that surprises consensus by a wide margin. On the upside, a supply disruption or demand surge could push prices well above 1230 within a month. On the downside, a risk-off episode, financial contagion, or demand destruction could easily breach 1010. There is also model risk in the sense that if the asset is in a transitional regime, such as moving from low to high volatility, the intervals would be too narrow almost by construction, since they were calibrated on historical behavior that may no longer be representative.",
+  "status": "collected",
+  "error": null
+}

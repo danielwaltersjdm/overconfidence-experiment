@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-18",
+  "timestamp": "2026-06-18T21:25:55.639752Z",
+  "domain": "stocks",
+  "item": "NDAQ",
+  "item_label": "Nasdaq Inc",
+  "unit": "USD",
+  "current_value": 82.23999786376953,
+  "context": "Current closing price of Nasdaq Inc (NDAQ): $82.24 USD as of 2026-06-18.",
+  "prompt_text": "Today is 2026-06-18.\n\nCurrent closing price of Nasdaq Inc (NDAQ): $82.24 USD as of 2026-06-18.\n\nPredict the closing price of Nasdaq Inc at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-19\n  1-week target date: 2026-06-25\n  1-month target date: 2026-07-18\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 82.50,\n    \"90_ci\": [80.50, 84.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 83.00,\n    \"90_ci\": [79.00, 87.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 84.00,\n    \"90_ci\": [75.00, 93.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 82.5,
+      "90_ci": [
+        80.5,
+        84.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 83.0,
+      "90_ci": [
+        79.0,
+        87.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 84.0,
+      "90_ci": [
+        75.0,
+        93.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 82.5,\n    \"90_ci\": [\n      80.5,\n      84.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 83.0,\n    \"90_ci\": [\n      79.0,\n      87.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 84.0,\n    \"90_ci\": [\n      75.0,\n      93.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-sloping trajectory starting near current market levels. For the 1-day estimate, I anchored closely to the prevailing price, assuming mean-reverting intraday behavior with minimal drift \u2014 essentially that tomorrow's close will look much like today's close, adjusted slightly upward for a small positive drift assumption built into equity markets generally. The 1-week estimate nudges slightly higher, reflecting that same drift tendency over a longer window without any strong directional catalyst pulling it meaningfully away from current levels. The 1-month estimate extends that logic further, with a somewhat more pronounced upward bias consistent with long-run equity risk premium assumptions, though still grounded near current price levels.\n\nThe confidence interval widths expand meaningfully as the horizon lengthens, which reflects the fundamental statistical property that uncertainty compounds over time. At 1 day, realized volatility for a typical equity or index tends to be relatively contained \u2014 a 2-point band on either side captures the vast majority of daily outcomes under normal conditions. At 1 week, I widened the interval substantially to account for the accumulation of daily shocks, potential macro data releases, and the possibility that sentiment shifts intraday. By 1 month, the interval spans roughly 18 points, acknowledging that over four weeks, earnings announcements, central bank decisions, geopolitical developments, and shifting risk appetite can collectively push prices well beyond short-term historical ranges.\n\nSeveral specific risks could push outcomes outside even these wider intervals. On the downside, an unexpected deterioration in macroeconomic data \u2014 a sharper-than-expected jobs report, surprise inflation print, or renewed credit stress \u2014 could trigger a sharp repricing that breaks through the lower bounds, particularly at the 1-month horizon. A liquidity event or geopolitical shock (escalation of an existing conflict, unexpected policy action from a major central bank) could easily produce a move exceeding 10% in a short window. On the upside, a positive catalyst such as a dovish policy pivot, a blowout earnings season, or resolution of a known geopolitical overhang could push prices through the upper bound. These tail scenarios are precisely why the stated 90% confidence intervals, while wide, still leave 10% probability mass outside their bounds.",
+  "status": "collected",
+  "error": null
+}
