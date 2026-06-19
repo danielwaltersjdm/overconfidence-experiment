@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-19",
+  "timestamp": "2026-06-19T19:26:13.103213Z",
+  "domain": "stocks",
+  "item": "VRTX",
+  "item_label": "Vertex Pharma",
+  "unit": "USD",
+  "current_value": 451.6300048828125,
+  "context": "Current closing price of Vertex Pharma (VRTX): $451.63 USD as of 2026-06-19.",
+  "prompt_text": "Today is 2026-06-19.\n\nCurrent closing price of Vertex Pharma (VRTX): $451.63 USD as of 2026-06-19.\n\nPredict the closing price of Vertex Pharma at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-20\n  1-week target date: 2026-06-26\n  1-month target date: 2026-07-19\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 453,\n    \"90_ci\": [440, 466]\n  },\n  \"1w\": {\n    \"point_estimate\": 455,\n    \"90_ci\": [432, 478]\n  },\n  \"1m\": {\n    \"point_estimate\": 460,\n    \"90_ci\": [415, 505]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 453,
+      "90_ci": [
+        440,
+        466
+      ]
+    },
+    "1w": {
+      "point_estimate": 455,
+      "90_ci": [
+        432,
+        478
+      ]
+    },
+    "1m": {
+      "point_estimate": 460,
+      "90_ci": [
+        415,
+        505
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 453,\n    \"90_ci\": [\n      440,\n      466\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 455,\n    \"90_ci\": [\n      432,\n      478\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 460,\n    \"90_ci\": [\n      415,\n      505\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the 1-day estimate of 453, I was primarily anchoring to recent observed levels and assuming mean-reversion dynamics dominate over such a short window \u2014 essentially, whatever the current value is, it's unlikely to move dramatically in 24 hours absent a specific catalyst. The 1-week estimate of 455 incorporates a slight upward nudge reflecting typical trending behavior or drift in the underlying series, while the 1-month estimate of 460 extends that logic further, assuming gradual positive momentum but with diminishing confidence in the direction as the horizon lengthens.\n\nThe confidence interval widths reflect how uncertainty compounds over time. At the 1-day horizon, the 90% interval spans only 26 units (440\u2013466), which reflects the relatively tight constraint that short-term volatility places on outcomes \u2014 most of the randomness simply hasn't had time to accumulate. By one week, that span widens to 46 units (432\u2013478), incorporating the possibility of sustained moves in either direction over several trading sessions or measurement periods. At one month, the interval expands to 90 units (415\u2013505), reflecting that over four-plus weeks, structural shifts, trend reversals, or compounding volatility can meaningfully alter outcomes from any starting point.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a sudden positive shock \u2014 such as a policy announcement, better-than-expected data release, or a sentiment shift \u2014 could drive the value well above 505 at the monthly horizon. On the downside, a negative catalyst like a market dislocation, reversal of recent trends, or an external shock (geopolitical event, financial stress) could push values below 415. These tail risks are real but were judged to be low-probability enough to fall outside the 90% confidence band by construction.\n\nIt's also worth acknowledging model uncertainty as a meta-risk. My estimates implicitly assume the data-generating process remains relatively stable, but if the underlying dynamics have shifted \u2014 due to regime change, structural breaks, or seasonal effects \u2014 my intervals could be systematically miscalibrated in either direction. The further out the horizon, the more this model uncertainty compounds alongside standard statistical uncertainty, which is the primary reason the monthly interval is so much wider than the daily one.",
+  "status": "collected",
+  "error": null
+}

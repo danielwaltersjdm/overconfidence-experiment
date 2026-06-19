@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-19",
+  "timestamp": "2026-06-19T19:48:19.337874Z",
+  "domain": "stocks",
+  "item": "DIA",
+  "item_label": "SPDR Dow Jones ETF",
+  "unit": "USD",
+  "current_value": 515.52001953125,
+  "context": "Current closing price of SPDR Dow Jones ETF (DIA): $515.52 USD as of 2026-06-19.",
+  "prompt_text": "Today is 2026-06-19.\n\nCurrent closing price of SPDR Dow Jones ETF (DIA): $515.52 USD as of 2026-06-19.\n\nPredict the closing price of SPDR Dow Jones ETF at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-20\n  1-week target date: 2026-06-26\n  1-month target date: 2026-07-19\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I'll estimate based on typical DIA volatility characteristics:\n\n- Daily volatility for DIA is roughly 0.7-0.9% (annualized ~15%)\n- 1-day \u03c3 \u2248 0.8% \u2192 ~$4.12\n- 1-week \u03c3 \u2248 1.8% \u2192 ~$9.28\n- 1-month \u03c3 \u2248 3.8% \u2192 ~$19.59\n\nFor 90% CI, I use \u00b11.645\u03c3. Point estimates drift slightly upward reflecting modest bullish bias.\n\n{\n  \"1d\": {\n    \"point_estimate\": 516.50,\n    \"90_ci\": [508.75, 524.25]\n  },\n  \"1w\": {\n    \"point_estimate\": 518.00,\n    \"90_ci\": [500.00, 536.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 521.00,\n    \"90_ci\": [483.00, 559.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 516.5,
+      "90_ci": [
+        508.75,
+        524.25
+      ]
+    },
+    "1w": {
+      "point_estimate": 518.0,
+      "90_ci": [
+        500.0,
+        536.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 521.0,
+      "90_ci": [
+        483.0,
+        559.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 516.5,\n    \"90_ci\": [\n      508.75,\n      524.25\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 518.0,\n    \"90_ci\": [\n      500.0,\n      536.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 521.0,\n    \"90_ci\": [\n      483.0,\n      559.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly bullish baseline assumption for what appears to be a mid-500s equity price or index level. For the 1-day horizon, I anchored closely to the presumed current price with only a small upward drift, reflecting the typical daily expected return being near zero but slightly positive over time. The 1-week estimate edges slightly higher, continuing that drift assumption while acknowledging that a week is long enough for meaningful directional movement. The 1-month estimate extends this gradual appreciation further, consistent with long-run equity risk premium assumptions, though the increment remains modest relative to the uncertainty introduced over that timeframe.\n\nThe confidence interval widths grow substantially as the horizon extends, which reflects the well-established square-root-of-time scaling of volatility. At the 1-day level, the interval is fairly tight because intraday and overnight price swings for a mature equity instrument tend to be limited in the absence of major catalysts. Over a week, realized volatility can accumulate meaningfully, and the range widens to capture plausible trending or mean-reverting behavior. Over a month, the interval nearly doubles in half-width again, capturing macro data releases, earnings cycles, Federal Reserve communications, and geopolitical developments that could collectively move prices substantially in either direction.\n\nThere are several specific risks that could push outcomes outside even the stated intervals. On the downside, a sudden credit event, a sharp deterioration in economic data suggesting recession, or an unexpected Federal Reserve policy shift toward aggressive tightening could produce a swift sell-off well beyond the lower bound. Geopolitical shocks \u2014 an escalation in an ongoing conflict or a new supply disruption \u2014 could also generate tail moves. On the upside, a surprisingly strong earnings season, a pivot signal from the Fed, or a resolution of ongoing geopolitical tensions could produce a sharp rally that exceeds the upper bound, particularly at the 1-month horizon where positive momentum can compound.\n\nIt is also worth noting that my intervals assume a relatively stable volatility regime. If implied volatility were to spike \u2014 as it does during market stress events \u2014 the actual distribution of outcomes would have fatter tails than my stated ranges suggest. Liquidity conditions and options market positioning can also amplify moves during short squeezes or forced deleveraging episodes, making extreme outcomes more probable than a simple Gaussian assumption would imply. Readers should treat these intervals as a reasonable central scenario rather than hard probabilistic guarantees.",
+  "status": "collected",
+  "error": null
+}
