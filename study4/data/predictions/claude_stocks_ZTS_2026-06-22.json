@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-22",
+  "timestamp": "2026-06-22T21:26:27.236779Z",
+  "domain": "stocks",
+  "item": "ZTS",
+  "item_label": "Zoetis",
+  "unit": "USD",
+  "current_value": 75.88999938964844,
+  "context": "Current closing price of Zoetis (ZTS): $75.89 USD as of 2026-06-22.",
+  "prompt_text": "Today is 2026-06-22.\n\nCurrent closing price of Zoetis (ZTS): $75.89 USD as of 2026-06-22.\n\nPredict the closing price of Zoetis at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-23\n  1-week target date: 2026-06-29\n  1-month target date: 2026-07-22\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 76.20,\n    \"90_ci\": [74.10, 78.30]\n  },\n  \"1w\": {\n    \"point_estimate\": 76.80,\n    \"90_ci\": [72.50, 81.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 77.50,\n    \"90_ci\": [68.00, 87.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 76.2,
+      "90_ci": [
+        74.1,
+        78.3
+      ]
+    },
+    "1w": {
+      "point_estimate": 76.8,
+      "90_ci": [
+        72.5,
+        81.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 77.5,
+      "90_ci": [
+        68.0,
+        87.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 76.2,\n    \"90_ci\": [\n      74.1,\n      78.3\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 76.8,\n    \"90_ci\": [\n      72.5,\n      81.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 77.5,\n    \"90_ci\": [\n      68.0,\n      87.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across the three time horizons, starting near the current price level and gradually rising. At the one-day horizon, the estimate of 76.2 is essentially anchored to the prevailing market price with minimal expected movement, consistent with the empirical observation that short-term price changes in most assets are small relative to their level. The one-week estimate of 76.8 and one-month estimate of 77.5 incorporate a slight positive drift, which likely reflects some combination of a positive underlying trend in the asset, mean-reversion toward a perceived fair value above the current price, or a modest risk premium embedded in the expected return. The incremental increases across horizons are intentionally small because the forecasting model does not have strong conviction in directional momentum over these timeframes.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which is the natural consequence of uncertainty compounding over time. At one day, the 90% interval spans roughly 2.1 points on each side, reflecting tight short-term volatility bounds. By one week, that half-width grows to about 4.3 points, and by one month it reaches approximately 9.5 points. This scaling is broadly consistent with a volatility process where uncertainty grows with the square root of time, though the one-month interval may also absorb additional uncertainty from macroeconomic or structural factors that are less relevant at shorter horizons. Estimation uncertainty around the volatility parameter itself also widens the intervals slightly beyond what pure historical realized volatility would suggest.\n\nThere are several specific risks that could push outcomes outside these stated intervals. On the upside, a surprise positive catalyst \u2014 such as a strong earnings release, favorable policy announcement, or broader market rally \u2014 could drive the price well above 87 within a month. On the downside, a risk-off episode, deteriorating fundamentals, or a liquidity shock could push the price below 68 or even lower. Tail risks are by definition underrepresented in confidence intervals, and the stated 90% intervals explicitly leave 10% probability mass outside their bounds.\n\nPerhaps the most important caveat is that the model generating these estimates implicitly assumes a relatively stable volatility regime. If realized volatility shifts significantly \u2014 due to geopolitical events, central bank surprises, or a structural break in the asset's underlying drivers \u2014 both the point estimates and the interval widths could be materially wrong. The one-month interval is especially vulnerable to this regime-change risk, as a month is long enough for macro conditions to shift in ways that short-term volatility estimates cannot anticipate.",
+  "status": "collected",
+  "error": null
+}
