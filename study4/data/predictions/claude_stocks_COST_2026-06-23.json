@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-23",
+  "timestamp": "2026-06-23T18:32:31.896651Z",
+  "domain": "stocks",
+  "item": "COST",
+  "item_label": "Costco",
+  "unit": "USD",
+  "current_value": 960.625,
+  "context": "Current closing price of Costco (COST): $960.62 USD as of 2026-06-23.",
+  "prompt_text": "Today is 2026-06-23.\n\nCurrent closing price of Costco (COST): $960.62 USD as of 2026-06-23.\n\nPredict the closing price of Costco at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-24\n  1-week target date: 2026-06-30\n  1-month target date: 2026-07-23\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 963,\n    \"90_ci\": [940, 986]\n  },\n  \"1w\": {\n    \"point_estimate\": 968,\n    \"90_ci\": [925, 1010]\n  },\n  \"1m\": {\n    \"point_estimate\": 975,\n    \"90_ci\": [880, 1070]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 963,
+      "90_ci": [
+        940,
+        986
+      ]
+    },
+    "1w": {
+      "point_estimate": 968,
+      "90_ci": [
+        925,
+        1010
+      ]
+    },
+    "1m": {
+      "point_estimate": 975,
+      "90_ci": [
+        880,
+        1070
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 963,\n    \"90_ci\": [\n      940,\n      986\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 968,\n    \"90_ci\": [\n      925,\n      1010\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 975,\n    \"90_ci\": [\n      880,\n      1070\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over time. At the one-day horizon, the estimate of 963 likely anchored closely to the most recent observed value, incorporating minimal expected movement given typical short-term mean reversion and low overnight drift in most financial or economic series. At the one-week horizon, the slight upward nudge to 968 reflects a small positive trend component or baseline drift assumption, while the one-month estimate of 975 extends that logic further, embedding a gentle positive trajectory without assuming any major structural break or catalyst.\n\nThe confidence interval widths grow progressively with time horizon, which is a natural consequence of uncertainty compounding over longer periods. At one day, the 90% interval spans roughly 46 units, reflecting tight short-term predictability. By one week, it widens to 85 units, capturing the accumulation of daily variance and the possibility of modest trend shifts. At one month, the interval expands to 190 units, reflecting not just statistical volatility but also the increased probability of regime changes, policy shifts, or external shocks materializing over a longer window. The asymmetry between upside and downside in the monthly interval is relatively balanced, suggesting no strong skew assumption was embedded in the forecast.\n\nSpecific risks that could push outcomes outside the stated intervals fall into a few categories. On the downside, a sudden macro shock, liquidity event, or negative data surprise could produce sharp moves well below the lower bound, particularly at the monthly horizon where tail risks are harder to dismiss. On the upside, an unexpected positive catalyst such as a major policy announcement, surprisingly strong fundamental data, or a sentiment-driven momentum surge could carry the value above 1,070. At the one-day level, the tightest risk would be an overnight announcement or pre-market event that gaps the series significantly beyond the 940\u2013986 range before normal trading or updating mechanisms can absorb it.\n\nIt is also worth acknowledging model uncertainty as a meta-level risk. The intervals reflect parametric assumptions about volatility and drift that may not hold if the underlying data-generating process has shifted recently. If realized volatility has been elevated or compressed relative to historical norms used in calibration, all three intervals could be systematically too narrow or too wide, respectively. Users of this forecast should treat the intervals as indicative rather than precisely calibrated, and should update their views as new information arrives, particularly around the weekly and monthly horizons where cumulative uncertainty is most consequential.",
+  "status": "collected",
+  "error": null
+}
