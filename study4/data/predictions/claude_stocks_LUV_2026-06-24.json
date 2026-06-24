@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-24",
+  "timestamp": "2026-06-24T20:59:33.388104Z",
+  "domain": "stocks",
+  "item": "LUV",
+  "item_label": "Southwest Airlines",
+  "unit": "USD",
+  "current_value": 50.939998626708984,
+  "context": "Current closing price of Southwest Airlines (LUV): $50.94 USD as of 2026-06-24.",
+  "prompt_text": "Today is 2026-06-24.\n\nCurrent closing price of Southwest Airlines (LUV): $50.94 USD as of 2026-06-24.\n\nPredict the closing price of Southwest Airlines at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-25\n  1-week target date: 2026-07-01\n  1-month target date: 2026-07-24\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 51.10,\n    \"90_ci\": [49.20, 52.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 51.50,\n    \"90_ci\": [47.50, 55.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 52.00,\n    \"90_ci\": [44.00, 60.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 51.1,
+      "90_ci": [
+        49.2,
+        52.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 51.5,
+      "90_ci": [
+        47.5,
+        55.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 52.0,
+      "90_ci": [
+        44.0,
+        60.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 51.1,\n    \"90_ci\": [\n      49.2,\n      52.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 51.5,\n    \"90_ci\": [\n      47.5,\n      55.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 52.0,\n    \"90_ci\": [\n      44.0,\n      60.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a current reading near 51, with each horizon incorporating a small positive bias. At the 1-day horizon, the estimate of 51.1 essentially anchors to the prevailing level with minimal expected movement, consistent with the typical inertia in whatever underlying series this represents. At one week, a slight uptick to 51.5 reflects a gentle mean-reversion or trend assumption, and at one month, the 52.0 estimate assumes a continued but shallow upward trajectory. These incremental increases suggest I was treating the series as having a mild positive drift, perhaps reflecting underlying fundamental momentum or a slow-moving trend component rather than any discrete expected event.\n\nThe confidence interval widths grow systematically with horizon, which is standard for time-series forecasting under uncertainty. At one day, the 90% CI of roughly plus or minus 1.9 points is tight, reflecting that short-term realizations tend to cluster near recent values. By one week, the interval widens to plus or minus 4 points, capturing intraweek volatility and the compounding of daily uncertainty. At one month, the interval of 44 to 60 \u2014 spanning 16 points \u2014 reflects the substantially larger variance that accumulates over roughly 20 trading or calendar days. The widening is consistent with a random-walk-like uncertainty structure where variance scales with time elapsed.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a surprise policy announcement, strong macroeconomic data release, or a significant sentiment shift could push the index well above 60 within a month. On the downside, a sudden deterioration in risk appetite, an unexpected geopolitical shock, or a liquidity event could drive the reading below 44. These tail risks are by definition underweighted in confidence intervals that target the central 90% of outcomes.\n\nIt's also worth noting that my intervals may be systematically too narrow if the underlying series exhibits fat tails or regime-switching behavior, which many financial and sentiment indicators do. Volatility clustering \u2014 where calm periods are interrupted by sudden bursts \u2014 means that the realized distribution is likely more leptokurtic than the Gaussian-style expansion I implicitly assumed. Any model that anchors too heavily on recent low-volatility conditions will understate the probability of large moves, especially at the monthly horizon.",
+  "status": "collected",
+  "error": null
+}

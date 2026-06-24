@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-24",
+  "timestamp": "2026-06-24T18:48:47.477522Z",
+  "domain": "stocks",
+  "item": "IBM",
+  "item_label": "IBM",
+  "unit": "USD",
+  "current_value": 263.1600036621094,
+  "context": "Current closing price of IBM (IBM): $263.16 USD as of 2026-06-24.",
+  "prompt_text": "Today is 2026-06-24.\n\nCurrent closing price of IBM (IBM): $263.16 USD as of 2026-06-24.\n\nPredict the closing price of IBM at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-25\n  1-week target date: 2026-07-01\n  1-month target date: 2026-07-24\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 263.50,\n    \"90_ci\": [257.00, 270.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 264.00,\n    \"90_ci\": [252.00, 276.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 265.00,\n    \"90_ci\": [242.00, 288.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 263.5,
+      "90_ci": [
+        257.0,
+        270.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 264.0,
+      "90_ci": [
+        252.0,
+        276.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 265.0,
+      "90_ci": [
+        242.0,
+        288.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 263.5,\n    \"90_ci\": [\n      257.0,\n      270.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 264.0,\n    \"90_ci\": [\n      252.0,\n      276.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 265.0,\n    \"90_ci\": [\n      242.0,\n      288.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates were anchored around the prevailing price level at the time of the forecast, with very modest drift built in across horizons. For the 1-day estimate of 263.5, I was essentially assuming near-mean-reversion with minimal directional conviction, reflecting the asset trading close to recent levels with no strong short-term catalyst visible. The 1-week estimate of 264.0 added only a marginal upward tilt, acknowledging that slightly positive drift tends to be the base case over multi-day horizons for many financial instruments in the absence of contrary signals. The 1-month estimate of 265.0 similarly assumed a gentle continuation of that drift, implying I had no strong view on a directional break but leaned slightly bullish on the margin based on prevailing trend momentum.\n\nThe confidence interval widths reflect standard volatility scaling across time horizons. At one day, the 90% CI of roughly plus or minus 6.5 points is consistent with typical daily realized volatility in a moderately liquid instrument. At one week, the interval widens to roughly plus or minus 12 points, scaling with the square root of time in a manner consistent with a random walk assumption. At one month, the interval expands to roughly plus or minus 23 points, capturing the compounding uncertainty over approximately 20 trading days. The width choices also implicitly account for the possibility of regime shifts or volatility clustering, which can cause realized spreads to exceed what simple scaling would suggest.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a strong macroeconomic surprise \u2014 such as an unexpected policy pivot from a major central bank, a significant positive earnings or data release, or a sharp short-covering rally \u2014 could drive prices well above 270 within even a day or two. On the downside, a risk-off event such as geopolitical escalation, a liquidity shock, or a major credit event could push the price below 252 within a week or below 242 within a month. These tail scenarios are precisely what the 10% outside-interval probability is meant to capture, but in practice, fat-tailed distributions mean extreme moves occur more frequently than Gaussian-based intervals would suggest, so the true tail risk is modestly higher than the stated confidence level implies.",
+  "status": "collected",
+  "error": null
+}

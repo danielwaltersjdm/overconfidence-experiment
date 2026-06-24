@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-24",
+  "timestamp": "2026-06-24T20:48:16.019782Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 30.059999465942383,
+  "context": "Current closing price of Tractor Supply (TSCO): $30.06 USD as of 2026-06-24.",
+  "prompt_text": "Today is 2026-06-24.\n\nCurrent closing price of Tractor Supply (TSCO): $30.06 USD as of 2026-06-24.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-25\n  1-week target date: 2026-07-01\n  1-month target date: 2026-07-24\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to think carefully about this. TSCO's current price is $30.06, which seems extremely low for Tractor Supply Company. The stock has historically traded in the $200-$280 range in recent years. This price of $30.06 could reflect a stock split or some other corporate action, or it could be an error in the prompt. I'll take the given price at face value and make predictions from $30.06.\n\nFor volatility assumptions:\n- TSCO historically has ~20-25% annualized volatility\n- Daily vol: ~1.3-1.6%\n- Weekly vol: ~3-3.5%\n- Monthly vol: ~7-8%\n\nGiven the unusual price level, I'll apply standard stock volatility:\n\n1-day: \n- Point estimate: slight drift upward ~$30.10\n- 90% CI: \u00b11.65 * 1.4% * 30.06 \u2248 \u00b1$0.69\n- Range: ~$29.37 to $30.79\n\n1-week:\n- Point estimate: ~$30.15\n- 90% CI: \u00b11.65 * 3.2% * 30.06 \u2248 \u00b1$1.59\n- Range: ~$28.56 to $31.74\n\n1-month:\n- Point estimate: ~$30.40\n- 90% CI: \u00b11.65 * 7.5% * 30.06 \u2248 \u00b1$3.72\n- Range: ~$26.68 to $34.12\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.10,\n    \"90_ci\": [29.37, 30.83]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.18,\n    \"90_ci\": [28.55, 31.81]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.45,\n    \"90_ci\": [26.70, 34.20]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 30.1,
+      "90_ci": [
+        29.37,
+        30.83
+      ]
+    },
+    "1w": {
+      "point_estimate": 30.18,
+      "90_ci": [
+        28.55,
+        31.81
+      ]
+    },
+    "1m": {
+      "point_estimate": 30.45,
+      "90_ci": [
+        26.7,
+        34.2
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.1,\n    \"90_ci\": [\n      29.37,\n      30.83\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.18,\n    \"90_ci\": [\n      28.55,\n      31.81\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 30.45,\n    \"90_ci\": [\n      26.7,\n      34.2\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with a modest upward drift over time. For the one-day horizon, I anchored closely to the last observed price level, assuming mean-reverting behavior in the very short run with minimal directional catalyst. The one-week estimate nudges slightly higher, reflecting a small positive drift assumption consistent with mild bullish momentum or carry effects depending on the underlying asset. The one-month estimate continues that gentle upward slope, incorporating a longer-run trend assumption while acknowledging that over a 30-day window, drift has more time to compound \u2014 though the magnitude remains modest, suggesting I did not anticipate any strong directional regime shift.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a standard consequence of uncertainty accumulating over time. At one day, the interval is relatively tight at roughly plus or minus 0.73 around the point estimate, reflecting low expected intraday or overnight volatility. By one week, the band expands to about plus or minus 1.63, incorporating the possibility of meaningful price swings driven by scheduled data releases, policy announcements, or shifts in market sentiment. At one month, the interval stretches to roughly plus or minus 3.75, capturing the full range of macro developments, earnings cycles, or thematic rotations that could materially reprice the asset over that window.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a surprise positive catalyst \u2014 such as better-than-expected economic data, a dovish central bank pivot, or a geopolitical resolution \u2014 could drive prices well above the upper bound of the one-month range. On the downside, a sharp risk-off episode triggered by financial stress, an unexpected policy tightening move, or deteriorating liquidity conditions could breach the lower bound. Tail events by definition are underweighted in point-forecast frameworks, and my intervals, while wide at longer horizons, still assume a relatively benign volatility environment without fat-tail shocks.\n\nIt is also worth noting that model uncertainty itself is a source of risk not fully captured in these intervals. The estimates implicitly rely on historical volatility patterns and drift assumptions that may not hold if the current market regime shifts \u2014 for instance, if correlation structures break down or if an exogenous shock introduces non-stationarity. In practice, the true distribution of outcomes at one month is likely heavier-tailed than a symmetric confidence interval implies, meaning the probability of extreme outcomes on either side is modestly higher than the interval boundaries suggest.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-24",
+  "timestamp": "2026-06-24T19:39:21.888770Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 31.709999084472656,
+  "context": "Current closing price of Chipotle (CMG): $31.71 USD as of 2026-06-24.",
+  "prompt_text": "Today is 2026-06-24.\n\nCurrent closing price of Chipotle (CMG): $31.71 USD as of 2026-06-24.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-25\n  1-week target date: 2026-07-01\n  1-month target date: 2026-07-24\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future Chipotle closing prices. Let me think through this carefully.\n\n**Current situation:**\n- CMG at $31.71 on 2026-06-24\n- Note: CMG did a 50-for-1 stock split in June 2024, so this $31.71 price is in post-split terms (pre-split would have been ~$1,585). This seems consistent with post-split pricing around $50-60 range in late 2024, suggesting some decline to ~$31.71 by mid-2026.\n\n**Volatility estimation:**\n- CMG historical daily volatility is roughly 1.5-2% (annualized ~25-30%)\n- Daily \u03c3 \u2248 1.7% of price \u2248 $0.54\n- Weekly \u03c3 \u2248 $0.54 \u00d7 \u221a5 \u2248 $1.21\n- Monthly \u03c3 \u2248 $0.54 \u00d7 \u221a21 \u2248 $2.47\n\n**Point estimates:**\n- Slight upward drift assumption (small positive expected return)\n- 1-day: ~$31.75 (minimal drift)\n- 1-week: ~$31.90\n- 1-month: ~$32.20\n\n**90% CI construction (\u00b11.645\u03c3):**\n- 1-day: \u00b11.645 \u00d7 $0.54 \u2248 \u00b1$0.89 \u2192 [$30.86, $32.64]\n- 1-week: \u00b11.645 \u00d7 $1.21 \u2248 \u00b1$1.99 \u2192 [$29.91, $33.89]\n- 1-month: \u00b11.645 \u00d7 $2.47 \u2248 \u00b1$4.06 \u2192 [$28.14, $36.26]\n\nI'll slightly widen these to account for fat tails and uncertainty in my volatility estimate:\n\n{\n  \"1d\": {\n    \"point_estimate\": 31.75,\n    \"90_ci\": [30.70, 32.85]\n  },\n  \"1w\": {\n    \"point_estimate\": 31.90,\n    \"90_ci\": [29.60, 34.30]\n  },\n  \"1m\": {\n    \"point_estimate\": 32.20,\n    \"90_ci\": [27.50, 37.20]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 31.75,
+      "90_ci": [
+        30.7,
+        32.85
+      ]
+    },
+    "1w": {
+      "point_estimate": 31.9,
+      "90_ci": [
+        29.6,
+        34.3
+      ]
+    },
+    "1m": {
+      "point_estimate": 32.2,
+      "90_ci": [
+        27.5,
+        37.2
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 31.75,\n    \"90_ci\": [\n      30.7,\n      32.85\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 31.9,\n    \"90_ci\": [\n      29.6,\n      34.3\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 32.2,\n    \"90_ci\": [\n      27.5,\n      37.2\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift across the three horizons, starting near the current market price and gradually moving higher. At the one-day horizon, the estimate of 31.75 is essentially anchored to the prevailing price level, assuming no major overnight catalysts and relatively stable market conditions. For the one-week estimate of 31.90, I incorporated a slight positive bias based on the assumption that near-term momentum or mean-reversion tendencies would nudge prices modestly higher without strong directional conviction. The one-month estimate of 32.20 extends this logic further, reflecting a gentle upward drift that is consistent with long-run trend assumptions while acknowledging that the asset has limited explosive upside catalysts in the near term.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which is the natural consequence of compounding uncertainty over time. At one day, the interval of 30.70 to 32.85 is relatively tight because short-term price movements are constrained by intraday liquidity, market microstructure, and the absence of scheduled high-impact events. Over one week, the interval widens to 29.60 to 34.30, reflecting the possibility of macroeconomic data releases, central bank commentary, or sector-specific news that could shift sentiment meaningfully. By one month, the range of 27.50 to 37.20 captures the full breadth of plausible outcomes given that fundamental reassessments, earnings surprises, or broad market regime changes could materially alter the picture.\n\nSpecific risks that could push outcomes outside these stated intervals include tail events such as an unexpected geopolitical shock, a sudden shift in monetary policy expectations, or a liquidity crisis in a correlated asset class. On the upside, a significant positive catalyst \u2014 such as a better-than-expected earnings release, a surprise acquisition, or a macro data print that dramatically improves risk appetite \u2014 could push the price well above 37.20 on the monthly horizon. On the downside, a deterioration in broader equity sentiment, a credit event, or company-specific negative news could drive prices below 27.50. These scenarios are assigned low probability but are not negligible, and they represent the fat tails that formal confidence intervals based on normal distribution assumptions tend to understate.",
+  "status": "collected",
+  "error": null
+}
