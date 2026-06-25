@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-25",
+  "timestamp": "2026-06-25T19:54:55.927569Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 32.3849983215332,
+  "context": "Current closing price of Chipotle (CMG): $32.38 USD as of 2026-06-25.",
+  "prompt_text": "Today is 2026-06-25.\n\nCurrent closing price of Chipotle (CMG): $32.38 USD as of 2026-06-25.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-26\n  1-week target date: 2026-07-02\n  1-month target date: 2026-07-25\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate Chipotle's future closing prices. Let me think through this carefully.\n\n**Current situation:**\n- CMG closing price: $32.38 as of 2026-06-25\n- Note: CMG did a 50-for-1 stock split in June 2024, so $32.38 is a reasonable post-split price level\n\n**Volatility estimation:**\n- CMG historically has annualized volatility around 30-35%\n- Daily volatility \u2248 30% / \u221a252 \u2248 1.89% per day\n- 1-day \u03c3 \u2248 $0.61\n- 1-week \u03c3 \u2248 $32.38 \u00d7 1.89% \u00d7 \u221a5 \u2248 $1.37\n- 1-month \u03c3 \u2248 $32.38 \u00d7 1.89% \u00d7 \u221a21 \u2248 $2.80\n\n**Point estimates:**\n- I'll use a slight upward drift assumption (modest growth expectation), but essentially flat for near-term\n- 1-day: ~$32.45\n- 1-week: ~$32.70\n- 1-month: ~$33.20\n\n**90% CI construction:**\n- 90% CI uses \u00b11.645\u03c3\n- 1-day: \u00b11.645 \u00d7 $0.61 \u2248 \u00b1$1.00\n- 1-week: \u00b11.645 \u00d7 $1.37 \u2248 \u00b1$2.25\n- 1-month: \u00b11.645 \u00d7 $2.80 \u2248 \u00b1$4.60\n\n**Adjustments:**\n- Stock prices can have fat tails, so I'll widen intervals slightly\n- Also accounting for any macro uncertainty\n\n{\n  \"1d\": {\n    \"point_estimate\": 32.45,\n    \"90_ci\": [30.90, 34.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 32.70,\n    \"90_ci\": [28.80, 36.60]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.20,\n    \"90_ci\": [26.50, 40.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 32.45,
+      "90_ci": [
+        30.9,
+        34.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 32.7,
+      "90_ci": [
+        28.8,
+        36.6
+      ]
+    },
+    "1m": {
+      "point_estimate": 33.2,
+      "90_ci": [
+        26.5,
+        40.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 32.45,\n    \"90_ci\": [\n      30.9,\n      34.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 32.7,\n    \"90_ci\": [\n      28.8,\n      36.6\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 33.2,\n    \"90_ci\": [\n      26.5,\n      40.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd presume was a current price near $32.45, with the 1-day estimate essentially anchored to the last observed price given the very short horizon. For the 1-week estimate of $32.70, I applied a slight positive drift assumption consistent with a typical equity or commodity instrument that has mild momentum or a slightly positive expected return over short horizons. The 1-month estimate of $33.20 extends that same drift logic further out, incorporating a small compounding effect. In the absence of specific fundamental catalysts, these estimates lean heavily on mean-reverting or mild trend-following assumptions rather than any strong directional thesis.\n\nThe confidence interval widths were primarily driven by realized volatility assumptions scaled to each time horizon. For the 1-day window, the narrow band of roughly \u00b11.5 reflects that most assets don't move dramatically in a single session absent a specific catalyst. The 1-week interval widens to roughly \u00b13.9, consistent with typical weekly volatility for a moderately volatile instrument. The 1-month interval of \u00b16.75 reflects not just scaled volatility but also the accumulation of estimation uncertainty \u2014 the further out one forecasts, the more macroeconomic regime changes, earnings surprises, or sentiment shifts can compound into meaningful price divergence.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a surprise positive catalyst \u2014 such as a strong earnings report, a policy shift favoring the sector, or a broader risk-on market surge \u2014 could push the price well above the upper bounds. On the downside, a sudden liquidity shock, negative macro data, or a sector-specific selloff could breach the lower bounds, particularly at the 1-month horizon where there is more time for adverse developments to unfold.\n\nIt's also worth acknowledging that my intervals may be systematically underestimating tail risk. Financial return distributions tend to have fat tails, meaning extreme moves happen more frequently than a normal distribution would suggest. Events like sudden regulatory changes, geopolitical shocks, or contagion from correlated assets are difficult to quantify in advance but represent genuine sources of out-of-interval outcomes. The 1-month interval in particular should be treated as a rough guide rather than a precise probabilistic bound.",
+  "status": "collected",
+  "error": null
+}

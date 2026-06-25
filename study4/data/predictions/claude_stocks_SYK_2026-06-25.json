@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-25",
+  "timestamp": "2026-06-25T19:27:15.978668Z",
+  "domain": "stocks",
+  "item": "SYK",
+  "item_label": "Stryker",
+  "unit": "USD",
+  "current_value": 317.8299865722656,
+  "context": "Current closing price of Stryker (SYK): $317.83 USD as of 2026-06-25.",
+  "prompt_text": "Today is 2026-06-25.\n\nCurrent closing price of Stryker (SYK): $317.83 USD as of 2026-06-25.\n\nPredict the closing price of Stryker at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-26\n  1-week target date: 2026-07-02\n  1-month target date: 2026-07-25\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 318.50,\n    \"90_ci\": [311.00, 326.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 319.50,\n    \"90_ci\": [306.00, 333.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 322.00,\n    \"90_ci\": [295.00, 350.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 318.5,
+      "90_ci": [
+        311.0,
+        326.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 319.5,
+      "90_ci": [
+        306.0,
+        333.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 322.0,
+      "90_ci": [
+        295.0,
+        350.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 318.5,\n    \"90_ci\": [\n      311.0,\n      326.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 319.5,\n    \"90_ci\": [\n      306.0,\n      333.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 322.0,\n    \"90_ci\": [\n      295.0,\n      350.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-sloping trajectory from roughly 318.5 at one day out to 322 at one month. The one-day estimate is anchored heavily on the last observed price or level, assuming mean-reverting dynamics dominate over very short horizons with minimal drift. As I extend to one week, I allow for a small positive drift component, perhaps reflecting an underlying trend or slight bullish bias in the asset or indicator being forecast. By one month, that drift accumulates further, though I temper the estimate somewhat because mean-reversion forces and uncertainty about the trend's persistence both grow in importance. In short, the nearer-term estimates are dominated by inertia while the longer-term estimate incorporates a modest trend assumption.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a standard consequence of uncertainty compounding over time. At one day, the interval spans about 15 units, reflecting the typical daily volatility I observed or assumed, plus a small allowance for tail events. At one week, the interval roughly doubles to about 27 units, consistent with volatility scaling approximately with the square root of time. At one month, the interval expands to 55 units, where not only does volatility compound further but model uncertainty \u2014 uncertainty about whether the trend persists, whether volatility regimes shift \u2014 begins to dominate. Essentially, the short-term interval is driven by realized volatility, while the long-term interval is increasingly driven by parameter and regime uncertainty.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a sudden positive catalyst \u2014 an unexpected policy shift, strong macroeconomic data release, or a momentum breakout \u2014 could push the asset well above 333 even within a week. On the downside, a liquidity shock, geopolitical disruption, or negative earnings or data surprise could easily push the price below 306 or even 295. The one-month interval is particularly vulnerable to regime changes: if volatility itself spikes (a volatility-of-volatility event), actual outcomes could land well outside the 295\u2013350 range.\n\nFinally, I should be transparent that my stated intervals assume relatively stable market conditions and that the underlying data-generating process doesn't structurally break during the forecast horizon. If there are scheduled high-impact events \u2014 central bank meetings, elections, major economic reports \u2014 that I did not fully weight, these could systematically bias my point estimates or cause realized outcomes to cluster in the tails rather than near the center of my distributions. The intervals should be interpreted as reflecting typical uncertainty, not worst-case scenario bounds.",
+  "status": "collected",
+  "error": null
+}
