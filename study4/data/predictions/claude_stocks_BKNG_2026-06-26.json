@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-26",
+  "timestamp": "2026-06-26T18:50:49.372976Z",
+  "domain": "stocks",
+  "item": "BKNG",
+  "item_label": "Booking Holdings",
+  "unit": "USD",
+  "current_value": 182.32000732421875,
+  "context": "Current closing price of Booking Holdings (BKNG): $182.32 USD as of 2026-06-26.",
+  "prompt_text": "Today is 2026-06-26.\n\nCurrent closing price of Booking Holdings (BKNG): $182.32 USD as of 2026-06-26.\n\nPredict the closing price of Booking Holdings at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-27\n  1-week target date: 2026-07-03\n  1-month target date: 2026-07-26\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to provide price predictions for Booking Holdings (BKNG) at three horizons.\n\n**Current price:** $182.32 (2026-06-26)\n\n**Key considerations:**\n- BKNG is a large-cap travel/tech stock with moderate volatility\n- Typical daily volatility for BKNG is roughly 1.5-2.5% (annualized ~25-35%)\n- No specific news context provided, so I'll use statistical reasoning\n- 1-day: ~1.5% daily vol \u2192 90% CI \u2248 \u00b12.5% (roughly \u00b11.65\u03c3)\n- 1-week: ~5 trading days \u2192 vol scales by \u221a5, so ~3.4% \u2192 90% CI \u2248 \u00b15.6%\n- 1-month: ~21 trading days \u2192 vol scales by \u221a21, so ~7% \u2192 90% CI \u2248 \u00b111.5%\n\n**Calculations:**\n- 1-day \u03c3 \u2248 $2.74; 90% CI: \u00b1$4.52 \u2192 [$177.8, $186.8]\n- 1-week \u03c3 \u2248 $6.12; 90% CI: \u00b1$10.1 \u2192 [$172.2, $192.4]\n- 1-month \u03c3 \u2248 $12.55; 90% CI: \u00b1$20.7 \u2192 [$161.6, $203.0]\n\nPoint estimates are slightly above current (slight upward drift assumption for equities over time):\n\n{\n  \"1d\": {\n    \"point_estimate\": 182.8,\n    \"90_ci\": [177.8, 187.8]\n  },\n  \"1w\": {\n    \"point_estimate\": 183.5,\n    \"90_ci\": [172.5, 194.5]\n  },\n  \"1m\": {\n    \"point_estimate\": 185.0,\n    \"90_ci\": [161.5, 208.5]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 182.8,
+      "90_ci": [
+        177.8,
+        187.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 183.5,
+      "90_ci": [
+        172.5,
+        194.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 185.0,
+      "90_ci": [
+        161.5,
+        208.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 182.8,\n    \"90_ci\": [\n      177.8,\n      187.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 183.5,\n    \"90_ci\": [\n      172.5,\n      194.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 185.0,\n    \"90_ci\": [\n      161.5,\n      208.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I assumed was a current price around $182-183, with the 1-day estimate of $182.8 essentially anchoring near the prevailing level given how little tends to change in a single trading session under normal conditions. The 1-week estimate of $183.5 incorporates a slight positive bias consistent with the long-run tendency of equity markets to drift upward, while acknowledging that a week is still a short enough window that mean reversion and noise dominate any fundamental signal. The 1-month estimate of $185.0 extends that same gentle upward trajectory, reflecting an annualized return assumption in the low-to-mid single digits applied over roughly 20 trading days. In all three cases, I was essentially anchoring to the current price and layering on a small expected return rather than making a strong directional call.\n\nThe confidence interval widths were calibrated using typical realized volatility for a large-cap equity, which tends to run somewhere in the range of 20-30% annualized for individual stocks. Scaling that to the relevant horizon \u2014 roughly one day, five days, and twenty-two days \u2014 produces interval widths that expand with the square root of time, which is why the 1-month band is roughly twice as wide as the 1-week band rather than seven times as wide. The 1-day interval of plus or minus roughly $5 around the point estimate reflects daily moves of about 1.4% at the 90% confidence level, which is consistent with a moderately volatile individual stock. These assumptions embed the idea that near-term price behavior is largely driven by random noise rather than predictable fundamentals.\n\nSeveral specific risks could push outcomes well outside my stated intervals. On the downside, a broad market selloff driven by macroeconomic data surprises \u2014 such as a hotter-than-expected inflation print triggering aggressive Fed repricing \u2014 could easily produce a 5-10% drawdown within a week, breaching the lower bound of even my 1-month interval. Company-specific events like an earnings miss, a guidance cut, a regulatory action, or an unexpected CEO departure could similarly cause sharp moves. On the upside, a positive earnings surprise, a buyout rumor, or a broader risk-on rally could push prices above my upper bounds. Liquidity conditions and options market dynamics, particularly around expiration dates, can also amplify moves in ways that standard volatility models fail to capture.\n\nIt is also worth acknowledging that my forecast is anchored to a single assumed starting price and does not incorporate real-time information about order flow, sentiment shifts, or breaking news. If the stock had already been moving sharply in either direction before I made this forecast, my intervals would likely be too narrow",
+  "status": "collected",
+  "error": null
+}
