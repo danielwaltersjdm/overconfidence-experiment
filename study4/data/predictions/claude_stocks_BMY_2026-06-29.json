@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-29",
+  "timestamp": "2026-06-29T19:28:23.947240Z",
+  "domain": "stocks",
+  "item": "BMY",
+  "item_label": "Bristol-Myers Squibb",
+  "unit": "USD",
+  "current_value": 58.21500015258789,
+  "context": "Current closing price of Bristol-Myers Squibb (BMY): $58.22 USD as of 2026-06-29.",
+  "prompt_text": "Today is 2026-06-29.\n\nCurrent closing price of Bristol-Myers Squibb (BMY): $58.22 USD as of 2026-06-29.\n\nPredict the closing price of Bristol-Myers Squibb at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-30\n  1-week target date: 2026-07-06\n  1-month target date: 2026-07-29\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 58.35,\n    \"90_ci\": [56.80, 59.90]\n  },\n  \"1w\": {\n    \"point_estimate\": 58.50,\n    \"90_ci\": [55.50, 61.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 59.00,\n    \"90_ci\": [52.00, 66.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 58.35,
+      "90_ci": [
+        56.8,
+        59.9
+      ]
+    },
+    "1w": {
+      "point_estimate": 58.5,
+      "90_ci": [
+        55.5,
+        61.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 59.0,
+      "90_ci": [
+        52.0,
+        66.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 58.35,\n    \"90_ci\": [\n      56.8,\n      59.9\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 58.5,\n    \"90_ci\": [\n      55.5,\n      61.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 59.0,\n    \"90_ci\": [\n      52.0,\n      66.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with a modest upward drift over time. For the one-day estimate of 58.35, I was anchoring closely to the most recent observed price or level, assuming mean-reverting dynamics dominate over such a short window and that no major catalyst was imminent. The one-week estimate of 58.5 reflects only a marginal upward nudge, acknowledging that short-term momentum or slight positive drift tends to persist but that reversals are equally plausible. The one-month estimate of 59.0 incorporates a small structural drift assumption \u2014 perhaps reflecting a mild bullish bias in underlying fundamentals or trend \u2014 while recognizing that over a month, the path dependency and compounding of daily moves introduces meaningful uncertainty around that central tendency.\n\nThe confidence interval widths were primarily driven by time-scaling of volatility. At one day, the interval is relatively tight (56.8 to 59.9), consistent with typical daily price fluctuation ranges under normal market conditions. At one week, I widened the interval to 55.5\u201361.5, roughly scaling uncertainty by the square root of time while also accounting for the possibility of a mid-week news event or data release that could shift sentiment. At one month, the interval widens substantially to 52.0\u201366.0, reflecting both the longer volatility runway and the genuine possibility of regime changes, macro surprises, or trend breaks that are difficult to anticipate but become increasingly likely over a 30-day window.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, an unexpected deterioration in macroeconomic data, a sharp risk-off episode driven by geopolitical escalation, or a liquidity event in correlated markets could easily breach the lower bounds. On the upside, a surprise policy pivot \u2014 such as earlier-than-expected central bank easing or a positive earnings or economic surprise \u2014 could push the level well above the upper bounds, particularly at the one-month horizon. These tail risks are by definition underweighted in a symmetrically constructed confidence interval.\n\nIt is also worth noting that my intervals assume roughly log-normal or normally distributed returns and do not fully capture fat tails or jump processes. In practice, financial time series exhibit excess kurtosis, meaning extreme moves occur more frequently than a Gaussian model would suggest. The true probability of breaching the stated intervals \u2014 especially at the one-month horizon \u2014 is likely somewhat higher than the implied 10% combined tail probability, and users should treat these bounds as indicative rather than hard probabilistic guarantees.",
+  "status": "collected",
+  "error": null
+}

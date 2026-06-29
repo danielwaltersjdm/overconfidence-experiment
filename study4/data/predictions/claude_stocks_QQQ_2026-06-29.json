@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-29",
+  "timestamp": "2026-06-29T19:52:51.933818Z",
+  "domain": "stocks",
+  "item": "QQQ",
+  "item_label": "Invesco QQQ ETF",
+  "unit": "USD",
+  "current_value": 722.3699951171875,
+  "context": "Current closing price of Invesco QQQ ETF (QQQ): $722.37 USD as of 2026-06-29.",
+  "prompt_text": "Today is 2026-06-29.\n\nCurrent closing price of Invesco QQQ ETF (QQQ): $722.37 USD as of 2026-06-29.\n\nPredict the closing price of Invesco QQQ ETF at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-30\n  1-week target date: 2026-07-06\n  1-month target date: 2026-07-29\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 724.50,\n    \"90_ci\": [707.50, 741.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 727.00,\n    \"90_ci\": [697.00, 757.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 735.00,\n    \"90_ci\": [678.00, 792.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 724.5,
+      "90_ci": [
+        707.5,
+        741.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 727.0,
+      "90_ci": [
+        697.0,
+        757.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 735.0,
+      "90_ci": [
+        678.0,
+        792.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 724.5,\n    \"90_ci\": [\n      707.5,\n      741.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 727.0,\n    \"90_ci\": [\n      697.0,\n      757.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 735.0,\n    \"90_ci\": [\n      678.0,\n      792.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift assumption from what appears to be a baseline price around 724\u2013725, with the 1-day estimate essentially anchoring near the current level given the very short horizon, the 1-week estimate nudging slightly higher to reflect a mild bullish drift, and the 1-month estimate continuing that gradual upward trend. The progression from 724.5 to 727 to 735 embeds a slow positive momentum assumption, likely informed by recent price trends or a slight mean-reversion tendency toward a perceived fair value. At the 1-day horizon, the forecast is almost purely about persistence \u2014 prices rarely move dramatically in a single session absent a major catalyst, so the point estimate stays close to spot.\n\nThe confidence interval widths naturally expand as the horizon extends, following standard volatility scaling where uncertainty grows roughly with the square root of time. The 1-day interval of roughly \u00b117 points reflects typical daily volatility for the underlying asset, while the 1-week interval widens to \u00b130 points and the 1-month interval expands to \u00b157 points to account for the accumulation of daily shocks over longer periods. I likely calibrated these widths against historical realized volatility, perhaps using an annualized volatility figure that, when scaled down to daily increments and compounded, produces these band widths. The relatively tight 1-day band suggests low implied or realized volatility at the time of the forecast.\n\nSeveral sources of uncertainty could cause realized outcomes to fall outside these intervals. On the macro side, unexpected central bank communications, inflation data surprises, or geopolitical disruptions could trigger sharp moves that compress or expand prices well beyond the stated bounds. If this is a commodity, agricultural, or energy price, supply-demand shocks \u2014 such as weather events, production outages, or sudden demand shifts \u2014 could produce tail moves especially at the 1-month horizon. Earnings reports or sector-specific news could similarly create discontinuous jumps.\n\nThe most meaningful tail risks at the 1-month horizon are regime changes in market sentiment \u2014 a shift from risk-on to risk-off conditions, or vice versa \u2014 that could push prices 10\u201315% outside the stated interval. At the 1-day horizon, the primary tail risk is an overnight announcement or gap opening that bypasses the normal intraday drift assumption entirely. My intervals are calibrated for \"normal\" market conditions and likely understate risk during periods of elevated volatility clustering, where successive large moves compound quickly beyond what symmetric, constant-volatility models anticipate.",
+  "status": "collected",
+  "error": null
+}

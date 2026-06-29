@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-29",
+  "timestamp": "2026-06-29T20:39:26.786509Z",
+  "domain": "stocks",
+  "item": "EW",
+  "item_label": "Edwards Lifesciences",
+  "unit": "USD",
+  "current_value": 91.18000030517578,
+  "context": "Current closing price of Edwards Lifesciences (EW): $91.18 USD as of 2026-06-29.",
+  "prompt_text": "Today is 2026-06-29.\n\nCurrent closing price of Edwards Lifesciences (EW): $91.18 USD as of 2026-06-29.\n\nPredict the closing price of Edwards Lifesciences at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-30\n  1-week target date: 2026-07-06\n  1-month target date: 2026-07-29\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 91.50,\n    \"90_ci\": [88.50, 94.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 92.00,\n    \"90_ci\": [86.00, 98.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 93.00,\n    \"90_ci\": [81.00, 105.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 91.5,
+      "90_ci": [
+        88.5,
+        94.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 92.0,
+      "90_ci": [
+        86.0,
+        98.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 93.0,
+      "90_ci": [
+        81.0,
+        105.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 91.5,\n    \"90_ci\": [\n      88.5,\n      94.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 92.0,\n    \"90_ci\": [\n      86.0,\n      98.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 93.0,\n    \"90_ci\": [\n      81.0,\n      105.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near 91.5 for the one-day horizon and gradually rising to 93.0 at one month. This pattern suggests I was anchoring heavily on recent price levels or index values and incorporating a slight positive drift assumption \u2014 likely drawn from long-run equity risk premium expectations or near-term momentum signals. The one-day estimate would have been dominated by the most recent closing price and short-term mean-reversion dynamics, while the one-week and one-month estimates layer in a small expected return component consistent with typical market behavior over those horizons.\n\nThe confidence interval widths widen substantially as the horizon extends, which is the statistically appropriate behavior under most asset pricing frameworks. At one day, the 90% interval spans only 6 points (88.5 to 94.5), reflecting the relatively constrained intraday and overnight volatility typical of a liquid instrument. By one week, the interval opens to 12 points, and by one month it reaches 24 points, roughly consistent with volatility scaling by the square root of time. These widths likely draw on recent realized volatility as the primary input, possibly supplemented by implied volatility if options data were available.\n\nSeveral sources of uncertainty could cause outcomes to fall outside even the stated intervals. Macroeconomic surprises \u2014 such as an unexpected inflation print, a central bank policy shift, or a geopolitical shock \u2014 could produce rapid repricing that overwhelms any short-term statistical model. Liquidity crunches or correlation breakdowns during stress episodes historically cause tails far fatter than normal distribution assumptions would suggest. My intervals may be underestimating tail risk if recent volatility was unusually subdued, which would compress historical estimates and leave the model blind to regime changes.\n\nBeyond macro risks, idiosyncratic events like earnings surprises, regulatory announcements, or sudden changes in market microstructure could push the one-day estimate outside its narrow band. At the one-month horizon, the compounding of these risks means the true distribution likely has heavier tails than my stated interval implies. A prudent user of this forecast should treat the 90% confidence intervals as reasonable central-case boundaries rather than hard limits, and should stress-test against scenarios where outcomes land 10\u201320% beyond the stated range.",
+  "status": "collected",
+  "error": null
+}

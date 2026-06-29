@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-29",
+  "timestamp": "2026-06-29T21:09:59.297431Z",
+  "domain": "stocks",
+  "item": "DAL",
+  "item_label": "Delta Air Lines",
+  "unit": "USD",
+  "current_value": 93.16999816894531,
+  "context": "Current closing price of Delta Air Lines (DAL): $93.17 USD as of 2026-06-29.",
+  "prompt_text": "Today is 2026-06-29.\n\nCurrent closing price of Delta Air Lines (DAL): $93.17 USD as of 2026-06-29.\n\nPredict the closing price of Delta Air Lines at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-06-30\n  1-week target date: 2026-07-06\n  1-month target date: 2026-07-29\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 93.50,\n    \"90_ci\": [90.20, 96.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 94.00,\n    \"90_ci\": [87.50, 100.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 95.50,\n    \"90_ci\": [81.00, 110.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 93.5,
+      "90_ci": [
+        90.2,
+        96.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 94.0,
+      "90_ci": [
+        87.5,
+        100.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 95.5,
+      "90_ci": [
+        81.0,
+        110.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 93.5,\n    \"90_ci\": [\n      90.2,\n      96.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 94.0,\n    \"90_ci\": [\n      87.5,\n      100.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 95.5,\n    \"90_ci\": [\n      81.0,\n      110.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "At the time of the forecast, the 1-day point estimate of 93.5 was anchored primarily to the most recent observed price or level, with the assumption that short-term momentum and market microstructure would keep the value relatively stable over such a brief window. The 1-week estimate of 94.0 reflects a slight upward drift assumption, likely based on a modest positive trend or mean-reversion dynamic in the underlying series. The 1-month estimate of 95.5 extends that gradual drift further, incorporating the idea that whatever fundamental or structural forces were driving the series would continue to exert mild upward pressure over a longer horizon. Each successive estimate steps slightly higher, suggesting the forecast was built on a gentle positive trend assumption rather than any dramatic expected move.\n\nThe confidence interval widths grow meaningfully across horizons, which reflects a straightforward scaling of uncertainty with time. Over one day, the 90% interval spans roughly 6.6 units, which is relatively tight and reflects low expected volatility in the very near term. By one week, the interval widens to about 13 units, and by one month it expands to roughly 29 units. This widening captures the compounding of daily uncertainty \u2014 small unpredictable shocks accumulate over time, and the further out we forecast, the more paths the series could plausibly take. The uncertainty structure here is broadly consistent with a random-walk-like process where variance grows with the forecast horizon.\n\nSeveral specific risks could push outcomes outside the stated intervals. On the downside, a sudden macroeconomic shock, a policy announcement, or a liquidity event could cause a sharp and rapid repricing well below the lower bound of any of these intervals. On the upside, a surprise positive catalyst \u2014 such as an earnings beat, a policy reversal, or a surge in demand \u2014 could push the value above the upper bounds, particularly at the 1-month horizon where the interval already stretches to 110.\n\nPerhaps the most important caveat is that these intervals assume relatively stable underlying conditions and do not fully account for tail risks or regime changes. If the data-generating process itself shifts \u2014 due to a structural break, a crisis, or an unexpected correlation breakdown \u2014 the stated confidence intervals would be too narrow and the point estimates potentially badly miscalibrated. Black swan events, by definition, are underweighted in any historically calibrated model, and that remains the dominant source of potential surprise beyond the stated bounds.",
+  "status": "collected",
+  "error": null
+}
