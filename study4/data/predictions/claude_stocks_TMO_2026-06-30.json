@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-30",
+  "timestamp": "2026-06-30T18:44:56.810610Z",
+  "domain": "stocks",
+  "item": "TMO",
+  "item_label": "Thermo Fisher",
+  "unit": "USD",
+  "current_value": 505.1549987792969,
+  "context": "Current closing price of Thermo Fisher (TMO): $505.15 USD as of 2026-06-30.",
+  "prompt_text": "Today is 2026-06-30.\n\nCurrent closing price of Thermo Fisher (TMO): $505.15 USD as of 2026-06-30.\n\nPredict the closing price of Thermo Fisher at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-01\n  1-week target date: 2026-07-07\n  1-month target date: 2026-07-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 507.0,\n    \"90_ci\": [493.0, 521.0]\n  },\n  \"1w\": {\n    \"point_estimate\": 509.0,\n    \"90_ci\": [483.0, 535.0]\n  },\n  \"1m\": {\n    \"point_estimate\": 515.0,\n    \"90_ci\": [460.0, 570.0]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 507.0,
+      "90_ci": [
+        493.0,
+        521.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 509.0,
+      "90_ci": [
+        483.0,
+        535.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 515.0,
+      "90_ci": [
+        460.0,
+        570.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 507.0,\n    \"90_ci\": [\n      493.0,\n      521.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 509.0,\n    \"90_ci\": [\n      483.0,\n      535.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 515.0,\n    \"90_ci\": [\n      460.0,\n      570.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I presume was a baseline price around 505, with the 1-day estimate of 507 essentially anchoring near current levels given the very short horizon. The 1-week estimate of 509 and 1-month estimate of 515 incorporate a slight positive drift assumption, consistent with long-run equity market tendencies to trend gradually higher in the absence of specific negative catalysts. These estimates are deliberately conservative in their upward slope, reflecting that mean reversion and the absence of strong directional signals make large moves unlikely as a base case.\n\nThe confidence interval widths widen appropriately across horizons, reflecting the square-root-of-time scaling of uncertainty that characterizes random walk models for financial prices. At one day, the 28-point range (493\u2013521) is relatively tight, capturing typical daily volatility. By one week, the 52-point range reflects accumulated daily variance over five trading sessions. At one month, the 110-point range (460\u2013570) accounts for roughly 20 trading days of compounded uncertainty, and also incorporates the possibility that regime changes, macroeconomic surprises, or earnings-related moves could shift the distribution more meaningfully than short-horizon noise alone would suggest.\n\nSpecific risks that could push outcomes outside the stated intervals include sudden macroeconomic shocks such as an unexpected Federal Reserve policy shift, a geopolitical escalation, or a significant deterioration in corporate earnings guidance. On the upside, a surprisingly strong jobs report, easing inflation data, or a resolution of trade or geopolitical tensions could drive a rapid rally beyond the upper bound. These tail events are inherently difficult to assign precise probabilities to, but they represent the primary reason I chose a 90% rather than a tighter confidence interval.\n\nIt is worth noting that my stated intervals assume relatively normal market conditions and do not fully capture fat-tailed distributions that financial returns empirically exhibit. In practice, the true probability of outcomes outside the 460\u2013570 range at one month is likely somewhat higher than the implied 10%, since financial markets periodically experience volatility clustering and discontinuous jumps that simple diffusion-based models underweight.",
+  "status": "collected",
+  "error": null
+}

@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-30",
+  "timestamp": "2026-06-30T20:51:29.134021Z",
+  "domain": "stocks",
+  "item": "WST",
+  "item_label": "West Pharmaceutical",
+  "unit": "USD",
+  "current_value": 359.0,
+  "context": "Current closing price of West Pharmaceutical (WST): $359.00 USD as of 2026-06-30.",
+  "prompt_text": "Today is 2026-06-30.\n\nCurrent closing price of West Pharmaceutical (WST): $359.00 USD as of 2026-06-30.\n\nPredict the closing price of West Pharmaceutical at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-01\n  1-week target date: 2026-07-07\n  1-month target date: 2026-07-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 360,\n    \"90_ci\": [348, 372]\n  },\n  \"1w\": {\n    \"point_estimate\": 362,\n    \"90_ci\": [340, 384]\n  },\n  \"1m\": {\n    \"point_estimate\": 365,\n    \"90_ci\": [318, 412]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 360,
+      "90_ci": [
+        348,
+        372
+      ]
+    },
+    "1w": {
+      "point_estimate": 362,
+      "90_ci": [
+        340,
+        384
+      ]
+    },
+    "1m": {
+      "point_estimate": 365,
+      "90_ci": [
+        318,
+        412
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 360,\n    \"90_ci\": [\n      348,\n      372\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 362,\n    \"90_ci\": [\n      340,\n      384\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 365,\n    \"90_ci\": [\n      318,\n      412\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the 1-day estimate of 360, I was anchoring closely to recent observed levels, assuming mean-reverting behavior and no imminent catalysts to drive a sharp move. The 1-week estimate of 362 incorporates a slight positive drift assumption, consistent with a mild bullish bias in the underlying trend while acknowledging that short-term noise could easily dominate. The 1-month estimate of 365 extends that drift further, reflecting a baseline assumption of gradual appreciation, but with considerably more uncertainty baked in given how many factors can shift over a 30-day window.\n\nThe confidence interval widths were deliberately calibrated to widen at each horizon, reflecting the compounding of uncertainty over time. At 1 day, the interval is relatively tight at plus or minus roughly 12 units, consistent with typical daily volatility in a relatively stable regime. By 1 week, the interval expands to reflect the accumulation of daily shocks and the possibility of an unexpected directional move triggered by macroeconomic data or sentiment shifts. At 1 month, the interval stretches to nearly plus or minus 47 units, accounting for the realistic possibility of regime changes, trend reversals, or external shocks that could meaningfully reprice the underlying over that timeframe.\n\nSeveral specific risks could push outcomes well outside the stated intervals. On the upside, a surprise policy announcement, stronger-than-expected economic data, or a broad risk-on rally could push the 1-month outcome well above 412. On the downside, a deterioration in macro conditions, geopolitical escalation, or a liquidity event could drive the value below 318. These tail scenarios are not captured well by symmetric confidence intervals, and the true distribution likely has fat tails in both directions.\n\nIt is also worth noting that my intervals assume a relatively stationary volatility environment. If realized volatility were to spike \u2014 as it can during earnings seasons, central bank meetings, or unexpected geopolitical events \u2014 even the 1-day interval could prove too narrow. Conversely, in a low-volatility, range-bound environment, the actual outcome could cluster much more tightly than my intervals suggest, meaning the intervals are not guarantees but rather a reflection of my assessed probability mass under plausible conditions.",
+  "status": "collected",
+  "error": null
+}

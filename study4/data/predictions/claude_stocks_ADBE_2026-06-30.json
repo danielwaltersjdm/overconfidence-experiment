@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-30",
+  "timestamp": "2026-06-30T18:48:13.680986Z",
+  "domain": "stocks",
+  "item": "ADBE",
+  "item_label": "Adobe",
+  "unit": "USD",
+  "current_value": 204.77999877929688,
+  "context": "Current closing price of Adobe (ADBE): $204.78 USD as of 2026-06-30.",
+  "prompt_text": "Today is 2026-06-30.\n\nCurrent closing price of Adobe (ADBE): $204.78 USD as of 2026-06-30.\n\nPredict the closing price of Adobe at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-01\n  1-week target date: 2026-07-07\n  1-month target date: 2026-07-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 206.50,\n    \"90_ci\": [198.00, 215.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 208.00,\n    \"90_ci\": [192.00, 224.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 212.00,\n    \"90_ci\": [178.00, 248.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 206.5,
+      "90_ci": [
+        198.0,
+        215.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 208.0,
+      "90_ci": [
+        192.0,
+        224.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 212.0,
+      "90_ci": [
+        178.0,
+        248.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 206.5,\n    \"90_ci\": [\n      198.0,\n      215.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 208.0,\n    \"90_ci\": [\n      192.0,\n      224.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 212.0,\n    \"90_ci\": [\n      178.0,\n      248.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assess as a current baseline price level around $205\u2013$206 for the asset in question. At the one-day horizon, the estimate of $206.5 essentially assumes near-continuity with recent price action, with only minimal drift expected over such a short window. The one-week estimate of $208 incorporates a slight positive bias, perhaps reflecting a mild trend or momentum signal, while the one-month estimate of $212 extends that drift further, consistent with a low but positive expected return over a longer horizon. These estimates implicitly assume no major structural breaks and that recent market conditions \u2014 liquidity, volatility regime, and macro backdrop \u2014 remain roughly stable.\n\nThe confidence interval widths grow substantially as the horizon extends, which reflects the standard square-root-of-time scaling of uncertainty in financial price processes. At one day, the 90% interval of $198\u2013$215 spans roughly $17, which is consistent with typical daily volatility for a moderately volatile asset. By one week, the interval widens to $32, and by one month it reaches $70, reflecting the compounding of daily uncertainty over more trading sessions. The asymmetry in widths is also worth noting \u2014 the upside and downside bands are roughly symmetric, suggesting I'm not embedding strong skew assumptions, though real markets often have fat tails that formal symmetric intervals can understate.\n\nThere are meaningful tail risks that could push outcomes well outside these stated intervals. On the downside, a sudden deterioration in macro conditions \u2014 a surprise rate decision, geopolitical shock, or liquidity crisis \u2014 could produce moves of 10\u201315% or more, which would breach the lower bound even at the one-week horizon. On the upside, a strong earnings surprise, policy reversal, or short-squeeze dynamic could similarly push prices through the upper bound. The one-month interval in particular should be treated with humility, as a single unexpected event over a 30-day window has historically been sufficient to render even wide confidence intervals too narrow.",
+  "status": "collected",
+  "error": null
+}

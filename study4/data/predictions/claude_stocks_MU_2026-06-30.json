@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-30",
+  "timestamp": "2026-06-30T19:29:27.699494Z",
+  "domain": "stocks",
+  "item": "MU",
+  "item_label": "Micron",
+  "unit": "USD",
+  "current_value": 1158.6700439453125,
+  "context": "Current closing price of Micron (MU): $1158.67 USD as of 2026-06-30.",
+  "prompt_text": "Today is 2026-06-30.\n\nCurrent closing price of Micron (MU): $1158.67 USD as of 2026-06-30.\n\nPredict the closing price of Micron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-01\n  1-week target date: 2026-07-07\n  1-month target date: 2026-07-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about this. The current price of $1,158.67 seems extraordinarily high for MU - as of my knowledge cutoff, MU was trading in the $80-130 range. This suggests either a significant stock price appreciation (possibly driven by AI/memory chip demand) or a stock split hasn't occurred. I'll take the current price as given and make predictions from there.\n\nFor a stock at this price level, I'll estimate typical volatility parameters:\n- Daily volatility for a semiconductor stock like MU: roughly 2-3% per day\n- At $1,158.67, that's about $23-35 per day in standard deviation\n\nFor the confidence intervals, I'll use approximately:\n- 1-day: \u00b11.645 sigma for 90% CI\n- 1-week (5 trading days): \u00b11.645 * sigma * sqrt(5)\n- 1-month (~21 trading days): \u00b11.645 * sigma * sqrt(21)\n\nUsing ~2.5% daily volatility:\n- Daily sigma: $1,158.67 * 0.025 = ~$29\n- 1-day 90% CI: \u00b1$48 \u2192 [~$1,111, ~$1,207]\n- 1-week sigma: $29 * sqrt(5) \u2248 $65; 90% CI: \u00b1$107 \u2192 [~$1,052, ~$1,266]\n- 1-month sigma: $29 * sqrt(21) \u2248 $133; 90% CI: \u00b1$219 \u2192 [~$940, ~$1,378]\n\nPoint estimates: slight upward drift (~0.05% daily expected return for a growth stock)\n- 1-day: $1,159.25\n- 1-week: $1,161.57\n- 1-month: $1,170.83\n\n{\n  \"1d\": {\n    \"point_estimate\": 1159.25,\n    \"90_ci\": [1111.00, 1207.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 1161.57,\n    \"90_ci\": [1051.00, 1272.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 1170.83,\n    \"90_ci\": [938.00, 1403.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1159.25,
+      "90_ci": [
+        1111.0,
+        1207.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 1161.57,
+      "90_ci": [
+        1051.0,
+        1272.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 1170.83,
+      "90_ci": [
+        938.0,
+        1403.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1159.25,\n    \"90_ci\": [\n      1111.0,\n      1207.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1161.57,\n    \"90_ci\": [\n      1051.0,\n      1272.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1170.83,\n    \"90_ci\": [\n      938.0,\n      1403.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume is a current price near 1,155\u20131,160, with each horizon showing only marginal appreciation. The 1-day estimate of roughly 1,159 is essentially anchored to the prevailing price with minimal expected movement, reflecting the typical daily drift in whatever underlying asset this represents. The 1-week estimate of around 1,162 builds in a small positive carry or trend continuation assumption, while the 1-month estimate near 1,171 extrapolates that gentle drift further out. These estimates implicitly assume mean-reverting behavior around a slow upward trend, with no major catalysts expected to dramatically shift the price in either direction over the near term.\n\nThe confidence interval widths widen appropriately as the horizon extends, reflecting the compounding of uncertainty over time. At one day, the 90% interval spans roughly 96 points, which captures normal intraday-to-overnight volatility. By one week, the interval widens to about 221 points, and by one month it stretches to roughly 465 points. These widths were calibrated based on typical realized volatility for an asset in this price range, where daily moves of 1\u20132% are common and monthly moves of 10\u201315% are well within historical norms. The asymmetry between upside and downside in the intervals is relatively mild, suggesting I wasn't pricing in a strong skew in either direction.\n\nSpecific risks that could push outcomes outside my stated intervals include sudden macroeconomic shocks such as unexpected central bank policy shifts, geopolitical escalations, or major liquidity events that compress or expand risk appetite across markets. On the upside, a strong momentum breakout driven by institutional flows or a surprise positive catalyst could push prices well above 1,272 within a week. On the downside, a risk-off episode, technical breakdown through key support levels, or forced selling could easily breach the lower bounds. The one-month interval is particularly vulnerable to being violated, since a sustained trend in either direction over four weeks can easily accumulate to moves larger than what historical average volatility would suggest.\n\nIt's also worth acknowledging that my intervals may be somewhat overconfident given model uncertainty. I don't have full context on the specific asset, current market microstructure, or any pending event risk such as earnings, economic data releases, or regulatory announcements. Any of these known unknowns could render the stated confidence intervals too narrow, and in practice a well-calibrated forecaster might widen them further to account for the possibility that the regime itself shifts during the forecast period.",
+  "status": "collected",
+  "error": null
+}

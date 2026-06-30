@@ -1,0 +1,42 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-06-30",
+  "timestamp": "2026-06-30T19:17:01.539153Z",
+  "domain": "stocks",
+  "item": "ADP",
+  "item_label": "ADP",
+  "unit": "USD",
+  "current_value": 224.3350067138672,
+  "context": "Current closing price of ADP (ADP): $224.34 USD as of 2026-06-30.",
+  "prompt_text": "Today is 2026-06-30.\n\nCurrent closing price of ADP (ADP): $224.34 USD as of 2026-06-30.\n\nPredict the closing price of ADP at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-01\n  1-week target date: 2026-07-07\n  1-month target date: 2026-07-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 225.50,\n    \"90_ci\": [220.50, 230.50]\n  },\n  \"1w\": {\n    \"point_estimate\": 226.00,\n    \"90_ci\": [216.00, 236.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 228.00,\n    \"90_ci\": [208.00, 248.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 225.5,
+      "90_ci": [
+        220.5,
+        230.5
+      ]
+    },
+    "1w": {
+      "point_estimate": 226.0,
+      "90_ci": [
+        216.0,
+        236.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 228.0,
+      "90_ci": [
+        208.0,
+        248.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 225.5,\n    \"90_ci\": [\n      220.5,\n      230.5\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 226.0,\n    \"90_ci\": [\n      216.0,\n      236.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 228.0,\n    \"90_ci\": [\n      208.0,\n      248.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift assumption from what I'd infer was a recent price level around $224\u2013225. For the 1-day horizon, the estimate of $225.50 essentially assumes near-continuity with the prevailing price, as overnight and intraday drift tends to be small relative to the level. For the 1-week estimate of $226, I'm incorporating a slight positive bias consistent with a long-run equity drift assumption, while acknowledging that one week is still short enough that mean reversion and noise dominate directional views. The 1-month estimate of $228 extends that modest drift further, reflecting perhaps a 1\u20131.5% expected move upward over roughly 20 trading days, consistent with annualized equity return assumptions in the range of 8\u201310%.\n\nThe confidence interval widths are calibrated to typical realized volatility for a large-cap equity or ETF in this price range. For the 1-day horizon, I used an implied daily volatility of roughly 1\u20131.5%, producing a tight $10 range. For the 1-week interval, volatility scales with the square root of time, roughly doubling the uncertainty to a $20 range. For the 1-month interval, that scaling produces a $40 range, reflecting how uncertainty compounds over longer horizons even when the point estimate moves only modestly.\n\nThere are several specific risks that could push outcomes outside my stated intervals. A sudden macroeconomic shock \u2014 such as a surprise inflation print, an unexpected Federal Reserve policy shift, or a geopolitical escalation \u2014 could produce gap moves of 5\u201310% or more, easily breaching the 1-week and 1-month intervals. Earnings announcements or significant company-specific news, if this is an individual stock, could create overnight gaps well beyond the 1-day confidence interval. Broader market liquidity events or credit stress episodes have historically produced tail moves far larger than normal volatility models anticipate, and these remain the primary reason the stated intervals should be treated as indicative rather than exhaustive of the true risk distribution.",
+  "status": "collected",
+  "error": null
+}
