@@ -16,6 +16,7 @@
       <a href="./index.html">Daily Forecast</a>
       <a href="./backtest.html">Horizon Backtest</a>
       <a href="./crossdomain.html">Cross-Domain</a>
+      <a href="./sports.html">Sports Outcomes</a>
       <a href="./about.html" class="active">Methodology</a>
       <a href="./researcher.html">Researcher</a>
     </nav>
@@ -147,6 +148,13 @@
           <td>200 equities, 3 horizons (1d/1w/1m), daily collection</td>
           <td>Ongoing</td>
           <td>Longitudinal</td>
+          <td>Live</td>
+        </tr>
+        <tr>
+          <td><strong><a href="./sports.html">Sports Outcomes</a></strong></td>
+          <td>184 MLB games, 5 quantities/game, single-batch prospective predictions</td>
+          <td>900 (180&times;5 resolved)</td>
+          <td>Domain (non-financial)</td>
           <td>Live</td>
         </tr>
       </tbody>
@@ -307,6 +315,45 @@ Please explain your reasoning in 2&ndash;4 paragraphs. Address:
 Write in plain English. No JSON, no bullet points.</pre>
     </div>
 
+    <h3>Sports Outcomes</h3>
+    <p>
+      Single-batch prospective predictions. On the prediction date (June 4, 2026),
+      each model received one prompt per scheduled game, requesting point
+      estimates and 90% confidence intervals for five quantities at once. Only
+      90% CIs are elicited (no 50/80) to keep prompts compact.
+    </p>
+    <div class="prompt-box">
+<pre>Today is {today}.
+
+You are forecasting outcomes of a Major League Baseball
+regular-season game.
+
+Game details:
+  Date:        {game_date}
+  Matchup:     {away_team} at {home_team}
+  Venue:       {venue}
+  First pitch: {first_pitch} (game time)
+
+Predict the following five quantities for this game. For each,
+provide a point estimate and a 90% confidence interval...
+
+Quantities:
+  1. total_runs        - both teams combined
+  2. total_strikeouts  - both teams combined
+  3. total_home_runs   - both teams combined
+  4. duration_min      - first pitch to final out
+  5. attendance        - announced paid attendance
+
+Respond ONLY with valid JSON and no markdown fences:
+{
+  "total_runs":       {"point_estimate": &lt;n&gt;, "90_ci": [&lt;lo&gt;, &lt;hi&gt;]},
+  "total_strikeouts": {"point_estimate": &lt;n&gt;, "90_ci": [&lt;lo&gt;, &lt;hi&gt;]},
+  "total_home_runs":  {"point_estimate": &lt;n&gt;, "90_ci": [&lt;lo&gt;, &lt;hi&gt;]},
+  "duration_min":     {"point_estimate": &lt;n&gt;, "90_ci": [&lt;lo&gt;, &lt;hi&gt;]},
+  "attendance":       {"point_estimate": &lt;n&gt;, "90_ci": [&lt;lo&gt;, &lt;hi&gt;]}
+}</pre>
+    </div>
+
     <!-- ── Prediction horizons ────────────────────────────────────────── -->
 
     <h2>Prediction horizons</h2>
@@ -354,6 +401,7 @@ Write in plain English. No JSON, no bullet points.</pre>
         <tr><td>Forex</td><td>8 currency pairs</td><td>Cross-Domain</td><td>Yahoo Finance</td></tr>
         <tr><td>Weather</td><td>30 US cities (mean temp &deg;F)</td><td>Cross-Domain</td><td>Open-Meteo</td></tr>
         <tr><td>Commodities</td><td>5 futures (gold, oil, etc.)</td><td>Cross-Domain</td><td>Yahoo Finance</td></tr>
+        <tr><td>MLB games</td><td>184 regular-season games (5 outcomes each)</td><td>Sports Outcomes</td><td>MLB Stats API</td></tr>
       </tbody>
     </table>
 

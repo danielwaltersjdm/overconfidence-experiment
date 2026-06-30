@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sports Outcomes &mdash; AI Calibration Index</title>
+  <meta name="description" content="Study 5: calibration of frontier AI confidence intervals on Major League Baseball game outcomes. Predictions made June 4, 2026 for games June 5-18." />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="./index.html" class="site-title">AI Calibration Index</a>
+    <nav>
+      <a href="./index.html">Daily Forecast</a>
+      <a href="./backtest.html">Horizon Backtest</a>
+      <a href="./crossdomain.html">Cross-Domain</a>
+      <a href="./sports.html" class="active">Sports Outcomes</a>
+      <a href="./about.html">Methodology</a>
+      <a href="./researcher.html">Researcher</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Confidence in Sports Outcomes</h1>
+    <p class="hero-sub">
+      Does the calibration pattern from financial markets reproduce in a
+      structurally different prediction task? On June 4, 2026 we asked three
+      frontier AI models to forecast five quantities for each scheduled MLB
+      game over the following two weeks &mdash; total runs, strikeouts, home
+      runs, game duration, and attendance &mdash; then scored the predictions
+      as games completed.
+    </p>
+    <p class="study-tag">Study 5: MLB Game Prediction Snapshot</p>
+  </section>
+
+  <!-- Status bar -->
+  <div class="status-bar" id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span class="status-text" id="status-text">Loading&hellip;</span>
+  </div>
+
+  <!-- Filter -->
+  <section>
+    <div class="filter-bar" id="filter-bar">
+      <div class="filter-group">
+        <label class="filter-label" for="quantity-select">Quantity</label>
+        <select id="quantity-select" class="filter-select" style="min-width:180px">
+          <option value="all">All Quantities</option>
+        </select>
+      </div>
+      <button class="filter-clear" id="filter-clear" style="display:none">Clear filter</button>
+    </div>
+  </section>
+
+  <!-- Model cards -->
+  <section>
+    <div class="section-head">
+      <h2>Calibration Summary</h2>
+      <span class="section-sub"><span id="cards-filter-label">All quantities</span></span>
+    </div>
+    <div class="cards" id="model-cards"></div>
+  </section>
+
+  <!-- Chart: quantities on x-axis -->
+  <section>
+    <div class="section-head">
+      <h2>Across Game Quantities</h2>
+      <span class="section-sub">5 quantities &mdash; with 95% CI error bars</span>
+    </div>
+    <div class="chart-panel">
+      <div class="chart-controls">
+        <div class="metric-tabs" id="metric-tabs">
+          <button class="mtab" data-metric="hit_rate_90">90% CI Hit Rate</button>
+          <button class="mtab active" data-metric="mu">&mu; (Meta-knowledge)</button>
+          <button class="mtab" data-metric="accuracy">Accuracy</button>
+        </div>
+      </div>
+      <div class="chart-area" id="chart-area">
+        <canvas id="main-chart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Per-quantity table -->
+  <section>
+    <div class="section-head">
+      <h2>Hit Rate by Quantity</h2>
+      <span class="section-sub">90% CI hit rate per model &times; quantity (target: 90%)</span>
+    </div>
+    <div class="table-wrap" id="quantity-table"></div>
+  </section>
+
+  <!-- Coverage notice + missed games -->
+  <section>
+    <div class="section-head">
+      <h2>Data Coverage</h2>
+      <span class="section-sub" id="coverage-headline">&hellip;</span>
+    </div>
+    <div id="missed-games"></div>
+  </section>
+
+  <!-- Explainer -->
+  <section class="explainer">
+    <h3>Why MLB outcomes?</h3>
+    <p>
+      Sports outcomes are structurally different from financial markets:
+      discrete events with bounded outcomes, no random-walk dynamics, and
+      ground truth available within hours of game completion. If the same
+      calibration patterns appear across both domains, the effect is unlikely
+      to be a quirk of any single prediction context.
+    </p>
+    <p>
+      The five quantities span different types of knowledge: <strong>total
+      runs</strong> (sportsbook-priced, skill-driven), <strong>total
+      strikeouts</strong> (pitching-specific), <strong>total home runs</strong>
+      (discrete, low-count, skewed), <strong>game duration</strong>
+      (pace/replays, not a baseball-skill quantity), and <strong>attendance</strong>
+      (multi-factor: team popularity, day of week, venue capacity, weather).
+    </p>
+    <p>
+      <strong>&mu; &lt; 1</strong> = overconfident (intervals too narrow).
+      <strong>&mu; = 1</strong> = perfectly calibrated.
+      <strong>&mu; &gt; 1</strong> = underconfident (intervals too wide).
+    </p>
+    <p class="explainer-link">
+      <a href="./about.html">Full methodology &rarr;</a>
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <p>
+      An ongoing empirical research project on LLM calibration.
+      <a href="./about.html">Methodology</a> &middot;
+      <a href="./researcher.html">Researcher</a> &middot;
+      <a href="https://github.com/danielwaltersjdm/overconfidence-experiment" target="_blank" rel="noopener">GitHub</a>
+    </p>
+  </div>
+</footer>
+
+<script src="./js/sports.js"></script>
+</body>
+</html>
