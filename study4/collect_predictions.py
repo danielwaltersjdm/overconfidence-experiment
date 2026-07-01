@@ -210,7 +210,18 @@ def call_with_retry(fn, retries: int = 3, base_delay: float = 2.0):
             time.sleep(delay)
 
 
-def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
+def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> tuple[str, dict]:
+    """Call the model and return (text, served_meta).
+
+    served_meta captures what the API actually returned so we can detect
+    silent provider updates (e.g., Google rolling out a new gemini-2.5-flash
+    snapshot behind the same alias). Fields:
+      - served_model:       provider's reported served model ID
+      - response_id:        unique message/response ID
+      - system_fingerprint: OpenAI-only, changes when infra/model changes
+      - input_tokens, output_tokens: from the usage block
+      - served_at:          ISO timestamp captured client-side at receipt
+    """
     api = model_cfg["api"]
     model_id = model_cfg["model_id"]
 
@@ -224,7 +235,15 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
                 model=model_id, max_tokens=max_tokens,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return msg.content[0].text
+            meta = {
+                "served_model":       getattr(msg, "model", None),
+                "response_id":        getattr(msg, "id", None),
+                "system_fingerprint": None,
+                "input_tokens":       getattr(getattr(msg, "usage", None), "input_tokens", None),
+                "output_tokens":      getattr(getattr(msg, "usage", None), "output_tokens", None),
+                "served_at":          datetime.utcnow().isoformat() + "Z",
+            }
+            return msg.content[0].text, meta
 
     elif api == "openai":
         client = openai.OpenAI(
@@ -236,7 +255,16 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
                 model=model_id, max_tokens=max_tokens,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return resp.choices[0].message.content
+            usage = getattr(resp, "usage", None)
+            meta = {
+                "served_model":       getattr(resp, "model", None),
+                "response_id":        getattr(resp, "id", None),
+                "system_fingerprint": getattr(resp, "system_fingerprint", None),
+                "input_tokens":       getattr(usage, "prompt_tokens", None),
+                "output_tokens":      getattr(usage, "completion_tokens", None),
+                "served_at":          datetime.utcnow().isoformat() + "Z",
+            }
+            return resp.choices[0].message.content, meta
 
     elif api == "google":
         def _call():
@@ -244,7 +272,20 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
                 api_key=os.environ["GOOGLE_API_KEY"],
                 http_options={"api_version": "v1beta"},
             )
-            return client.models.generate_content(model=model_id, contents=prompt).text
+            resp = client.models.generate_content(model=model_id, contents=prompt)
+            # google-genai response object shape varies across SDK versions
+            served = (getattr(resp, "model_version", None)
+                      or getattr(resp, "model", None))
+            usage = getattr(resp, "usage_metadata", None)
+            meta = {
+                "served_model":       served,
+                "response_id":        getattr(resp, "response_id", None),
+                "system_fingerprint": None,
+                "input_tokens":       getattr(usage, "prompt_token_count", None) if usage else None,
+                "output_tokens":      getattr(usage, "candidates_token_count", None) if usage else None,
+                "served_at":          datetime.utcnow().isoformat() + "Z",
+            }
+            return resp.text, meta
 
     else:
         raise ValueError(f"Unknown API: {api}")
@@ -300,6 +341,12 @@ def collect_item(item_cfg: dict, domain: str, domain_cfg: dict,
         "horizons":           None,
         "justification_prompt": None,
         "justification_text": None,
+        # Served-model metadata (populated after each API call). This lets us
+        # detect silent provider updates: the model IDs we request are aliases
+        # for some providers (e.g. gemini-2.5-flash) and the served snapshot
+        # can drift while the alias stays the same.
+        "prediction_served":  None,   # dict, see call_model.meta shape
+        "justification_served": None, # dict
         "status":             "failed",
         "error":              None,
     }
@@ -331,7 +378,8 @@ def collect_item(item_cfg: dict, domain: str, domain_cfg: dict,
 
         # ── Step 3: prediction API call ───────────────────────────────────────
         if not dry_run:
-            raw = call_model(model_cfg, prompt, max_tokens=1024)
+            raw, served = call_model(model_cfg, prompt, max_tokens=1024)
+            record["prediction_served"] = served
             parsed = parse_json_response(raw)
         else:
             parsed = make_mock_prediction(ref_val, run_date)
@@ -349,7 +397,8 @@ def collect_item(item_cfg: dict, domain: str, domain_cfg: dict,
         record["justification_prompt"] = just_prompt
 
         if not dry_run:
-            just_text = call_model(model_cfg, just_prompt, max_tokens=600)
+            just_text, just_served = call_model(model_cfg, just_prompt, max_tokens=600)
+            record["justification_served"] = just_served
         else:
             just_text = "Dry-run mode — no justification generated."
         record["justification_text"] = just_text

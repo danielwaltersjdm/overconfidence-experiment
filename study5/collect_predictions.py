@@ -199,7 +199,10 @@ def call_with_retry(fn, retries: int = 3, base_delay: float = 2.0):
 
 
 # ── Model calls ───────────────────────────────────────────────────────────
-def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
+def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> tuple[str, dict]:
+    """Return (text, served_meta). See Study 4 collect_predictions.py for the
+    served_meta contract. Recording served metadata lets us detect silent
+    provider updates behind aliased model IDs."""
     api = model_cfg["api"]
     model_id = model_cfg["model_id"]
 
@@ -211,7 +214,16 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
                 model=model_id, max_tokens=max_tokens,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return msg.content[0].text
+            usage = getattr(msg, "usage", None)
+            meta = {
+                "served_model":       getattr(msg, "model", None),
+                "response_id":        getattr(msg, "id", None),
+                "system_fingerprint": None,
+                "input_tokens":       getattr(usage, "input_tokens", None) if usage else None,
+                "output_tokens":      getattr(usage, "output_tokens", None) if usage else None,
+                "served_at":          datetime.utcnow().isoformat() + "Z",
+            }
+            return msg.content[0].text, meta
 
     elif api == "openai":
         client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"],
@@ -221,13 +233,34 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> str:
                 model=model_id, max_tokens=max_tokens,
                 messages=[{"role": "user", "content": prompt}],
             )
-            return resp.choices[0].message.content
+            usage = getattr(resp, "usage", None)
+            meta = {
+                "served_model":       getattr(resp, "model", None),
+                "response_id":        getattr(resp, "id", None),
+                "system_fingerprint": getattr(resp, "system_fingerprint", None),
+                "input_tokens":       getattr(usage, "prompt_tokens", None) if usage else None,
+                "output_tokens":      getattr(usage, "completion_tokens", None) if usage else None,
+                "served_at":          datetime.utcnow().isoformat() + "Z",
+            }
+            return resp.choices[0].message.content, meta
 
     elif api == "google":
         def _call():
             client = google_genai.Client(api_key=os.environ["GOOGLE_API_KEY"],
                                          http_options={"api_version": "v1beta"})
-            return client.models.generate_content(model=model_id, contents=prompt).text
+            resp = client.models.generate_content(model=model_id, contents=prompt)
+            served = (getattr(resp, "model_version", None)
+                      or getattr(resp, "model", None))
+            usage = getattr(resp, "usage_metadata", None)
+            meta = {
+                "served_model":       served,
+                "response_id":        getattr(resp, "response_id", None),
+                "system_fingerprint": None,
+                "input_tokens":       getattr(usage, "prompt_token_count", None) if usage else None,
+                "output_tokens":      getattr(usage, "candidates_token_count", None) if usage else None,
+                "served_at":          datetime.utcnow().isoformat() + "Z",
+            }
+            return resp.text, meta
 
     else:
         raise ValueError(f"Unknown API: {api}")
@@ -268,6 +301,10 @@ def collect_one(model_cfg: dict, game: dict, today: date, dry_run: bool) -> dict
         "prompt_text":    None,
         "raw_response":   None,
         "predictions":    None,
+        # Served-model metadata (populated after API call). Records the
+        # actually-served model ID / response_id / system_fingerprint / usage,
+        # so silent provider updates behind alias model IDs are detectable.
+        "prediction_served": None,
         "status":         "failed",
         "error":          None,
     }
@@ -280,7 +317,8 @@ def collect_one(model_cfg: dict, game: dict, today: date, dry_run: bool) -> dict
             parsed = {q: {"point_estimate": 0, "90_ci": [0, 0]} for q in QUANTITIES}
             raw = json.dumps(parsed)
         else:
-            raw = call_model(model_cfg, prompt, max_tokens=1024)
+            raw, served = call_model(model_cfg, prompt, max_tokens=1024)
+            record["prediction_served"] = served
             parsed = parse_json_response(raw)
             validate_response(parsed)
 

@@ -163,28 +163,75 @@
     <!-- ── Models ─────────────────────────────────────────────────────── -->
 
     <h2>Models</h2>
+    <p>
+      Three frontier LLMs are held constant across all studies for
+      within-model comparability. Provider-side updates to alias endpoints
+      are possible, so from July 2026 onward we record the actually-served
+      model ID (and, for OpenAI, the system fingerprint) with every
+      prediction &mdash; see &ldquo;Model provenance&rdquo; below.
+    </p>
     <table class="about-table">
       <thead>
-        <tr><th>Display name</th><th>Provider</th><th>Horizon Backtest &amp; Cross-Domain</th><th>Daily Forecast</th></tr>
+        <tr>
+          <th>Display name</th>
+          <th>Provider</th>
+          <th>Horizon Backtest &amp; Cross-Domain</th>
+          <th>Daily Forecast, Sports Outcomes</th>
+          <th>Endpoint type</th>
+        </tr>
       </thead>
       <tbody>
         <tr>
           <td><strong>Claude</strong></td><td>Anthropic</td>
           <td><code>claude-sonnet-4-20250514</code></td>
           <td><code>claude-sonnet-4-6</code></td>
+          <td>Family alias</td>
         </tr>
         <tr>
           <td><strong>GPT-4o</strong></td><td>OpenAI</td>
           <td><code>gpt-4o</code></td>
           <td><code>gpt-4o-2024-11-20</code></td>
+          <td>Date-pinned snapshot</td>
         </tr>
         <tr>
           <td><strong>Gemini</strong></td><td>Google</td>
           <td><code>gemini-2.5-flash</code></td>
           <td><code>gemini-2.5-flash</code></td>
+          <td>Family alias</td>
         </tr>
       </tbody>
     </table>
+
+    <h3>Model provenance recording</h3>
+    <p>
+      From July 2026 onward, every API response is inspected and the
+      following fields are persisted alongside each prediction:
+    </p>
+    <ul>
+      <li><strong>Served model ID</strong> &mdash; what the provider reports
+        it actually served (may differ from what we requested if the
+        provider routes an alias through a different snapshot).</li>
+      <li><strong>System fingerprint</strong> (OpenAI only) &mdash; changes
+        when the underlying serving stack changes, even without a nominal
+        model version bump. The gold standard for detecting silent updates.</li>
+      <li><strong>Response ID and token counts</strong> &mdash; for full
+        traceability from the paper back to a specific API response.</li>
+    </ul>
+    <p>
+      This means we can distinguish, in the eventual analysis, between
+      calibration drift caused by our own model choices, drift caused by
+      real changes in the underlying prediction task, and drift caused by
+      silent provider-side updates behind a stable alias.
+    </p>
+
+    <h3>New models</h3>
+    <p>
+      As new frontier models are released, they may be added to the study
+      as additional cells in the (model &times; date) grid without changing
+      the existing observations. Historical model_ids remain in the dataset;
+      new model_ids are stored under their own filename prefix so no data is
+      overwritten or reinterpreted.
+    </p>
 
     <!-- ── Elicitation ────────────────────────────────────────────────── -->
 
