@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-07-03",
+  "timestamp": "2026-07-03T20:20:00.933711Z",
+  "domain": "stocks",
+  "item": "DXCM",
+  "item_label": "DexCom",
+  "unit": "USD",
+  "current_value": 71.25,
+  "context": "Current closing price of DexCom (DXCM): $71.25 USD as of 2026-07-03.",
+  "prompt_text": "Today is 2026-07-03.\n\nCurrent closing price of DexCom (DXCM): $71.25 USD as of 2026-07-03.\n\nPredict the closing price of DexCom at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-04\n  1-week target date: 2026-07-10\n  1-month target date: 2026-08-02\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate DexCom's future closing prices. Let me think through this carefully.\n\n**Current situation:**\n- DXCM closing price: $71.25 as of 2026-07-03\n- July 4th (2026-07-04) is Independence Day in the US \u2014 markets are closed, so the \"closing price\" on that date would typically be the same as the prior trading day, or the question may refer to the next available price. I'll treat it as a market holiday and assume the price carries over or the next available close is used. Actually, I'll note this and provide the same price with tight CI since there's no trading.\n\n**DXCM context:**\n- DXCM has historically been volatile \u2014 a CGM (continuous glucose monitor) company\n- The stock was around $71.25, which represents a significant decline from its highs (~$140+ in 2024)\n- Typical daily volatility for DXCM: ~2-3% daily standard deviation\n- Weekly: ~4-6%\n- Monthly: ~10-15%\n\n**1-day (July 4 - market closed):**\nSince July 4th is a US market holiday, there will be no trading. The closing price will effectively remain $71.25 or be listed as the prior close. I'll set point estimate near current with very tight interval.\n\n**1-week (July 10):**\n- ~5 trading days of volatility\n- Daily vol ~2.5%, so weekly ~2.5% \u00d7 \u221a5 \u2248 ~5.6%\n- Point estimate: ~$71.25 (slight drift, assume roughly flat)\n- 90% CI: \u00b11.645 \u00d7 5.6% \u00d7 $71.25 \u2248 \u00b1$6.58\n\n**1-month (August 2):**\n- ~21 trading days\n- Monthly vol ~2.5% \u00d7 \u221a21 \u2248 ~11.5%\n- Point estimate: ~$71.50\n- 90% CI: \u00b11.645 \u00d7 11.5% \u00d7 $71.25 \u2248 \u00b1$13.47\n\nI'll apply a slight positive drift assumption and widen intervals appropriately for a volatile mid-cap healthcare stock.\n\n{\n  \"1d\": {\n    \"point_estimate\": 71.25,\n    \"90_ci\": [71.25, 71.25]\n  },\n  \"1w\": {\n    \"point_estimate\": 71.50,\n    \"90_ci\": [63.00, 80.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 72.00,\n    \"90_ci\": [57.50, 88.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 71.25,
+      "90_ci": [
+        71.25,
+        71.25
+      ]
+    },
+    "1w": {
+      "point_estimate": 71.5,
+      "90_ci": [
+        63.0,
+        80.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 72.0,
+      "90_ci": [
+        57.5,
+        88.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 71.25,\n    \"90_ci\": [\n      71.25,\n      71.25\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 71.5,\n    \"90_ci\": [\n      63.0,\n      80.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 72.0,\n    \"90_ci\": [\n      57.5,\n      88.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable baseline with modest upward drift across horizons. At the one-day horizon, I anchored heavily on the most recent observed price or level, assuming minimal overnight movement and treating the near-term as essentially locked in \u2014 hence the tight interval collapsing to the point estimate itself. For the one-week estimate, I applied a small positive drift assumption, reflecting whatever underlying trend or momentum was present in the data at the time of forecasting. The one-month estimate extends that drift further, arriving at 72.0, which represents a continuation of the same gentle upward trajectory without assuming any major structural break.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which reflects the standard statistical reality that uncertainty compounds over time. At one day, the interval is essentially degenerate because very short-term price or value changes tend to be small relative to the precision of the estimate. By one week, the 90% interval spans roughly 17.5 units (63.0 to 80.5), capturing plausible weekly volatility. By one month, the interval widens to about 30.5 units (57.5 to 88.0), reflecting that a full month allows for meaningful trend reversals, external shocks, or regime changes that simply cannot materialize within a single trading day.\n\nThe key sources of uncertainty include macroeconomic data releases, policy decisions, and any idiosyncratic events tied to whatever asset or variable is being tracked. Sentiment shifts, liquidity conditions, and correlated market movements can all amplify or dampen realized volatility well beyond historical averages. The width of my intervals was calibrated using something like historical volatility or analogous reference-class data, but that calibration assumes the near future resembles the recent past in terms of volatility regime.\n\nThere are plausible tail risks that could push outcomes outside even the stated 90% intervals. A sudden policy shock \u2014 central bank surprise, geopolitical escalation, or a major data surprise \u2014 could easily generate moves exceeding the interval bounds in either direction. On the upside, a strong catalyst or short-squeeze dynamic could push well above 88.0 within a month. On the downside, a risk-off episode or structural negative development could drive the value below 57.5. These scenarios are unlikely by construction (they sit in the outer 10% of my distribution), but they are by no means implausible given how frequently tail events occur in financial and economic contexts.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_01AqrmZmpcvYExh52953GryJ",
+    "system_fingerprint": null,
+    "input_tokens": 330,
+    "output_tokens": 647,
+    "served_at": "2026-07-03T20:20:13.857159Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_01Y772LmrBa39EV4UnaApR2r",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 538,
+    "served_at": "2026-07-03T20:20:28.018591Z"
+  },
+  "status": "collected",
+  "error": null
+}

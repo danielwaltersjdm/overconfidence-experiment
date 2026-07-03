@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-07-03",
+  "timestamp": "2026-07-03T19:30:03.503294Z",
+  "domain": "stocks",
+  "item": "CMG",
+  "item_label": "Chipotle",
+  "unit": "USD",
+  "current_value": 35.38999938964844,
+  "context": "Current closing price of Chipotle (CMG): $35.39 USD as of 2026-07-03.",
+  "prompt_text": "Today is 2026-07-03.\n\nCurrent closing price of Chipotle (CMG): $35.39 USD as of 2026-07-03.\n\nPredict the closing price of Chipotle at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-04\n  1-week target date: 2026-07-10\n  1-month target date: 2026-08-02\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate Chipotle's future closing prices. Let me think through this carefully.\n\nCurrent price: $35.39 (as of 2026-07-03)\n\nNote: July 4th (2026-07-04) is Independence Day, a US market holiday. The NYSE will be closed, so there will be no closing price on that date. I'll need to account for this - the \"closing price\" on 2026-07-04 would effectively be the same as the prior day's close, or the question may expect me to predict as if it trades. I'll note the market is closed and use the same price as a point estimate with a tight interval, but realistically I should predict the next trading day's price, which would be July 6. I'll treat the 1-day estimate as the price that would be reported (prior close carried forward) or predict minimal change.\n\nFor the 1-day horizon (market closed July 4th): The closing price will likely just be reported as $35.39 or not available. I'll use $35.39 as point estimate with a very narrow CI since markets are closed.\n\nFor 1-week (July 10): About 5 trading days from now (next trading day July 6 through July 10). Typical daily volatility for CMG is roughly 1.5-2%. Over ~5 trading days, uncertainty grows. A reasonable range might be \u00b18-10% for 90% CI.\n\nFor 1-month (August 2): About 21 trading days. Uncertainty grows further. 90% CI might span \u00b115%.\n\nPoint estimates: I'll assume a slight upward drift consistent with market expectations, ~0.5% weekly.\n\n1-day: $35.39 (market closed)\n- CI: [35.39, 35.39] \u2192 effectively same, but I'll give a small range\n\n1-week: ~$35.75 (slight upward drift)\n- 90% CI: ~\u00b18% \u2192 [32.75, 38.75]\n\n1-month: ~$36.25\n- 90% CI: ~\u00b115% \u2192 [30.75, 41.75]\n\n{\n  \"1d\": {\n    \"point_estimate\": 35.39,\n    \"90_ci\": [35.39, 35.39]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.75,\n    \"90_ci\": [32.50, 39.00]\n  },\n  \"1m\": {\n    \"point_estimate\": 36.25,\n    \"90_ci\": [30.50, 42.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 35.39,
+      "90_ci": [
+        35.39,
+        35.39
+      ]
+    },
+    "1w": {
+      "point_estimate": 35.75,
+      "90_ci": [
+        32.5,
+        39.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 36.25,
+      "90_ci": [
+        30.5,
+        42.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 35.39,\n    \"90_ci\": [\n      35.39,\n      35.39\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.75,\n    \"90_ci\": [\n      32.5,\n      39.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 36.25,\n    \"90_ci\": [\n      30.5,\n      42.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates were built around a modest upward drift assumption from the current price level of $35.39. For the one-day horizon, I essentially anchored to the last known price with minimal movement expected, reflecting the reality that short-term price changes in individual securities are difficult to predict and the most likely single outcome is close to where the asset is already trading. Over one week, I projected a slight upward drift to $35.75, reflecting a small positive expected return consistent with historical equity market tendencies. At the one-month horizon, I extended that drift further to $36.25, incorporating a slightly higher expected return over a longer compounding window while acknowledging that this is still a relatively modest move from current levels.\n\nThe confidence interval widths reflect increasing uncertainty as the time horizon extends. At one day, I essentially collapsed the interval to a point, which in hindsight may have been overly precise and reflects the assumption that intraday volatility would be negligible or that no major catalysts were expected imminently. Over one week, the interval widens to roughly plus or minus 9% around the point estimate, which is consistent with annualized volatility in the range typical for mid-cap or sector-specific equities. At one month, the interval widens further, spanning from $30.50 to $42.50, capturing a wider range of plausible outcomes as accumulated uncertainty from daily price movements compounds.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a broader market selloff driven by macroeconomic deterioration, unexpected central bank policy tightening, or a credit event could drag the stock well below $30. Company-specific risks such as an earnings miss, management change, regulatory action, or negative analyst downgrades could also cause a sharp decline. On the upside, a positive earnings surprise, merger and acquisition activity, or a strong sector rotation into the stock's industry could push it above $42.50.\n\nIt is also worth acknowledging a structural limitation in my one-day forecast. Collapsing the confidence interval to a single point implies near-certainty about the next day's price, which is almost never justified. Even in the absence of any news, intraday volatility, bid-ask dynamics, and small informational surprises can move a stock by one to two percent on an ordinary day. A more honest one-day interval would have reflected at least some width, and I would treat that portion of the forecast with appropriate skepticism.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_01SUXQzNxNM55xbf5vabo89U",
+    "system_fingerprint": null,
+    "input_tokens": 327,
+    "output_tokens": 618,
+    "served_at": "2026-07-03T19:30:16.473708Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_01FvMiF7hG6GjEDq8idXsrsj",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 535,
+    "served_at": "2026-07-03T19:30:30.556202Z"
+  },
+  "status": "collected",
+  "error": null
+}
