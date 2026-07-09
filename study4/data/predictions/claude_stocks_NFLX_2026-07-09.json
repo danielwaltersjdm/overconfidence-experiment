@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-07-09",
+  "timestamp": "2026-07-09T17:36:14.014579Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 74.74500274658203,
+  "context": "Current closing price of Netflix (NFLX): $74.75 USD as of 2026-07-09.",
+  "prompt_text": "Today is 2026-07-09.\n\nCurrent closing price of Netflix (NFLX): $74.75 USD as of 2026-07-09.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-10\n  1-week target date: 2026-07-16\n  1-month target date: 2026-08-08\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about Netflix's stock price prediction.\n\nFirst, I notice something important: the current price given is $74.75 USD as of 2026-07-09. This seems unusually low for Netflix. As of my knowledge cutoff, Netflix was trading around $600-900+ per share. A price of $74.75 would suggest either a significant stock split or a massive crash. I'll take the given price at face value and work from it.\n\nWorking from $74.75 as the base price:\n\n**Volatility considerations:**\n- Netflix historically has ~30-40% annualized volatility\n- Daily volatility: ~1.5-2%\n- Weekly volatility: ~3-5%\n- Monthly volatility: ~8-12%\n\n**1-day horizon (2026-07-10):**\n- Expected move: minimal drift assumption\n- Point estimate: ~$74.75 (slight upward drift)\n- 90% CI: \u00b11.65 \u00d7 daily vol \u00d7 price = \u00b11.65 \u00d7 0.018 \u00d7 74.75 \u2248 \u00b1$2.22\n- CI: [72.50, 77.00]\n\n**1-week horizon (2026-07-16):**\n- Weekly vol: ~0.018 \u00d7 \u221a5 \u00d7 74.75 \u2248 \u00b1$3.00 \u00d7 1.65 \u2248 \u00b1$4.95\n- Point estimate: ~$75.50\n- CI: [70.00, 81.00]\n\n**1-month horizon (2026-08-08):**\n- Monthly vol: ~0.018 \u00d7 \u221a22 \u00d7 74.75 \u2248 \u00b1$6.31 \u00d7 1.65 \u2248 \u00b1$10.40\n- Point estimate: ~$76.50\n- CI: [64.00, 89.00]\n\nI'll apply a slight upward bias given Netflix's generally positive long-term trajectory, but keep the intervals appropriately wide.\n\n{\n  \"1d\": {\n    \"point_estimate\": 75.10,\n    \"90_ci\": [72.40, 77.80]\n  },\n  \"1w\": {\n    \"point_estimate\": 75.80,\n    \"90_ci\": [69.50, 82.50]\n  },\n  \"1m\": {\n    \"point_estimate\": 77.50,\n    \"90_ci\": [63.00, 92.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 75.1,
+      "90_ci": [
+        72.4,
+        77.8
+      ]
+    },
+    "1w": {
+      "point_estimate": 75.8,
+      "90_ci": [
+        69.5,
+        82.5
+      ]
+    },
+    "1m": {
+      "point_estimate": 77.5,
+      "90_ci": [
+        63.0,
+        92.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 75.1,\n    \"90_ci\": [\n      72.4,\n      77.8\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 75.8,\n    \"90_ci\": [\n      69.5,\n      82.5\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 77.5,\n    \"90_ci\": [\n      63.0,\n      92.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a recent market price around 75, with the 1-day estimate of 75.1 essentially anchored to the last observed price with minimal expected movement. The 1-week estimate of 75.8 incorporates a slight positive drift assumption, perhaps reflecting a mild bullish bias in the underlying asset's recent momentum or fundamental trend. The 1-month estimate of 77.5 extends that drift further, implying roughly a 3% gain over the period, which is consistent with a scenario where the asset continues on a gradual upward trajectory without major disruptions. These point estimates are fairly conservative and largely mean-reverting around recent price action rather than assuming any dramatic directional move.\n\nThe confidence interval widths grow substantially as the horizon extends, which is a straightforward reflection of how uncertainty compounds over time. At 1 day, the 90% interval of roughly plus or minus 2.7 points is tight because intraday and overnight volatility is relatively constrained for most assets in the 70\u201380 price range. By one week, the interval widens to about plus or minus 6.5 points, capturing the possibility of a meaningful trend shift or macro event. At one month, the interval spans nearly 30 points, acknowledging that a full month introduces earnings announcements, central bank decisions, geopolitical developments, and shifts in broader market sentiment that are genuinely difficult to anticipate.\n\nSpecific risks that could push outcomes outside even my wide 1-month interval include a sudden liquidity crisis, a surprise regulatory shock, or an unexpected geopolitical escalation that triggers broad risk-off selling well beyond normal volatility regimes. On the upside, a major positive catalyst such as an acquisition announcement, a significant earnings beat, or a policy pivot could send the price well above 92. Fat-tail events by definition are underweighted in standard confidence intervals, and any scenario involving correlated market stress or a black swan event would likely violate the assumed distribution.\n\nIt's also worth noting that my intervals implicitly assume relatively stable volatility over the forecast horizon. If realized volatility spikes sharply \u2014 as it tends to do during financial stress \u2014 both the downside and upside tails become considerably fatter than my stated ranges suggest. Conversely, if conditions remain unusually calm, the actual outcome might cluster much more tightly around the point estimates than the wide 1-month interval implies.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CcrtUoreCFVUB1Umcx46h",
+    "system_fingerprint": null,
+    "input_tokens": 323,
+    "output_tokens": 596,
+    "served_at": "2026-07-09T17:36:25.270707Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CcrtVczZwLzPcLkW7rjKj",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 534,
+    "served_at": "2026-07-09T17:36:39.697992Z"
+  },
+  "status": "collected",
+  "error": null
+}
