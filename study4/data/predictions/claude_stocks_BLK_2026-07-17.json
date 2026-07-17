@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-07-17",
+  "timestamp": "2026-07-17T17:35:48.995623Z",
+  "domain": "stocks",
+  "item": "BLK",
+  "item_label": "BlackRock",
+  "unit": "USD",
+  "current_value": 1077.885009765625,
+  "context": "Current closing price of BlackRock (BLK): $1077.89 USD as of 2026-07-17.",
+  "prompt_text": "Today is 2026-07-17.\n\nCurrent closing price of BlackRock (BLK): $1077.89 USD as of 2026-07-17.\n\nPredict the closing price of BlackRock at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-18\n  1-week target date: 2026-07-24\n  1-month target date: 2026-08-16\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 1081,\n    \"90_ci\": [1055, 1107]\n  },\n  \"1w\": {\n    \"point_estimate\": 1085,\n    \"90_ci\": [1035, 1135]\n  },\n  \"1m\": {\n    \"point_estimate\": 1095,\n    \"90_ci\": [990, 1200]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 1081,
+      "90_ci": [
+        1055,
+        1107
+      ]
+    },
+    "1w": {
+      "point_estimate": 1085,
+      "90_ci": [
+        1035,
+        1135
+      ]
+    },
+    "1m": {
+      "point_estimate": 1095,
+      "90_ci": [
+        990,
+        1200
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 1081,\n    \"90_ci\": [\n      1055,\n      1107\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 1085,\n    \"90_ci\": [\n      1035,\n      1135\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 1095,\n    \"90_ci\": [\n      990,\n      1200\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across all three horizons, starting near 1081 for the one-day forecast and rising gradually to 1095 at one month. This gentle positive slope is typical of how I'd anchor near the last observed price level and then apply a small drift term consistent with historical average returns for the asset in question. The one-day estimate stays close to the current level because mean reversion and short-term momentum tend to dominate over very brief windows, while the one-week and one-month estimates incorporate a slightly longer drift, reflecting the assumption that the asset has a mild positive expected return over time. The differences between the three point estimates are intentionally small because, in expectation, prices don't move dramatically in these short windows.\n\nThe width of my confidence intervals expands significantly as the horizon lengthens, which is a direct reflection of volatility compounding over time. At one day, the 90% interval spans roughly 52 points, which is consistent with typical daily price fluctuations. By one week, that span grows to about 100 points, and at one month it reaches roughly 210 points. This widening follows approximately the square-root-of-time scaling that underlies most financial uncertainty models. The key inputs driving these widths are my assumptions about annualized volatility and the distribution of returns \u2014 if the asset is more volatile than I assumed, the actual intervals would need to be wider to maintain the same coverage.\n\nThere are several specific risks that could push realized outcomes outside my stated intervals. On the upside, a surprise positive catalyst \u2014 such as an unexpected earnings beat, a favorable macroeconomic data release, or a sudden shift in market sentiment \u2014 could push the price well above 1107 even within a single day. On the downside, a broad market selloff, a liquidity shock, or negative news specific to the asset could easily breach the lower bound of 990 at the one-month horizon. Tail events like geopolitical shocks, central bank surprises, or sudden changes in risk appetite are structurally underrepresented in symmetric, volatility-based intervals.\n\nFinally, my intervals assume relatively stable volatility and normal market functioning throughout the forecast window. In practice, volatility is itself uncertain and can spike suddenly \u2014 a phenomenon known as volatility clustering \u2014 which would make my stated 90% confidence intervals too narrow after the fact. If we are near a period of elevated macro uncertainty or if the asset is sensitive to scheduled events like central bank meetings or earnings announcements within the forecast window, the true uncertainty could be substantially larger than what my stated intervals suggest. These are the conditions most likely to produce outcomes that fall in the tails beyond my forecasted ranges.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Cd82vJ6hsA2hK7njBgv5d",
+    "system_fingerprint": null,
+    "input_tokens": 327,
+    "output_tokens": 113,
+    "served_at": "2026-07-17T17:35:51.449309Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Cd82vU3z9y6PzXnFJomgV",
+    "system_fingerprint": null,
+    "input_tokens": 216,
+    "output_tokens": 582,
+    "served_at": "2026-07-17T17:36:06.579548Z"
+  },
+  "status": "collected",
+  "error": null
+}
