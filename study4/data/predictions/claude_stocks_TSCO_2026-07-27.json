@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-07-27",
+  "timestamp": "2026-07-27T19:43:28.790155Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 31.9950008392334,
+  "context": "Current closing price of Tractor Supply (TSCO): $32.00 USD as of 2026-07-27.",
+  "prompt_text": "Today is 2026-07-27.\n\nCurrent closing price of Tractor Supply (TSCO): $32.00 USD as of 2026-07-27.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-28\n  1-week target date: 2026-08-03\n  1-month target date: 2026-08-26\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to think carefully about this. The current price of $32.00 for TSCO seems extremely low \u2014 Tractor Supply historically trades around $200-$270 range. This could indicate a stock split has occurred, or there's some unusual situation. However, I'll work with the given price of $32.00 as the current baseline.\n\nWorking from $32.00:\n\n**Volatility estimation:**\n- TSCO typical daily volatility ~1.5-2% (based on historical patterns)\n- Daily \u03c3 \u2248 $0.50-$0.64\n- Weekly \u03c3 \u2248 ~$1.30-$1.60\n- Monthly \u03c3 \u2248 ~$2.50-$3.20\n\n**Point estimates:**\n- I'll assume slight upward drift consistent with general market conditions\n- 1d: ~$32.10\n- 1w: ~$32.30\n- 1m: ~$32.80\n\n**90% CI construction:**\n- 1d: \u00b11.645\u03c3 daily \u2192 \u00b1$0.85 (being a bit generous for fat tails)\n- 1w: \u00b11.645\u03c3 weekly \u2192 \u00b1$2.00\n- 1m: \u00b11.645\u03c3 monthly \u2192 \u00b1$4.00\n\n{\n  \"1d\": {\n    \"point_estimate\": 32.10,\n    \"90_ci\": [30.80, 33.40]\n  },\n  \"1w\": {\n    \"point_estimate\": 32.30,\n    \"90_ci\": [29.50, 35.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 32.80,\n    \"90_ci\": [27.50, 38.10]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 32.1,
+      "90_ci": [
+        30.8,
+        33.4
+      ]
+    },
+    "1w": {
+      "point_estimate": 32.3,
+      "90_ci": [
+        29.5,
+        35.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 32.8,
+      "90_ci": [
+        27.5,
+        38.1
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 32.1,\n    \"90_ci\": [\n      30.8,\n      33.4\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 32.3,\n    \"90_ci\": [\n      29.5,\n      35.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 32.8,\n    \"90_ci\": [\n      27.5,\n      38.1\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift over time, starting near current market levels and gently rising from roughly 32.1 at the one-day horizon to 32.8 at the one-month horizon. The one-day estimate is anchored primarily by the most recent observed price or rate level, with very little expected movement given typical intraday and overnight dynamics. As the horizon extends to one week and one month, I applied a slight positive drift assumption based on prevailing trend momentum and mean-reversion tendencies in the underlying asset or indicator. The gradual upward slope in point estimates reflects a modest bullish lean rather than any strong directional conviction, and in the absence of more specific contextual information, the drift is intentionally small.\n\nThe confidence interval widths widen substantially as the forecast horizon extends, which reflects the compounding of uncertainty over time. At one day, the 90% interval spans roughly 2.6 units, which is consistent with typical short-term volatility where most of the price action is bounded by recent trading ranges and market microstructure. At one week, the interval expands to about 5.6 units, incorporating the possibility of meaningful news events, macro data releases, or shifts in sentiment that could accumulate over several trading sessions. By one month, the interval reaches approximately 10.6 units, reflecting a much broader set of possible outcomes as structural factors, policy changes, and trend reversals all become plausible within that timeframe.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the upside, a surprise positive catalyst \u2014 such as an unexpectedly strong economic data print, a policy shift toward accommodation, or a sudden surge in risk appetite \u2014 could drive the value well above 38.1 at the monthly horizon. On the downside, a risk-off shock, a deterioration in macro conditions, or a liquidity event could send the value below 27.5. Geopolitical developments and central bank communications are particularly difficult to anticipate and tend to generate fat-tailed outcomes that standard volatility-based intervals underrepresent.\n\nIt is also worth noting that my intervals assume relatively stable volatility conditions. If realized volatility were to spike \u2014 as it can during earnings seasons, major geopolitical events, or financial stress episodes \u2014 the actual distribution of outcomes would be considerably wider than my stated 90% confidence bands suggest. Conversely, if conditions remain unusually calm and range-bound, the true distribution could be narrower. These forecasts should be treated as informed probabilistic guidance rather than precise predictions, and they carry meaningful model uncertainty given that they were generated without access to live market data or the full context of the specific asset being forecasted.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdT8k5vTYHQsdJ3fACiYK",
+    "system_fingerprint": null,
+    "input_tokens": 328,
+    "output_tokens": 426,
+    "served_at": "2026-07-27T19:43:37.497490Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdT8kiwRhP9GjWYuKANkC",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 580,
+    "served_at": "2026-07-27T19:43:53.131732Z"
+  },
+  "status": "collected",
+  "error": null
+}
