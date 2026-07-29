@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-07-29",
+  "timestamp": "2026-07-29T18:05:08.610584Z",
+  "domain": "stocks",
+  "item": "MU",
+  "item_label": "Micron",
+  "unit": "USD",
+  "current_value": 775.4249877929688,
+  "context": "Current closing price of Micron (MU): $775.42 USD as of 2026-07-29.",
+  "prompt_text": "Today is 2026-07-29.\n\nCurrent closing price of Micron (MU): $775.42 USD as of 2026-07-29.\n\nPredict the closing price of Micron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-07-30\n  1-week target date: 2026-08-05\n  1-month target date: 2026-08-28\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future prices for Micron (MU) from a current price of $775.42.\n\nLet me think through this carefully:\n\n**Current context:**\n- MU at $775.42 on 2026-07-29\n- This is notably high compared to historical prices (MU was ~$100-130 range in 2024-2025), suggesting significant appreciation has occurred, likely driven by AI/memory demand cycles\n- Semiconductor stocks have high volatility, typically 40-60% annualized volatility for MU\n\n**Volatility estimates:**\n- Daily volatility: ~2.5-3% (MU is volatile)\n- 1-day \u03c3 \u2248 $19-23\n- 1-week \u03c3 \u2248 $43-55 (daily \u03c3 \u00d7 \u221a5)\n- 1-month \u03c3 \u2248 $95-120 (daily \u03c3 \u00d7 \u221a21)\n\n**Point estimates:**\n- Short-term: slight upward drift assumption given AI tailwinds, but essentially random walk\n- 1d: ~$778 (slight upward drift)\n- 1w: ~$782\n- 1m: ~$790\n\n**90% CI calculations (\u00b11.645\u03c3):**\n- 1d: \u00b11.645 \u00d7 $21 \u2248 \u00b1$35 \u2192 [~$743, ~$813]\n- 1w: \u00b11.645 \u00d7 $50 \u2248 \u00b1$82 \u2192 [~$696, ~$864]\n- 1m: \u00b11.645 \u00d7 $108 \u2248 \u00b1$178 \u2192 [~$597, ~$968]\n\nGiven the elevated price level and semiconductor cyclicality, I'll widen intervals slightly for tail risks:\n\n{\n  \"1d\": {\n    \"point_estimate\": 778.0,\n    \"90_ci\": [740.0, 816.0]\n  },\n  \"1w\": {\n    \"point_estimate\": 782.0,\n    \"90_ci\": [690.0, 875.0]\n  },\n  \"1m\": {\n    \"point_estimate\": 790.0,\n    \"90_ci\": [590.0, 990.0]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 778.0,
+      "90_ci": [
+        740.0,
+        816.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 782.0,
+      "90_ci": [
+        690.0,
+        875.0
+      ]
+    },
+    "1m": {
+      "point_estimate": 790.0,
+      "90_ci": [
+        590.0,
+        990.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 778.0,\n    \"90_ci\": [\n      740.0,\n      816.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 782.0,\n    \"90_ci\": [\n      690.0,\n      875.0\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 790.0,\n    \"90_ci\": [\n      590.0,\n      990.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook anchored around current price levels, with modest upward drift over longer horizons. For the 1-day estimate of 778, I was essentially projecting continuity from the most recent observed price, accounting for typical daily mean reversion and the absence of any imminent catalysts that would force a large directional move. The 1-week estimate of 782 incorporates a slight positive drift assumption, consistent with a mild upward bias that many assets exhibit over short horizons when there is no strong bearish macro signal. The 1-month estimate of 790 extends that drift further but with diminishing conviction, as compounding uncertainty over a longer window makes any specific directional call less reliable.\n\nThe confidence interval widths reflect the well-known phenomenon that forecast uncertainty expands with the time horizon. At one day, the 90% interval of 740\u2013816 captures roughly normal daily volatility, spanning about a 5% range around the point estimate. By one week, the interval widens to 690\u2013875, reflecting that multiple days of compounding volatility can produce meaningfully larger deviations, along with the possibility of discrete news events. The 1-month interval of 590\u2013990 is quite wide \u2014 spanning roughly 50% of the point estimate \u2014 because a full calendar month introduces exposure to macroeconomic data releases, policy decisions, and sentiment shifts that are genuinely hard to anticipate.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden deterioration in risk appetite \u2014 triggered by a central bank surprise, geopolitical escalation, or a credit event in a systemically important institution \u2014 could drive prices well below the lower bounds of any of these intervals. On the upside, an unexpected positive catalyst such as a policy reversal, stronger-than-anticipated economic data, or a short squeeze dynamic could push prices sharply above the upper bounds.\n\nIt is also worth acknowledging model uncertainty itself as a risk. These estimates assume some degree of stationarity in the underlying process, meaning that structural breaks \u2014 a regime change in monetary policy, a pandemic-scale shock, or a major market microstructure disruption \u2014 are not well-captured by the intervals. In practice, tail events in financial markets occur more frequently than Gaussian-based confidence intervals suggest, so the true probability of outcomes outside the stated ranges is likely modestly higher than the implied 10%.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdWns1skqWVCcKAkhSFMS",
+    "system_fingerprint": null,
+    "input_tokens": 325,
+    "output_tokens": 540,
+    "served_at": "2026-07-29T18:05:19.365383Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdWnsmEUVAb6BGjGki2iv",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 522,
+    "served_at": "2026-07-29T18:05:33.162871Z"
+  },
+  "status": "collected",
+  "error": null
+}
