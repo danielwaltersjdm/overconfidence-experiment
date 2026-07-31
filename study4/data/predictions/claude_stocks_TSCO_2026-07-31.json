@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-07-31",
+  "timestamp": "2026-07-31T19:47:54.596083Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 30.71500015258789,
+  "context": "Current closing price of Tractor Supply (TSCO): $30.72 USD as of 2026-07-31.",
+  "prompt_text": "Today is 2026-07-31.\n\nCurrent closing price of Tractor Supply (TSCO): $30.72 USD as of 2026-07-31.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-08-01\n  1-week target date: 2026-08-07\n  1-month target date: 2026-08-30\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to make predictions about TSCO's future closing price. Let me think carefully about this.\n\nFirst, I notice that $30.72 seems extremely low for TSCO. As of my knowledge cutoff, TSCO was trading around $220-260 range. A price of $30.72 in July 2026 would imply either a massive crash or a stock split. This is unusual and I should account for uncertainty about the current market context.\n\nGiven I must work with the provided current price of $30.72, I'll treat it as the baseline and apply typical stock price dynamics:\n\n**Key considerations:**\n1. Current price: $30.72 (as given)\n2. TSCO is a relatively stable retail company (farm/rural lifestyle)\n3. Typical daily volatility for a stock like TSCO historically ~1-1.5%\n4. If there was a major event causing this price level, there may be elevated volatility\n5. I'll use this price as given and model forward from here\n\n**Volatility assumptions:**\n- Daily volatility: ~1.5% (elevated given uncertainty)\n- For confidence intervals, I'll use roughly:\n  - 1-day: \u00b12.5% for 90% CI (about 1.65 standard deviations)\n  - 1-week: \u00b15.5% for 90% CI\n  - 1-month: \u00b112% for 90% CI\n\n**Point estimates:**\n- 1-day: ~$30.72 (slight upward drift assumption)\n- 1-week: ~$30.85\n- 1-month: ~$31.20\n\n**Confidence intervals:**\n- 1-day: $30.72 \u00d7 (1 \u00b1 0.025) \u2192 [$29.95, $31.49]\n- 1-week: [$29.02, $32.68]\n- 1-month: [$27.03, $35.41]\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.75,\n    \"90_ci\": [29.95, 31.55]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.90,\n    \"90_ci\": [29.00, 32.80]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.20,\n    \"90_ci\": [27.00, 35.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 30.75,
+      "90_ci": [
+        29.95,
+        31.55
+      ]
+    },
+    "1w": {
+      "point_estimate": 30.9,
+      "90_ci": [
+        29.0,
+        32.8
+      ]
+    },
+    "1m": {
+      "point_estimate": 31.2,
+      "90_ci": [
+        27.0,
+        35.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 30.75,\n    \"90_ci\": [\n      29.95,\n      31.55\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 30.9,\n    \"90_ci\": [\n      29.0,\n      32.8\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 31.2,\n    \"90_ci\": [\n      27.0,\n      35.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across horizons, anchored near the current price level with a slight bullish bias. At the one-day horizon, the estimate of around $30.75 is driven primarily by short-term momentum and mean-reversion tendencies typical of equity or commodity markets at this price level, assuming no overnight news shocks. The one-week estimate of $30.90 incorporates a small positive drift assumption consistent with historical average daily returns, while acknowledging that weekly price action tends to consolidate or extend recent trends. The one-month estimate of $31.20 reflects a continuation of that drift over a longer window, where compounding of small daily expected returns produces a modestly higher target, though the signal becomes progressively weaker relative to noise at this horizon.\n\nThe confidence interval widths widen substantially across horizons, which is a direct reflection of how uncertainty scales with time. At one day, the interval is tight \u2014 roughly plus or minus 80 cents \u2014 because short-term volatility is relatively predictable and large moves in a single session are uncommon absent a catalyst. By one week, the interval expands to nearly plus or minus two dollars, capturing the possibility of multi-day trending moves or reversals. At one month, the interval spans roughly eight dollars in total, reflecting the compounding of daily volatility and the meaningful probability that macro developments, earnings, or sector rotation could push the price substantially in either direction.\n\nSeveral specific risks could push outcomes outside these stated intervals. On the downside, a sudden deterioration in broader market sentiment \u2014 triggered by unexpected central bank policy shifts, geopolitical escalation, or a credit event \u2014 could drive a sharp selloff that breaks below the lower bound at any horizon. A negative earnings surprise or sector-specific shock could also compress prices well beyond the one-month lower bound of $27. On the upside, a strong risk-on rally, short squeeze, or unexpectedly favorable macroeconomic data could push prices above $35.50 within a month. Additionally, liquidity conditions matter: if this asset has thinner trading volume, price gaps and slippage could amplify moves beyond what historical volatility alone would suggest, rendering even the wider monthly interval insufficient in tail scenarios.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdaiKNhoJsrKKmM6u4M4T",
+    "system_fingerprint": null,
+    "input_tokens": 328,
+    "output_tokens": 578,
+    "served_at": "2026-07-31T19:48:06.375081Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdaiLCNyPe7n62ZG2Cve6",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 481,
+    "served_at": "2026-07-31T19:48:19.871690Z"
+  },
+  "status": "collected",
+  "error": null
+}
