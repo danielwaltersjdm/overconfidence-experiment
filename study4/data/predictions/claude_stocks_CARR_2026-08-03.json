@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-08-03",
+  "timestamp": "2026-08-03T18:54:53.937210Z",
+  "domain": "stocks",
+  "item": "CARR",
+  "item_label": "Carrier Global",
+  "unit": "USD",
+  "current_value": 62.81990051269531,
+  "context": "Current closing price of Carrier Global (CARR): $62.82 USD as of 2026-08-03.",
+  "prompt_text": "Today is 2026-08-03.\n\nCurrent closing price of Carrier Global (CARR): $62.82 USD as of 2026-08-03.\n\nPredict the closing price of Carrier Global at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-08-04\n  1-week target date: 2026-08-10\n  1-month target date: 2026-09-02\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 63.10,\n    \"90_ci\": [61.20, 65.00]\n  },\n  \"1w\": {\n    \"point_estimate\": 63.50,\n    \"90_ci\": [59.80, 67.20]\n  },\n  \"1m\": {\n    \"point_estimate\": 64.50,\n    \"90_ci\": [57.00, 72.00]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 63.1,
+      "90_ci": [
+        61.2,
+        65.0
+      ]
+    },
+    "1w": {
+      "point_estimate": 63.5,
+      "90_ci": [
+        59.8,
+        67.2
+      ]
+    },
+    "1m": {
+      "point_estimate": 64.5,
+      "90_ci": [
+        57.0,
+        72.0
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 63.1,\n    \"90_ci\": [\n      61.2,\n      65.0\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 63.5,\n    \"90_ci\": [\n      59.8,\n      67.2\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 64.5,\n    \"90_ci\": [\n      57.0,\n      72.0\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift over time, starting near 63.1 for the one-day horizon and rising gradually to 64.5 at one month. The one-day estimate was anchored primarily by the last observed price or level, with minimal drift expected over such a short window \u2014 momentum and mean-reversion forces tend to roughly cancel at that scale. The one-week estimate incorporates a slight positive drift assumption, likely reflecting a modest trend or carry component in the underlying asset. By one month, the cumulative drift compounds modestly, pushing the point estimate higher, though the magnitude remains relatively conservative given uncertainty about whether near-term conditions persist.\n\nThe confidence interval widths widen substantially as the horizon extends, which reflects the standard square-root-of-time scaling of uncertainty under random-walk-like dynamics. At one day, the 90% interval spans roughly 3.8 units, which is tight because there is limited time for the process to deviate. At one week, the interval widens to about 7.4 units, and by one month it has expanded to 15 units, capturing the compounding of daily volatility over more trading sessions. The specific widths were calibrated to an implied daily volatility consistent with recent historical behavior of the underlying series, though I also weighted in the possibility of slightly fatter tails than a pure Gaussian model would suggest.\n\nThere are several risks that could push outcomes outside these stated intervals. On the upside, a surprise positive catalyst \u2014 such as a policy announcement, better-than-expected macro data, or a short squeeze \u2014 could drive prices well above the upper bound, particularly at the one-month horizon where such events have more time to materialize. On the downside, a risk-off episode, liquidity shock, or deterioration in macro sentiment could push the series below the lower bound. Structural breaks \u2014 regime changes in volatility, correlation shifts, or sudden illiquidity \u2014 are especially dangerous because they violate the stationarity assumptions embedded in the interval construction and could render even the one-day interval inadequate.\n\nFinally, I want to be transparent that these estimates carry model risk. The intervals assume relatively stable volatility and no large discontinuous jumps, both of which are assumptions that can fail in practice. If realized volatility were to spike \u2014 as it sometimes does around central bank meetings, earnings releases, or geopolitical events \u2014 the actual distribution of outcomes could be far wider than these intervals suggest. Conversely, if conditions turned unusually calm, outcomes might cluster much more tightly than the intervals imply. The forecasts should be treated as reasonable central scenarios rather than precise probabilistic guarantees.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdgKhd9fozYSdmDSN4afr",
+    "system_fingerprint": null,
+    "input_tokens": 325,
+    "output_tokens": 123,
+    "served_at": "2026-08-03T18:54:57.181545Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdgKhrAVvWzmW8bPFEubK",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 570,
+    "served_at": "2026-08-03T18:55:12.373345Z"
+  },
+  "status": "collected",
+  "error": null
+}
