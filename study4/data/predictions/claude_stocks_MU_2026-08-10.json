@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-08-10",
+  "timestamp": "2026-08-10T18:03:11.254939Z",
+  "domain": "stocks",
+  "item": "MU",
+  "item_label": "Micron",
+  "unit": "USD",
+  "current_value": 879.4650268554688,
+  "context": "Current closing price of Micron (MU): $879.47 USD as of 2026-08-10.",
+  "prompt_text": "Today is 2026-08-10.\n\nCurrent closing price of Micron (MU): $879.47 USD as of 2026-08-10.\n\nPredict the closing price of Micron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-08-11\n  1-week target date: 2026-08-17\n  1-month target date: 2026-09-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about Micron's stock price movements and provide calibrated estimates.\n\n**Context reasoning:**\n- Current price: $879.47 (2026-08-10)\n- Note: This price is dramatically higher than Micron's historical prices (MU was ~$100-130 in 2024). By August 2026, this could reflect a significant bull run in memory/AI chips, or possibly a stock split hasn't been accounted for in my knowledge. I'll take the current price as given and work from there.\n\n**Volatility estimation:**\n- Micron is a volatile semiconductor stock. Historical daily volatility has been around 2-3%.\n- At current elevated prices in a strong AI cycle, I'll assume daily volatility ~2.5%.\n- Daily \u03c3 \u2248 2.5% of $879.47 \u2248 $22\n\n**1-day estimate (2026-08-11):**\n- Point estimate: slight drift, ~$880 (essentially flat with small upward bias)\n- 1-day 90% CI: \u00b11.645\u03c3 \u2248 \u00b1$36\n- Low: ~$844, High: ~$916\n\n**1-week estimate (2026-08-17):**\n- \u03c3_weekly = $22 \u00d7 \u221a5 \u2248 $49\n- 90% CI: \u00b1$81\n- Point estimate: ~$882\n- Low: ~$800, High: ~$963\n\n**1-month estimate (2026-09-09):**\n- ~22 trading days: \u03c3_monthly = $22 \u00d7 \u221a22 \u2248 $103\n- 90% CI: \u00b1$169\n- Point estimate: ~$890 (slight upward drift assumption in AI upcycle)\n- Low: ~$720, High: ~$1,060\n\nI'll widen the intervals slightly to ensure proper 90% calibration given fat tails in individual stocks:\n\n{\n  \"1d\": {\n    \"point_estimate\": 881,\n    \"90_ci\": [840, 922]\n  },\n  \"1w\": {\n    \"point_estimate\": 884,\n    \"90_ci\": [795, 970]\n  },\n  \"1m\": {\n    \"point_estimate\": 892,\n    \"90_ci\": [710, 1065]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 881,
+      "90_ci": [
+        840,
+        922
+      ]
+    },
+    "1w": {
+      "point_estimate": 884,
+      "90_ci": [
+        795,
+        970
+      ]
+    },
+    "1m": {
+      "point_estimate": 892,
+      "90_ci": [
+        710,
+        1065
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 881,\n    \"90_ci\": [\n      840,\n      922\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 884,\n    \"90_ci\": [\n      795,\n      970\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 892,\n    \"90_ci\": [\n      710,\n      1065\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over longer horizons. For the 1-day estimate of 881, I was anchoring closely to the prevailing price level at the time of the forecast, expecting mean-reverting intraday dynamics with little directional catalyst. The 1-week estimate of 884 reflects a slight upward bias consistent with a mild bullish drift assumption, while the 1-month estimate of 892 extends that drift further, though the incremental gain is small relative to the uncertainty that accumulates over that timeframe. Essentially, I expected the asset to grind modestly higher absent any major shock, with the base case reflecting continuation of recent trend rather than a sharp directional move.\n\nConfidence interval widths were calibrated to reflect how uncertainty compounds over time. At 1 day, the 90% interval spans roughly 82 points, which reflects typical short-term volatility while assuming no major scheduled events. At 1 week, the interval widens to about 175 points, incorporating the possibility of macro data releases, central bank communications, or liquidity shifts that could meaningfully move the market. By 1 month, the interval stretches to roughly 355 points, acknowledging that over a four-week window, cumulative news flow, sentiment shifts, and structural factors make a wide range of outcomes plausible. The widening is roughly consistent with a square-root-of-time scaling of volatility, though I may have been somewhat conservative on the downside tail at the monthly horizon.\n\nThere are several specific risks that could push outcomes well outside these intervals. On the upside, a surprise dovish pivot from a major central bank, a stronger-than-expected economic data print, or a sudden wave of risk appetite could drive the asset significantly above my upper bound. On the downside, a geopolitical shock, an unexpected financial stress event such as a credit blowup or banking sector concern, or a sharp deterioration in sentiment could easily breach the lower bound. At the monthly horizon in particular, the stated interval should be treated with humility \u2014 tail events in either direction occur more frequently than a 10% combined probability might suggest, and the true distribution of outcomes is likely fatter-tailed than what my intervals imply.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CduWRLk5NJTTUhKRg4hJ6",
+    "system_fingerprint": null,
+    "input_tokens": 325,
+    "output_tokens": 560,
+    "served_at": "2026-08-10T18:03:23.214813Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CduWSCLLBPsJJUmgYQXRR",
+    "system_fingerprint": null,
+    "input_tokens": 209,
+    "output_tokens": 494,
+    "served_at": "2026-08-10T18:03:36.618334Z"
+  },
+  "status": "collected",
+  "error": null
+}

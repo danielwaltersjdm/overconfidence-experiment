@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-08-10",
+  "timestamp": "2026-08-10T17:08:48.690314Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 75.71009826660156,
+  "context": "Current closing price of Netflix (NFLX): $75.71 USD as of 2026-08-10.",
+  "prompt_text": "Today is 2026-08-10.\n\nCurrent closing price of Netflix (NFLX): $75.71 USD as of 2026-08-10.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-08-11\n  1-week target date: 2026-08-17\n  1-month target date: 2026-09-09\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to note that $75.71 for NFLX as of 2026-08-10 seems extremely low compared to historical prices (NFLX was trading around $600-900+ range in recent years). This suggests either a stock split has occurred or this is a hypothetical scenario. I'll treat this as the current price and work from it.\n\nGiven the current price of $75.71, I'll estimate using typical NFLX volatility:\n- Daily volatility: ~2% (post-split adjusted)\n- Weekly volatility: ~4-5%\n- Monthly volatility: ~10-12%\n\nFor point estimates, I'll assume slight upward drift given Netflix's general growth trajectory.\n\n**1-day (2026-08-11):**\n- Point estimate: ~$76.20 (slight upward drift)\n- 90% CI: roughly \u00b13.3% \u2192 [$73.2, $79.2]\n\n**1-week (2026-08-17):**\n- Point estimate: ~$77.00\n- 90% CI: roughly \u00b18% \u2192 [$69.7, $84.3]\n\n**1-month (2026-09-09):**\n- Point estimate: ~$78.50\n- 90% CI: roughly \u00b116% \u2192 [$63.6, $93.4]\n\n{\n  \"1d\": {\n    \"point_estimate\": 76.20,\n    \"90_ci\": [73.20, 79.20]\n  },\n  \"1w\": {\n    \"point_estimate\": 77.00,\n    \"90_ci\": [69.70, 84.30]\n  },\n  \"1m\": {\n    \"point_estimate\": 78.50,\n    \"90_ci\": [63.60, 93.40]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 76.2,
+      "90_ci": [
+        73.2,
+        79.2
+      ]
+    },
+    "1w": {
+      "point_estimate": 77.0,
+      "90_ci": [
+        69.7,
+        84.3
+      ]
+    },
+    "1m": {
+      "point_estimate": 78.5,
+      "90_ci": [
+        63.6,
+        93.4
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 76.2,\n    \"90_ci\": [\n      73.2,\n      79.2\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 77.0,\n    \"90_ci\": [\n      69.7,\n      84.3\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 78.5,\n    \"90_ci\": [\n      63.6,\n      93.4\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modestly upward-drifting baseline from an assumed current price near 76, with the 1-day estimate staying close to the present level since overnight moves in most financial or commodity assets tend to be small relative to the prevailing price. The 1-week estimate nudges slightly higher, consistent with a mild positive drift assumption baked into many mean-reverting or trend-following frameworks. The 1-month estimate extends that drift further, arriving at 78.5, which represents roughly a 3% appreciation from the starting point. These estimates essentially encode a gentle bullish bias overlaid on what I treated as a relatively stable underlying trend, without a strong directional catalyst dominating the near-term picture.\n\nThe confidence interval widths widen considerably as the horizon extends, which is the natural consequence of uncertainty compounding over time. At 1 day, the \u00b13-point band around 76.2 reflects the typical daily volatility one might observe in a moderately volatile asset \u2014 roughly a 2% swing in either direction captures most of the plausible daily range. By 1 week, the interval nearly triples in half-width to about \u00b17.3 points, reflecting that multiple days of uncertain moves stack up. The 1-month interval, spanning roughly 30 points, acknowledges that over four weeks, trending behavior, mean reversion, and exogenous shocks all have meaningful time to play out in ways that are genuinely hard to anticipate at the time of the forecast.\n\nSeveral specific risks could push outcomes outside the stated intervals. On the downside, a sudden macro shock \u2014 an unexpected rate decision, a geopolitical escalation, or a liquidity crunch in related markets \u2014 could produce a sharp gap move that breaks through the lower bound of even the monthly interval. Structural breaks, such as a regime change in the underlying supply-demand or monetary policy environment, are particularly dangerous for interval estimates because they invalidate the historical volatility assumptions the widths are based on.\n\nOn the upside, a strong positive catalyst \u2014 a surprise policy easing, a significant demand shock, or a short-squeeze dynamic \u2014 could propel the asset well beyond 93 within a month. Additionally, my intervals assume roughly symmetric uncertainty, but in practice many assets exhibit fat tails and skewness, meaning the true probability of extreme outcomes in both directions is somewhat higher than a normal-distribution-based confidence interval would suggest. Anyone relying on these estimates should treat the interval boundaries as soft guardrails rather than hard limits.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CduSGrAArD9FJTzd9LJCL",
+    "system_fingerprint": null,
+    "input_tokens": 323,
+    "output_tokens": 435,
+    "served_at": "2026-08-10T17:08:56.890989Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CduSHR5aY2mW3wFqcEyYs",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 547,
+    "served_at": "2026-08-10T17:09:11.335945Z"
+  },
+  "status": "collected",
+  "error": null
+}
