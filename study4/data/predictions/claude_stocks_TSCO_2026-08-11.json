@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-08-11",
+  "timestamp": "2026-08-11T19:25:42.549965Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 35.255001068115234,
+  "context": "Current closing price of Tractor Supply (TSCO): $35.26 USD as of 2026-08-11.",
+  "prompt_text": "Today is 2026-08-11.\n\nCurrent closing price of Tractor Supply (TSCO): $35.26 USD as of 2026-08-11.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-08-12\n  1-week target date: 2026-08-18\n  1-month target date: 2026-09-10\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason about TSCO's price movements carefully.\n\nCurrent price: $35.26 as of 2026-08-11.\n\nNote: TSCO historically traded much higher (around $200-270 range in 2023-2024). A price of $35.26 suggests either a significant stock split or a major decline. I'll take the current price as given and work from it.\n\nFor volatility estimation:\n- TSCO is a mid/large cap retailer\n- Daily volatility typically around 1-2%\n- At $35.26, daily vol ~$0.50-0.70\n\n**1-day forecast (2026-08-12):**\n- Point estimate: slight drift upward, ~$35.40\n- 1-day 90% CI: roughly \u00b11.65 \u00d7 daily_vol\n- Daily vol \u2248 $0.55 (1.55% of price)\n- 90% CI range: \u00b1$0.91\n- CI: [$34.49, $36.31]\n\n**1-week forecast (2026-08-18):**\n- Point estimate: ~$35.55\n- Weekly vol \u2248 daily_vol \u00d7 \u221a5 \u2248 $0.55 \u00d7 2.236 \u2248 $1.23\n- 90% CI range: \u00b1$2.02\n- CI: [$33.53, $37.57]\n\n**1-month forecast (2026-09-10):**\n- Point estimate: ~$35.80\n- Monthly vol \u2248 daily_vol \u00d7 \u221a21 \u2248 $0.55 \u00d7 4.58 \u2248 $2.52\n- 90% CI range: \u00b1$4.15\n- CI: [$31.65, $39.95]\n\nI'll slightly widen intervals to account for model uncertainty and event risk.\n\n{\n  \"1d\": {\n    \"point_estimate\": 35.40,\n    \"90_ci\": [34.40, 36.35]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.55,\n    \"90_ci\": [33.20, 37.90]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.85,\n    \"90_ci\": [30.50, 41.20]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 35.4,
+      "90_ci": [
+        34.4,
+        36.35
+      ]
+    },
+    "1w": {
+      "point_estimate": 35.55,
+      "90_ci": [
+        33.2,
+        37.9
+      ]
+    },
+    "1m": {
+      "point_estimate": 35.85,
+      "90_ci": [
+        30.5,
+        41.2
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 35.4,\n    \"90_ci\": [\n      34.4,\n      36.35\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.55,\n    \"90_ci\": [\n      33.2,\n      37.9\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.85,\n    \"90_ci\": [\n      30.5,\n      41.2\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with a modest upward drift over time. At the one-day horizon, the estimate of 35.4 is anchored heavily to the last observed price or level, with only minimal expected movement given typical daily volatility. At the one-week horizon, I nudged the estimate slightly higher to 35.55, reflecting a mild positive drift assumption consistent with recent momentum or a slight mean-reversion tendency away from short-term lows. At the one-month horizon, the estimate of 35.85 continues that gradual drift, essentially projecting a continuation of a slow, modest upward trend while acknowledging that over longer periods, fundamental factors and broader market conditions begin to matter more than simple momentum.\n\nThe confidence interval widths grow substantially as the horizon extends, which reflects the well-known statistical reality that uncertainty compounds over time. At one day, the interval is quite tight at roughly plus or minus one unit, driven by historical daily volatility being relatively low and the short window leaving little room for surprise. At one week, the interval widens to a range of about 4.7 units, incorporating the possibility of intra-week news, sentiment shifts, or macro data releases that could move the needle meaningfully in either direction. At one month, the interval expands dramatically to roughly 10.7 units, acknowledging that over a four-week window, a wide range of economic reports, policy decisions, earnings events, and geopolitical developments could collectively push the outcome far from the central path.\n\nSeveral specific risks could push outcomes outside even these wider intervals. On the downside, a sudden deterioration in macro conditions \u2014 such as an unexpected central bank policy shift, a credit event, or a sharp risk-off episode \u2014 could drive a move well below the lower bound of the one-month interval. On the upside, a strong positive catalyst like better-than-expected economic data, a policy easing surprise, or a relief rally in correlated assets could push the outcome above 41.2. Liquidity conditions also matter \u2014 in thinner markets, moves can overshoot fair value estimates considerably. My intervals are calibrated around a base case of relatively normal market functioning, so any regime shift, such as a volatility spike or a structural break in the underlying trend, would render these bounds too narrow.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdwWXEGory2Vu1DFmVd88",
+    "system_fingerprint": null,
+    "input_tokens": 328,
+    "output_tokens": 566,
+    "served_at": "2026-08-11T19:25:53.049359Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CdwWXyeWzw8QiPiSMsZ1J",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 500,
+    "served_at": "2026-08-11T19:26:06.461729Z"
+  },
+  "status": "collected",
+  "error": null
+}
