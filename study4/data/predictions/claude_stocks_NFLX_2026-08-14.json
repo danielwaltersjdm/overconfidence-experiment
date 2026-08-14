@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-08-14",
+  "timestamp": "2026-08-14T17:13:45.753000Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 77.97470092773438,
+  "context": "Current closing price of Netflix (NFLX): $77.97 USD as of 2026-08-14.",
+  "prompt_text": "Today is 2026-08-14.\n\nCurrent closing price of Netflix (NFLX): $77.97 USD as of 2026-08-14.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-08-15\n  1-week target date: 2026-08-21\n  1-month target date: 2026-09-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully about this. The current price is $77.97 as of 2026-08-14.\n\nKey considerations:\n1. Netflix's current price of $77.97 seems very low compared to historical levels (NFLX was trading around $600-900+ in 2024-2025). This could reflect a significant stock decline, a stock split, or data uncertainty.\n2. Assuming this is the actual current price, I'll use it as my anchor.\n3. For volatility: NFLX is a high-beta growth stock. Typical daily volatility ~2-3%, weekly ~4-7%, monthly ~8-15%.\n4. Without specific news or context about why the price is at this level, I'll assume mean-reversion tendencies are unclear and use the current price as anchor with symmetric uncertainty.\n\nFor the confidence intervals:\n- 1-day: ~2% daily vol \u2192 90% CI roughly \u00b13.3% (1.645 sigma)\n  - Low: 77.97 \u00d7 0.967 \u2248 75.40\n  - High: 77.97 \u00d7 1.033 \u2248 80.54\n  - Point estimate: ~78.20 (slight upward drift)\n\n- 1-week: ~4.5% weekly vol \u2192 90% CI roughly \u00b17.4%\n  - Low: 77.97 \u00d7 0.926 \u2248 72.20\n  - High: 77.97 \u00d7 1.074 \u2248 83.74\n  - Point estimate: ~78.50\n\n- 1-month: ~10% monthly vol \u2192 90% CI roughly \u00b116.5%\n  - Low: 77.97 \u00d7 0.835 \u2248 65.10\n  - High: 77.97 \u00d7 1.165 \u2248 90.84\n  - Point estimate: ~79.00\n\n{\n  \"1d\": {\n    \"point_estimate\": 78.20,\n    \"90_ci\": [75.40, 80.54]\n  },\n  \"1w\": {\n    \"point_estimate\": 78.50,\n    \"90_ci\": [72.20, 83.74]\n  },\n  \"1m\": {\n    \"point_estimate\": 79.00,\n    \"90_ci\": [65.10, 90.84]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 78.2,
+      "90_ci": [
+        75.4,
+        80.54
+      ]
+    },
+    "1w": {
+      "point_estimate": 78.5,
+      "90_ci": [
+        72.2,
+        83.74
+      ]
+    },
+    "1m": {
+      "point_estimate": 79.0,
+      "90_ci": [
+        65.1,
+        90.84
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 78.2,\n    \"90_ci\": [\n      75.4,\n      80.54\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 78.5,\n    \"90_ci\": [\n      72.2,\n      83.74\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 79.0,\n    \"90_ci\": [\n      65.1,\n      90.84\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift from what I'd assume was a current price around $78, with the 1-day estimate of $78.2 anchoring closely to recent price action and the 1-week and 1-month estimates nudging slightly higher toward $78.5 and $79.0 respectively. This gentle positive slope likely reflects a combination of mean-reversion tendencies, any prevailing macro tailwinds at the time of the forecast, and a baseline assumption that the asset in question had mild positive momentum. The near-term estimate is essentially a continuation of the current price with minimal drift, while the longer horizons incorporate a small positive bias consistent with long-run expected returns or sector-specific optimism.\n\nThe confidence interval widths widen meaningfully as the horizon extends, which is a standard feature of probabilistic forecasting under uncertainty. The 1-day interval of roughly 75.4 to 80.5 is relatively tight, reflecting that intraday and overnight volatility is constrained by known market structure and liquidity conditions. By one week, the interval expands to 72.2\u201383.7, incorporating the possibility of macroeconomic data releases, earnings surprises, or sentiment shifts. The 1-month interval of 65.1\u201390.8 is quite wide, acknowledging that over four weeks, cumulative shocks \u2014 whether fundamental, technical, or sentiment-driven \u2014 can compound significantly and produce large deviations from the point estimate.\n\nSeveral specific risks could push outcomes outside even these intervals. On the downside, a sudden deterioration in risk appetite, an unexpected central bank policy shift, geopolitical escalation, or a liquidity shock could break through the lower bound of the 1-month interval below 65. On the upside, a strong catalyst such as a surprise earnings beat, a favorable policy announcement, or a short-squeeze dynamic could push the price well above 91. These tail events are precisely the scenarios that stated confidence intervals \u2014 by design covering only 90% of the distribution \u2014 intentionally leave outside their bounds, meaning roughly a 5% chance exists on each side that the true outcome falls beyond the stated range.\n\nIn summary, the forecast was constructed conservatively, leaning on near-term price stability and gradual positive drift, while honestly acknowledging that uncertainty compounds rapidly over time. The widening intervals are not a weakness of the model but a truthful representation of how unpredictable markets become over longer horizons. Anyone using these estimates should treat the point forecasts as central tendencies rather than firm targets and pay close attention to the interval bounds as meaningful risk markers.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Ce31tQXgUpw6ZXUTHYwfX",
+    "system_fingerprint": null,
+    "input_tokens": 323,
+    "output_tokens": 580,
+    "served_at": "2026-08-14T17:13:57.461392Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Ce31uEetTKAN4GwGFZRWB",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 567,
+    "served_at": "2026-08-14T17:14:13.477046Z"
+  },
+  "status": "collected",
+  "error": null
+}
