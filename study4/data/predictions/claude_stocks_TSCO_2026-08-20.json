@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-08-20",
+  "timestamp": "2026-08-20T19:20:48.834666Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 34.959999084472656,
+  "context": "Current closing price of Tractor Supply (TSCO): $34.96 USD as of 2026-08-20.",
+  "prompt_text": "Today is 2026-08-20.\n\nCurrent closing price of Tractor Supply (TSCO): $34.96 USD as of 2026-08-20.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-08-21\n  1-week target date: 2026-08-27\n  1-month target date: 2026-09-19\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason about Tractor Supply's stock price at three horizons.\n\nFirst, let me note that $34.96 seems extremely low for TSCO. Historically, TSCO has traded in the $200-$280 range in recent years. This current price of $34.96 suggests either a significant stock split has occurred, or there's been a major decline. Given today's date is August 2026, it's plausible a stock split occurred (e.g., a 1:8 or similar split), or the stock has declined dramatically. I'll take the current price at face value and predict from $34.96.\n\n**Reasoning:**\n- Current price: $34.96\n- TSCO is a defensive retail stock (farm/rural supplies), generally stable but not immune to macro pressures\n- At this price level, I'll assume it's legitimate (perhaps post-split or post-decline)\n- Daily volatility for TSCO historically ~1.5-2%\n- Weekly volatility ~3-4%\n- Monthly volatility ~6-9%\n\n**1-day estimate:**\n- Point estimate: ~$35.10 (slight upward drift)\n- 90% CI: \u00b12.5% \u2192 [$34.08, $35.84]\n\n**1-week estimate:**\n- Point estimate: ~$35.30\n- 90% CI: \u00b15% \u2192 [$33.50, $37.10]\n\n**1-month estimate:**\n- Point estimate: ~$35.80\n- 90% CI: \u00b110% \u2192 [$32.00, $39.50]\n\n{\n  \"1d\": {\n    \"point_estimate\": 35.10,\n    \"90_ci\": [34.08, 35.84]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.30,\n    \"90_ci\": [33.50, 37.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.80,\n    \"90_ci\": [32.00, 39.50]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 35.1,
+      "90_ci": [
+        34.08,
+        35.84
+      ]
+    },
+    "1w": {
+      "point_estimate": 35.3,
+      "90_ci": [
+        33.5,
+        37.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 35.8,
+      "90_ci": [
+        32.0,
+        39.5
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 35.1,\n    \"90_ci\": [\n      34.08,\n      35.84\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 35.3,\n    \"90_ci\": [\n      33.5,\n      37.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 35.8,\n    \"90_ci\": [\n      32.0,\n      39.5\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a mild upward drift across the three horizons, starting near 35.1 for the one-day forecast and rising gradually to 35.8 at one month. The one-day estimate is anchored heavily by the most recent observed price or level, with the assumption that intraday momentum and near-term market microstructure will keep the value close to its current level. The slight upward tilt over the week and month horizons likely reflects either a modest positive trend in the underlying data series or a mean-reversion assumption toward a slightly higher equilibrium, combined with the general tendency of risky assets or economic indicators to drift upward over time when no strong negative signal is present. The incremental increases are intentionally small because there is no strong directional catalyst identified in the near term.\n\nThe confidence interval widths widen substantially as the horizon extends, which is a standard feature of probabilistic forecasting under uncertainty. At one day, the 90% interval spans roughly 1.76 units, reflecting relatively tight short-term predictability driven by autocorrelation in the series. By one week, the interval expands to about 3.6 units, and at one month it reaches roughly 7.5 units. This widening captures the compounding effect of uncertainty \u2014 each additional time step introduces new shocks that cannot be anticipated, and those shocks accumulate. Volatility in the underlying series, potential shifts in macro conditions, and model uncertainty all contribute to the growing spread.\n\nSpecific risks that could push outcomes outside the stated intervals include unexpected macroeconomic announcements such as surprise inflation readings, central bank policy shifts, or geopolitical developments that trigger sharp repricing. On the upside, a stronger-than-expected demand signal or a sudden shift in market sentiment could push the one-month outcome well above 39.5. On the downside, a risk-off episode, a liquidity shock, or a deterioration in fundamentals could easily breach the lower bound of 32.0 at the monthly horizon. These tail events are, by construction, assigned roughly a combined 10% probability in my framework, but in practice fat tails in financial and economic data mean such breaches may occur somewhat more frequently than a normal-distribution-based model would suggest.\n\nIt is also worth acknowledging that my confidence intervals assume a relatively stable volatility regime. If realized volatility spikes \u2014 as it tends to during periods of market stress or major data surprises \u2014 even the short-horizon interval could prove too narrow. Model misspecification is a persistent source of risk: if the data-generating process has shifted in a way not captured by my inputs, all three forecasts could be systematically biased in the same direction, which would not be reflected in the interval widths.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CeEYRotmRSaEa8WYFbWNc",
+    "system_fingerprint": null,
+    "input_tokens": 328,
+    "output_tokens": 494,
+    "served_at": "2026-08-20T19:21:08.568591Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011CeEYTFc7uY5BAm9eHdHSi",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 597,
+    "served_at": "2026-08-20T19:21:24.618541Z"
+  },
+  "status": "collected",
+  "error": null
+}
