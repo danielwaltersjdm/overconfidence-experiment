@@ -17,6 +17,7 @@ import json
 import os
 import random
 import time
+from collections import defaultdict
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -36,6 +37,39 @@ requests.packages.urllib3.disable_warnings()
 # Factory for fresh httpx clients with SSL verification disabled
 def _make_httpx():
     return httpx.Client(verify=False, timeout=90.0)
+
+
+def _make_anthropic_client():
+    """
+    Build the Anthropic client, keeping the SSL-verification-disabled transport.
+
+    The anthropic SDK migrated from httpx to httpx2 in v1.0. Passing the wrong
+    client class raises TypeError and every call fails. requirements.txt left the
+    SDK unpinned, so CI silently upgraded and the study lost 8 weekdays of Claude
+    data (2026-08-21 .. 2026-09-01) before anyone noticed. Build whichever client
+    class the *installed* SDK actually expects, and if neither is accepted, fall
+    back to the SDK default rather than failing the run - CI has no corporate
+    proxy, so it does not need the workaround at all.
+    """
+    api_key = os.environ["ANTHROPIC_API_KEY"]
+    try:
+        import httpx2
+        return anthropic.Anthropic(
+            api_key=api_key,
+            http_client=httpx2.Client(verify=False, timeout=90.0),
+        )
+    except ImportError:
+        pass
+    except TypeError:
+        pass
+    try:
+        return anthropic.Anthropic(api_key=api_key, http_client=_make_httpx())
+    except TypeError as exc:
+        console.print(
+            f"  [yellow]anthropic SDK rejected both httpx clients ({exc}); "
+            f"using SDK default transport[/yellow]"
+        )
+        return anthropic.Anthropic(api_key=api_key)
 
 load_dotenv()
 
@@ -226,10 +260,7 @@ def call_model(model_cfg: dict, prompt: str, max_tokens: int = 1024) -> tuple[st
     model_id = model_cfg["model_id"]
 
     if api == "anthropic":
-        client = anthropic.Anthropic(
-            api_key=os.environ["ANTHROPIC_API_KEY"],
-            http_client=_make_httpx(),
-        )
+        client = _make_anthropic_client()
         def _call():
             msg = client.messages.create(
                 model=model_id, max_tokens=max_tokens,
@@ -439,6 +470,7 @@ def main():
         console.print("[yellow]Weekend — financial domains will be skipped unless overridden[/yellow]")
 
     total = collected = failed = skipped = 0
+    per_model = defaultdict(lambda: {"collected": 0, "failed": 0})
 
     for domain, domain_cfg in config["domains"].items():
         if not domain_cfg.get("enabled", True):
@@ -496,8 +528,10 @@ def main():
 
                 if record["status"] == "collected":
                     collected += 1
+                    per_model[model_cfg["name"]]["collected"] += 1
                 else:
                     failed += 1
+                    per_model[model_cfg["name"]]["failed"] += 1
 
                 if not args.dry_run:
                     time.sleep(0.5)
@@ -506,6 +540,35 @@ def main():
         f"\n[bold]Done:[/bold] {collected} collected, {failed} failed, {skipped} skipped"
         f" (total attempted: {total})"
     )
+    # Per-model health gate.
+    #
+    # The old check was `collected == 0 and failed > 0`, i.e. aggregated over all
+    # models. When the Anthropic client broke on 2026-08-21, Gemini and GPT-4o
+    # kept succeeding, so `collected` stayed high and the run exited 0 every day
+    # for 8 weekdays while Claude produced nothing. Failing per-model makes that
+    # loud. The workflow's commit step is `if: always()`, so partial data is
+    # still committed when this trips.
+    MIN_SUCCESS_RATE = 0.90
+    degraded = []
+    for name, c in sorted(per_model.items()):
+        attempted = c["collected"] + c["failed"]
+        if not attempted:
+            continue
+        rate = c["collected"] / attempted
+        console.print(
+            f"  {name}: {c['collected']}/{attempted} collected ({rate:.1%})"
+        )
+        if rate < MIN_SUCCESS_RATE:
+            degraded.append(f"{name} {c['collected']}/{attempted} ({rate:.1%})")
+
+    if degraded:
+        console.print("")
+        console.print(
+            "[bold red]FAIL: model success rate below "
+            f"{MIN_SUCCESS_RATE:.0%}[/bold red] - " + "; ".join(degraded)
+        )
+        raise SystemExit(1)
+
     if collected == 0 and failed > 0:
         raise SystemExit(1)
 

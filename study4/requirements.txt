@@ -1,10 +1,25 @@
-anthropic>=0.50.0
-openai>=1.50.0
-google-genai>=1.0.0
-yfinance>=0.2.50
-requests>=2.32.0
-pyyaml>=6.0.1
-pandas>=2.2.0
-numpy>=1.26.0
-python-dotenv>=1.0.0
-rich>=13.0.0
+# PINNED DELIBERATELY - do not loosen without reading this note.
+#
+# These were previously floors (`anthropic>=0.50.0` etc). CI runs a fresh
+# `pip install` on every scheduled run, so an upstream release silently entered
+# production: around 2026-08-21 the anthropic SDK went to 1.x and migrated from
+# httpx to httpx2, which made every Claude call raise TypeError. Collection kept
+# writing files and the workflow kept exiting 0, so the study lost 8 weekdays of
+# Claude data (2026-08-21 .. 2026-09-01) before anyone noticed.
+#
+# This is a longitudinal study: the measurement instrument must not change under
+# us mid-run. Bump these on purpose, one at a time, and re-run a day of
+# collection to confirm all three models still return before committing.
+#
+# Versions below are the ones in production as of 2026-09-02.
+
+anthropic==1.3.0
+openai==3.7.0
+google-genai==2.21.0
+yfinance==1.7.0
+requests==2.34.2
+pyyaml==6.0.3
+pandas==3.0.5
+numpy==2.5.2
+python-dotenv==1.2.3
+rich==15.0.0
