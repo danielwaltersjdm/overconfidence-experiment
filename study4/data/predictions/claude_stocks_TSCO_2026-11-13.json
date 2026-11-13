@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-11-13",
+  "timestamp": "2026-11-13T23:50:36.424837Z",
+  "domain": "stocks",
+  "item": "TSCO",
+  "item_label": "Tractor Supply",
+  "unit": "USD",
+  "current_value": 36.45000076293945,
+  "context": "Current closing price of Tractor Supply (TSCO): $36.45 USD as of 2026-11-13.",
+  "prompt_text": "Today is 2026-11-13.\n\nCurrent closing price of Tractor Supply (TSCO): $36.45 USD as of 2026-11-13.\n\nPredict the closing price of Tractor Supply at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-11-14\n  1-week target date: 2026-11-20\n  1-month target date: 2026-12-13\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to predict TSCO closing prices. Let me reason through this carefully.\n\n**Current situation:**\n- TSCO closing at $36.45 on 2026-11-13\n- Note: TSCO historically traded much higher (around $200-280 range in 2023-2024). A price of $36.45 suggests either a significant stock decline, a stock split, or this is a hypothetical scenario. I'll take the given price at face value.\n\n**Volatility estimation:**\n- TSCO is a mid-to-large cap retail stock\n- Typical daily volatility for such stocks: ~1.5-2% daily\n- Using ~1.5% daily vol as baseline\n\n**Calculations:**\n- Daily \u03c3 \u2248 $36.45 \u00d7 0.015 \u2248 $0.55\n- Weekly \u03c3 \u2248 $0.55 \u00d7 \u221a5 \u2248 $1.23\n- Monthly \u03c3 \u2248 $0.55 \u00d7 \u221a22 \u2248 $2.58\n\n**Point estimates:**\n- I'll keep point estimates close to current price with slight drift (assume slight positive drift)\n- 1d: ~$36.50\n- 1w: ~$36.60\n- 1m: ~$36.80\n\n**90% CI (\u00b11.645\u03c3):**\n- 1d: $36.45 \u00b1 1.645 \u00d7 $0.55 = $36.45 \u00b1 $0.90 \u2192 [$35.55, $37.35]\n- 1w: $36.45 \u00b1 1.645 \u00d7 $1.23 = $36.45 \u00b1 $2.02 \u2192 [$34.43, $38.47]\n- 1m: $36.45 \u00b1 1.645 \u00d7 $2.58 = $36.45 \u00b1 $4.24 \u2192 [$32.21, $40.69]\n\nI'll slightly widen these for fat tails and model uncertainty:\n\n{\n  \"1d\": {\n    \"point_estimate\": 36.50,\n    \"90_ci\": [35.40, 37.60]\n  },\n  \"1w\": {\n    \"point_estimate\": 36.60,\n    \"90_ci\": [34.10, 39.10]\n  },\n  \"1m\": {\n    \"point_estimate\": 36.90,\n    \"90_ci\": [31.50, 42.30]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 36.5,
+      "90_ci": [
+        35.4,
+        37.6
+      ]
+    },
+    "1w": {
+      "point_estimate": 36.6,
+      "90_ci": [
+        34.1,
+        39.1
+      ]
+    },
+    "1m": {
+      "point_estimate": 36.9,
+      "90_ci": [
+        31.5,
+        42.3
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 36.5,\n    \"90_ci\": [\n      35.4,\n      37.6\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 36.6,\n    \"90_ci\": [\n      34.1,\n      39.1\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 36.9,\n    \"90_ci\": [\n      31.5,\n      42.3\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with a modest upward drift over time. At the one-day horizon, the estimate of 36.5 is anchored closely to recent observed values, assuming mean-reversion dynamics and no major overnight surprises. The slight increase to 36.6 at one week and 36.9 at one month reflects a gentle positive drift assumption, perhaps tied to underlying trend momentum or a slight seasonal or structural bias in the data. These estimates are not dramatically different from one another, which signals that my baseline view is one of relative stability rather than strong directional conviction.\n\nThe confidence interval widths expand meaningfully as the horizon lengthens, which is a standard reflection of uncertainty compounding over time. At one day, the 90% CI spans roughly 2.2 units, consistent with typical short-term noise in the series. By one week, that span grows to 5 units, incorporating the possibility of meaningful shifts in market conditions, policy signals, or other medium-frequency drivers. At one month, the interval widens to nearly 11 units, acknowledging that over a 30-day window, a wide range of economic developments, sentiment shifts, or structural changes could materially alter the outcome. The asymmetric nature of real-world processes \u2014 where shocks can be larger in one direction \u2014 also contributes to wider tails at longer horizons.\n\nSeveral specific risks could push realized outcomes outside my stated intervals. On the upside, a surprise positive catalyst \u2014 such as a stronger-than-expected economic data release, a policy easing move, or a sudden improvement in sentiment \u2014 could push values well above 42 at the one-month horizon. On the downside, a risk-off episode, an unexpected negative shock, or a deterioration in underlying fundamentals could drive values below 31.5. At the shorter horizons, an overnight announcement or a sharp liquidity event could breach the one-day interval, which is narrow by design and therefore more vulnerable to fat-tail surprises.\n\nIt's also worth acknowledging model uncertainty itself as a source of risk. My estimates implicitly assume a certain degree of stationarity and continuity in the data-generating process. If the underlying regime changes \u2014 for instance, due to a structural break or an unprecedented event \u2014 then all three intervals could prove poorly calibrated simultaneously. This kind of correlated failure across horizons is the hardest risk to quantify and is not fully captured within the stated confidence bands.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Ch1pktvebw75YbKFDudn9",
+    "system_fingerprint": null,
+    "input_tokens": 328,
+    "output_tokens": 602,
+    "served_at": "2026-11-13T23:50:46.591152Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Ch1pmdTFBx7ERud7pYq2S",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 533,
+    "served_at": "2026-11-13T23:51:00.625100Z"
+  },
+  "status": "collected",
+  "error": null
+}
