@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-11-17",
+  "timestamp": "2026-11-17T00:32:55.869281Z",
+  "domain": "stocks",
+  "item": "NFLX",
+  "item_label": "Netflix",
+  "unit": "USD",
+  "current_value": 60.75,
+  "context": "Current closing price of Netflix (NFLX): $60.75 USD as of 2026-11-17.",
+  "prompt_text": "Today is 2026-11-17.\n\nCurrent closing price of Netflix (NFLX): $60.75 USD as of 2026-11-17.\n\nPredict the closing price of Netflix at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-11-18\n  1-week target date: 2026-11-24\n  1-month target date: 2026-12-17\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to reason carefully here. The current price of $60.75 for Netflix seems extremely low compared to what I know about NFLX historically (it was trading around $600-900+ in recent years). This could be a stock split or some hypothetical scenario, but I'll treat it as given and work from this price level.\n\nAssuming this is the actual current price, I'll apply typical Netflix volatility characteristics:\n- Daily volatility: ~1.5-2% (typical for NFLX)\n- This translates to daily sigma ~$0.90-1.20 at this price level\n\nFor the confidence intervals:\n- 1-day: ~\u00b11.65\u03c3 for 90% CI, \u03c3 \u2248 $1.00, so \u00b1$1.65\n- 1-week: \u03c3 scales by \u221a5 \u2248 2.24, so ~\u00b1$3.70\n- 1-month: \u03c3 scales by \u221a21 \u2248 4.58, so ~\u00b1$7.60\n\nPoint estimates slightly above current price (mild upward drift assumption):\n\n{\n  \"1d\": {\n    \"point_estimate\": 60.90,\n    \"90_ci\": [59.10, 62.70]\n  },\n  \"1w\": {\n    \"point_estimate\": 61.20,\n    \"90_ci\": [57.50, 64.90]\n  },\n  \"1m\": {\n    \"point_estimate\": 61.80,\n    \"90_ci\": [53.50, 70.10]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 60.9,
+      "90_ci": [
+        59.1,
+        62.7
+      ]
+    },
+    "1w": {
+      "point_estimate": 61.2,
+      "90_ci": [
+        57.5,
+        64.9
+      ]
+    },
+    "1m": {
+      "point_estimate": 61.8,
+      "90_ci": [
+        53.5,
+        70.1
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 60.9,\n    \"90_ci\": [\n      59.1,\n      62.7\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 61.2,\n    \"90_ci\": [\n      57.5,\n      64.9\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 61.8,\n    \"90_ci\": [\n      53.5,\n      70.1\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a modest upward drift across time horizons, starting near 60.9 and rising to 61.8 over a month. This trajectory likely reflects a baseline assumption of slow mean-reversion or gentle trend continuation from whatever the current level is, perhaps anchored by recent momentum or a fundamental fair-value estimate slightly above the current price. The 1-day estimate stays close to the present value because short-term price changes are dominated by noise, and there is little reason to expect a large directional move overnight without a specific catalyst. Over a week and month, the estimates drift slightly higher, suggesting mild bullish bias\u2014possibly driven by broader market trend, earnings expectations, or macro tailwinds that were factored in at the time of forecasting.\n\nThe confidence interval widths expand substantially as the horizon lengthens, which is a natural consequence of uncertainty compounding over time. At one day, the 90% interval spans roughly 3.6 units, reflecting typical daily volatility and the near-term anchoring effect of the current price. By one week, the interval widens to about 7.4 units, as multiple trading sessions introduce compounding uncertainty from both idiosyncratic news and broader market moves. At one month, the interval stretches to roughly 16.6 units, capturing the meaningful possibility of significant regime shifts, macro surprises, or company-specific developments over that longer window.\n\nSeveral specific risks could push outcomes well outside these stated ranges. On the downside, a sharp deterioration in macroeconomic data\u2014such as a surprise jobs report, inflation reading, or central bank decision\u2014could trigger broad risk-off selling that overwhelms the modest bullish bias. A company-specific earnings miss, guidance cut, or negative news event could easily push the price below the lower bound of even the one-month interval. On the upside, an unexpected positive catalyst such as a strong earnings beat, acquisition announcement, or sector rotation into this asset class could send prices well above the upper confidence bound. Tail risks like geopolitical shocks, sudden liquidity events, or correlated market dislocations are by definition poorly captured in symmetric confidence intervals, meaning the true distribution of outcomes is likely fatter-tailed than these ranges imply.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Ch7ZQpzy1orHD959pLrYi",
+    "system_fingerprint": null,
+    "input_tokens": 323,
+    "output_tokens": 376,
+    "served_at": "2026-11-17T00:33:03.689036Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011Ch7ZRPxMQaMnufnXWTGfP",
+    "system_fingerprint": null,
+    "input_tokens": 226,
+    "output_tokens": 483,
+    "served_at": "2026-11-17T00:33:16.052142Z"
+  },
+  "status": "collected",
+  "error": null
+}
