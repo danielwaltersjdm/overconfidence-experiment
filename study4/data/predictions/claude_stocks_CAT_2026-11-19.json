@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-11-19",
+  "timestamp": "2026-11-19T23:30:49.690093Z",
+  "domain": "stocks",
+  "item": "CAT",
+  "item_label": "Caterpillar",
+  "unit": "USD",
+  "current_value": 537.3699951171875,
+  "context": "Current closing price of Caterpillar (CAT): $537.37 USD as of 2026-11-19.",
+  "prompt_text": "Today is 2026-11-19.\n\nCurrent closing price of Caterpillar (CAT): $537.37 USD as of 2026-11-19.\n\nPredict the closing price of Caterpillar at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-11-20\n  1-week target date: 2026-11-26\n  1-month target date: 2026-12-19\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "{\n  \"1d\": {\n    \"point_estimate\": 539,\n    \"90_ci\": [522, 556]\n  },\n  \"1w\": {\n    \"point_estimate\": 541,\n    \"90_ci\": [510, 572]\n  },\n  \"1m\": {\n    \"point_estimate\": 545,\n    \"90_ci\": [490, 600]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 539,
+      "90_ci": [
+        522,
+        556
+      ]
+    },
+    "1w": {
+      "point_estimate": 541,
+      "90_ci": [
+        510,
+        572
+      ]
+    },
+    "1m": {
+      "point_estimate": 545,
+      "90_ci": [
+        490,
+        600
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 539,\n    \"90_ci\": [\n      522,\n      556\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 541,\n    \"90_ci\": [\n      510,\n      572\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 545,\n    \"90_ci\": [\n      490,\n      600\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates across all three horizons are clustered tightly around 539\u2013545, reflecting a view that the underlying variable is relatively stable and mean-reverting over short to medium timeframes. The 1-day estimate of 539 is anchored heavily on the most recent observed value, with minimal drift expected overnight. The 1-week estimate nudges slightly higher to 541, incorporating a modest positive trend or drift assumption while still being dominated by the recent level. The 1-month estimate of 545 extends that gentle upward drift further, though the increment remains small, suggesting I assessed no strong fundamental catalyst pushing the series dramatically in either direction over the coming weeks.\n\nThe confidence interval widths reflect increasing uncertainty as the horizon extends, which is a standard feature of time-series forecasting. At 1 day, the 90% interval spans only 34 units (522\u2013556), consistent with low day-to-day volatility. By 1 week the interval widens to 62 units, and by 1 month it reaches 110 units. These widths were likely calibrated using historical volatility at each horizon \u2014 either from observed variance in the series itself or from an assumed volatility parameter. The relatively tight intervals even at 1 month suggest the series has historically been fairly well-behaved and not prone to large structural breaks in short windows.\n\nSpecific risks that could push outcomes outside these intervals include sudden macroeconomic shocks, policy announcements, or structural changes in whatever underlying process this series tracks. If this is a financial or economic indicator, an unexpected central bank decision, geopolitical event, or data revision could easily produce a move of 30\u201350 units in a single session, blowing through the 1-day interval. On the downside, a sharp risk-off episode or negative surprise could similarly breach the lower bound. The 1-month interval is more vulnerable to slow-burning developments \u2014 a gradual deterioration in sentiment or a sustained trend reversal \u2014 that compound over time and are not captured in short-window volatility estimates.\n\nFinally, model risk itself is a meaningful source of tail exposure. If the point estimates were derived from a model that assumes stationarity or a stable regime, any regime shift would systematically bias forecasts toward the prior mean and understate true uncertainty. Black-swan-type events by definition fall outside historically calibrated intervals, so the stated 90% CIs should be interpreted as conditional on the current regime persisting, not as unconditional probability bounds.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011ChDA6v9sBdKRkcJ4gvPT9",
+    "system_fingerprint": null,
+    "input_tokens": 329,
+    "output_tokens": 105,
+    "served_at": "2026-11-19T23:30:51.823357Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011ChDA73vwU8H2xbKoC5y1c",
+    "system_fingerprint": null,
+    "input_tokens": 208,
+    "output_tokens": 541,
+    "served_at": "2026-11-19T23:31:06.364096Z"
+  },
+  "status": "collected",
+  "error": null
+}
