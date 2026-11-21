@@ -1,0 +1,58 @@
+{
+  "model": "claude",
+  "model_id": "claude-sonnet-4-6",
+  "prompt_version": "2.0.0",
+  "pred_date": "2026-11-20",
+  "timestamp": "2026-11-20T23:26:16.715926Z",
+  "domain": "stocks",
+  "item": "MU",
+  "item_label": "Micron",
+  "unit": "USD",
+  "current_value": 594.510009765625,
+  "context": "Current closing price of Micron (MU): $594.51 USD as of 2026-11-20.",
+  "prompt_text": "Today is 2026-11-20.\n\nCurrent closing price of Micron (MU): $594.51 USD as of 2026-11-20.\n\nPredict the closing price of Micron at three future horizons. For each horizon, provide a point estimate and a 90% confidence interval. A 90% confidence interval means you are providing a low value and a high value such that you believe there is a 90% chance the true closing price will fall between them. If we asked you to make this kind of estimate 100 times, the true value should fall inside your interval on about 90 of those occasions. Choose your bounds accordingly.\n\nHorizons:\n  1-day  target date: 2026-11-21\n  1-week target date: 2026-11-27\n  1-month target date: 2026-12-20\n\nRespond ONLY with valid JSON and no markdown fences:\n{\n  \"1d\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1w\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  },\n  \"1m\": {\n    \"point_estimate\": <number>,\n    \"90_ci\": [<low>, <high>]\n  }\n}",
+  "raw_response": "I need to estimate future prices for Micron (MU) from a current price of $594.51 on 2026-11-20.\n\nLet me think through this carefully:\n\n**Current context:**\n- MU at $594.51 (note: this is significantly higher than historical prices I was trained on, suggesting substantial appreciation has occurred)\n- Micron is a semiconductor/memory chip company, subject to cyclical volatility\n\n**Volatility assumptions:**\n- MU historically has high volatility (~40-50% annualized)\n- At $594.51, daily volatility \u2248 2-3% (roughly $12-18/day)\n- Weekly volatility \u2248 ~4-6% (roughly $24-36)\n- Monthly volatility \u2248 ~8-12% (roughly $48-71)\n\n**Point estimates:**\n- Short-term: slight drift toward current price (random walk assumption)\n- I'll use modest upward drift given semiconductor sector momentum\n\n**1-day:**\n- Point estimate: ~$596 (small positive drift)\n- 90% CI: roughly \u00b12.5% = \u00b1$15 \u2192 [$580, $612]\n\n**1-week:**\n- Point estimate: ~$600\n- 90% CI: roughly \u00b15% = \u00b1$30 \u2192 [$564, $636]\n\n**1-month:**\n- Point estimate: ~$606\n- 90% CI: roughly \u00b110% = \u00b1$60 \u2192 [$535, $680]\n\nThese intervals reflect MU's historical volatility scaled to the current price level. I'll widen them slightly to ensure proper 90% coverage given fat tails in stock returns.\n\n{\n  \"1d\": {\n    \"point_estimate\": 596,\n    \"90_ci\": [578, 614]\n  },\n  \"1w\": {\n    \"point_estimate\": 600,\n    \"90_ci\": [561, 638]\n  },\n  \"1m\": {\n    \"point_estimate\": 607,\n    \"90_ci\": [530, 685]\n  }\n}",
+  "horizons": {
+    "1d": {
+      "point_estimate": 596,
+      "90_ci": [
+        578,
+        614
+      ]
+    },
+    "1w": {
+      "point_estimate": 600,
+      "90_ci": [
+        561,
+        638
+      ]
+    },
+    "1m": {
+      "point_estimate": 607,
+      "90_ci": [
+        530,
+        685
+      ]
+    }
+  },
+  "justification_prompt": "You previously made the following probabilistic forecast:\n\n{\n  \"1d\": {\n    \"point_estimate\": 596,\n    \"90_ci\": [\n      578,\n      614\n    ]\n  },\n  \"1w\": {\n    \"point_estimate\": 600,\n    \"90_ci\": [\n      561,\n      638\n    ]\n  },\n  \"1m\": {\n    \"point_estimate\": 607,\n    \"90_ci\": [\n      530,\n      685\n    ]\n  }\n}\n\nPlease explain your reasoning in 2\u20134 paragraphs. Address:\n1. What drove your point estimates at each horizon?\n2. What sources of uncertainty influenced your confidence interval widths?\n3. Are there specific risks or events that could push outcomes outside your stated intervals?\n\nWrite in plain English. No JSON, no bullet points.",
+  "justification_text": "My point estimates reflect a relatively stable near-term outlook with modest upward drift over time. For the 1-day horizon, the estimate of 596 is anchored closely to the prevailing price level, assuming mean-reversion dynamics dominate over such a short window and that no major catalysts are imminent. The 1-week estimate of 600 incorporates a slight positive drift consistent with typical equity index behavior in the absence of negative macro shocks. The 1-month estimate of 607 extends that drift further, reflecting a long-run equity risk premium that tends to push broad indices modestly higher over multi-week horizons when conditions are neutral.\n\nThe confidence interval widths expand naturally as the horizon lengthens, reflecting the accumulation of uncertainty over time. At 1 day, realized volatility for a broad index tends to be relatively contained, so the 90% interval spans roughly 36 points. By 1 week, the interval widens to about 77 points as day-to-day randomness compounds and macro data releases, Fed commentary, and earnings reports can each shift sentiment. At 1 month, the 155-point interval reflects the full range of plausible economic and geopolitical developments that could materially reprice risk assets over a 4-week period.\n\nThere are several specific risks that could push outcomes well outside these stated intervals. On the downside, an unexpected Federal Reserve policy shift \u2014 such as signaling additional rate hikes or a delay in cuts \u2014 could trigger a sharp repricing of equities, potentially driving prices below the lower bounds. A significant deterioration in credit markets, a geopolitical escalation, or a major earnings disappointment from a systemically important company could have similar effects. On the upside, a surprisingly strong labor market combined with cooling inflation could fuel a risk-on rally, or a dovish Fed pivot signal could send prices well above the upper bounds, particularly at the 1-month horizon where such a catalyst would have more time to fully propagate through positioning and flows.\n\nIt is also worth noting that these intervals assume roughly log-normal return distributions, which understate the probability of fat-tail events. Realized equity returns have historically exhibited negative skew and excess kurtosis, meaning sharp drawdowns occur more frequently than a normal distribution would suggest. Accordingly, readers should treat the lower tail of the 1-month interval with particular caution, as a risk-off episode could produce a move considerably more severe than the stated lower bound of 530.",
+  "prediction_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011ChF3Zhamuq6BSc7yp5W6A",
+    "system_fingerprint": null,
+    "input_tokens": 325,
+    "output_tokens": 498,
+    "served_at": "2026-11-20T23:26:25.789941Z"
+  },
+  "justification_served": {
+    "served_model": "claude-sonnet-4-6",
+    "response_id": "msg_011ChF3aMSqKBVLnXPLxB7ia",
+    "system_fingerprint": null,
+    "input_tokens": 208,
+    "output_tokens": 539,
+    "served_at": "2026-11-20T23:26:39.978241Z"
+  },
+  "status": "collected",
+  "error": null
+}
